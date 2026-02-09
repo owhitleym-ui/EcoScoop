@@ -3,25 +3,27 @@
 
 ## 1. Introduction
 
-We envision a robust Point-Of-Sale (POS) application, NextGen POS, with the flexibility to support multiple terminal and user interface mechanisms, and integrate with multiple third- party support systems.
+We envision a robust News Hub application, EcoScoop, with the ability to support multiple news articles and user-based interaction, supporting a gameified feel to support usage.
 
 ## 2. Business case
-Our POS software addresses customer needs that other products do not:
-1. It can continue processing sales even when external services fail.
-2. It integrates with accounting and inventory systems to simplify stocking logistics.
+Our News Hub application addresses customer needs that other products do not:
+
+1. It supports user-oriented preferences and feed.
+2. It provides non-biased eco-sustainable news articles and filters through false information.
+3. It integrates game aspects to create a fun interactive environment.
 
 ## 3. Key functionality
-- Sales capture and auditing.
-- Multiple payment method support (credit, debit, check, cash).
-- System administration for users, security, discount rules, etc.
-- Real time inventory updating through 3rd party system connection.
-- Automatic offline sales processing support when external systems fail.
+- Provides Articles and News Feeds focusing on eco-sustainability.
+- Multiple interactable games and features (Leaderboard, Points, Games)
+- System administration for users, moderators, authors
+- Real time crawling and article updating using third party servers
+- Rating System allowing for more interaction and what is trending
 
 ## 4. Stakeholder goals summary
-- **Cashier**: process sales, handle returns, cash in, cash out
-- **Administrator**: manage users, configure system
-- **Sales activity system**: analyze sales data
-- **Tax agency**: collect correct amount of tax for each sale
+- **User**: obtain relevant articles on environment, topical news, readable format, interact with articles
+- **Author**: write articles, develop news feeds,
+- **Websites**: provide articles, want credit and attribution 
+- **System Administrator**: manages users, security permissions and moderation
 
 
 ## Use case diagram
@@ -31,12 +33,12 @@ Our POS software addresses customer needs that other products do not:
 skin rose
 
 ' human actors
-actor "Administrator" as admin
-actor "Cashier" as cashier
+actor "System Administrator" as admin
+actor "User" as user
+actor "Author" as author
 
 ' system actors
-actor "Accounting system" <<system>> as accountingSystem
-actor "Inventory system" <<system>> as inventorySystem
+actor "Websites" <<system>> as website
 
 ' list all use cases in package
 package NextGenPOS{
