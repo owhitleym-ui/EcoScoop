@@ -1,18 +1,19 @@
-# Use case name, e.g., process sale 
+# Access Article 
 
 ## 1. Primary actor and goals
 Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:
 
-__Cashier__: wants to sell items to a customer. Wants accurate, fast data entry, and no payment errors, as cash drawer shortages are deducted from their salary.
+__User__: wants to obtain relevant articles on environment. Wants relevant, topical news and no outdated entries. Wants to read news in a readable format, with togglable display settings
 
 
 ## 2. Other stakeholders and their goals
 
-* __Customer__: Wants fast service with minimal effort. Wants easily visible display of entered items and prices. Wants proof of purchase to support returns.
-* __Government tax agencies__: Want to collect correct amount of tax from every sale. There may be multiple agencies involved, e.g., at the federal, state, and county levels.
+* __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers. 
+* __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
+* 
 
 
-## 2. Preconditions
+## 3. Preconditions
 
 What must be true prior to the start of the use case.
 For example, for _process sale_:
@@ -30,7 +31,7 @@ For example, for _process sale_:
 * Payment authorization approvals are recorded.
 
 
-## 4. Workflow
+## 5. Workflow
 
 The sequence of steps involved in the execution of the use case, in the form of one or more activity diagrams (please feel free to decompose into multiple diagrams for readability).
 
