@@ -16,19 +16,20 @@ __User__: wants to obtain relevant articles on environment. Wants relevant, topi
 ## 3. Preconditions
 
 What must be true prior to the start of the use case.
-For example, for _process sale_:
+For example, for _access article_:
 
-* Cashier is identified and authenticated.
+* User is authenticated or logged in
+* User is in the right hub tab
 
 ## 4. Postconditions
 
 What must be true upon successful completion of the use case. 
-For example, for _process sale_:
+For example, for _access article_:
 
-* Sale is saved.
-* Tax is correctly calculated.
-* Receipt is generated.
-* Payment authorization approvals are recorded.
+* Article is saved to history.
+* Tags are added to user preference
+* Points are calculated and added to score after user finishes reading.
+* Other articles are recommended.
 
 
 ## 5. Workflow
