@@ -15,63 +15,74 @@ Our News Hub application addresses customer needs that other products do not:
 ## 3. Key functionality
 - Provides Articles and News Feeds focusing on eco-sustainability.
 - Multiple interactable games and features (Leaderboard, Points, Games)
-- System administration for users, moderators, authors
 - Real time crawling and article updating using third party servers
 - Rating System allowing for more interaction and what is trending
 
 ## 4. Stakeholder goals summary
 - **User**: obtain relevant articles on environment, topical news, readable format, interact with articles
 - **Author**: write articles, develop news feeds,
-- **Websites**: provide articles, want credit and attribution 
-- **System Administrator**: manages users, security permissions and moderation
+- **Websites**: provide articles, want credit and attribution
 
 
 ## Use case diagram
-
 ```plantuml
 @startuml
 skin rose
 
-' human actors
-actor "System Administrator" as admin
+'human actors
 actor "User" as user
-actor "Author" as author
 
-' system actors
-actor "Websites" <<system>> as website
+'system actors
+actor "Point System" <<system>> as pointSystem
+actor "History System" <<system>> as historySystem
+actor "Internet System" <<system>> as internetSystem
+actor "Learning System" <<system>> as learningSystem
 
 ' list all use cases in package
-package NextGenPOS{
-    usecase "Authenticate" as authenticate
-    usecase "Start admin session" as administerSystem
-    usecase "Start cashier session" as startCashierSession
-    
-    usecase "Manage users" as manageUsers
-    usecase "Configure settings" as configureSettings
-    usecase "Process sale" as processSale
-    usecase "Process return" as processReturn
-    usecase "Look up item" as lookUpItem
+package EcoScoop{
+    usecase "Open EcoScoop" as openEcoscoop
+    usecase "Open Articles" as openArticles
+    usecase "Access Article" as accessArticle
+    usecase "Search for Article" as searchArticle
+    usecase "React to Article" as reactArticle
+    usecase "Save Article" as saveArticle
+    usecase "Open Profile" as openProfile
+    usecase "Configure Settings" as changeSettings
+    usecase "Access History" as accessHistory
+    usecase "Open Dashboard" as openDashboard
+    usecase "Access Eco Stats" as accessEcoStats
+    usecase "Access Fun Stats" as accessFunStats
 }
 
-' list relationships between actors and use cases
-admin --> administerSystem
-cashier --> startCashierSession
+'list associations
+user --> openEcoscoop
 
-startCashierSession --> authenticate : <<includes>>
-administerSystem --> authenticate : <<includes>>
-administerSystem <|-- manageUsers : <<extends>>
-administerSystem <|-- configureSettings : <<extends>>
+openEcoscoop <|-down- openArticles : <<extends>>
+openEcoscoop <|-down- openProfile : <<extends>>
+openEcoscoop <|-down- openDashboard : <<extends>>
 
-processSale <|-right- lookUpItem : <<extends>>
-processReturn <|-left- lookUpItem : <<extends>>
+openArticles <|-down- accessArticle : <<extends>>
+openArticles <|-down- searchArticle : <<extends>>
 
-startCashierSession <|-- processSale : <<extends>>
-startCashierSession <|-- processReturn : <<extends>>
+accessArticle <|-right- searchArticle : <<extends>>
+accessArticle <|-down- reactArticle : <<extends>>
+accessArticle <|-down- saveArticle : <<extends>>
 
-' system actors
-processSale --> accountingSystem
-processSale --> inventorySystem
-processReturn --> accountingSystem
-processReturn --> inventorySystem
+accessArticle --> pointSystem
+accessArticle --> internetSystem
+accessArticle --> learningSystem
+reactArticle --> pointSystem
+reactArticle --> historySystem
+saveArticle --> historySystem
+
+openProfile <|-down- accessHistory : <<extends>>
+openProfile <|-right- changeSettings : <<includes>>
+
+accessHistory --> historySystem 
+
+openDashboard <|-down- accessEcoStats : <<extends>>
+openDashboard <|-down- accessFunStats : <<extends>>
+
 @enduml
 ```
+
