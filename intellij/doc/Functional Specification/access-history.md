@@ -1,32 +1,21 @@
-# Search Article
+# Access History
 
 ## 1. Primary actor and goals
-Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:
 
-__User__: Wants to look for relevant articles depending on keywords and other searches. Looking for relevant, topical news that all relate to what the user inputs and is searching for.
+__User__: Wants to look through previous articles read. Wants easy access to react, or reread article.
 
 ## 2. Other stakeholders and their goals
 
-* __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers.
-* __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
-
+* No other stakeholders.
 
 ## 3. Preconditions
 
-What must be true prior to the start of the use case.
-For example, for _process sale_:
-
-* User opens EcoScoop
-* User switches to Article Section
-* User clicks the search icon
+* User switches to view profile tab.
+* User clicks settings tab.
 
 ## 4. Postconditions
 
-What must be true upon successful completion of the use case.
-For example, for _process sale_:
-
-* List of relevant articles are shown
-* Ordered from most relevant
+* History is accessed and user knows which articles they have read.
 
 ## 5. Workflow
 
@@ -47,22 +36,16 @@ For example, for _process sale_:
 
 skin rose
 
-title Search Article (Casual)
-
+title Access History (Casual)
 'define the lanes
 |#application|User|
-|#implementation|System|
 
 |User|
 start
-:Enter Words into Search Bar;
-
-|System|
-:Acesses relevant articles;
-:Displays Articles in List of most relevant;
-
-|User|
-:Clicks on most relevant article;
+    repeat :Open profile;
+        :Click settings;
+        :Click history;
+        repeat while (Go back?) is (yes) not (no)
 
 stop
 @enduml

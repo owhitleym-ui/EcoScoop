@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f22f104-d04f-4ac8-a838-488022a43d03" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-article.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-history.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-history.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/intellij/doc/vision.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/vision.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +81,7 @@
       <workItem from="1771272516108" duration="40000" />
       <workItem from="1771272614745" duration="43000" />
       <workItem from="1771272677783" duration="2097000" />
-      <workItem from="1771275884112" duration="870000" />
+      <workItem from="1771275884112" duration="3478000" />
     </task>
     <servers />
   </component>

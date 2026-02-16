@@ -64,7 +64,7 @@ accessArticle <|-down- saveArticle : <<extends>>
 internetSystem <|-right- accessArticle 
 
 viewProfile <|-down- accessHistory : <<extends>>
-accessHistory <|-left- accessArticle : <<extends>>
+accessHistory <|-l- accessArticle : <<extends>>
 viewProfile <|-- changeSettings : <<extends>>
 
 
