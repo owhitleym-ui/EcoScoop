@@ -18,7 +18,8 @@ For example, for _process sale_:
 
 * User opens EcoScoop
 * User switches to Article Section
-* User clicks the search icon
+* User Accessed Article
+* User has clicked Save Article Button
 
 ## 4. Postconditions
 
@@ -47,22 +48,28 @@ For example, for _process sale_:
 
 skin rose
 
-title Search Article (Casual)
+title Save Article(Casual)
 
 'define the lanes
 |#application|User|
 |#implementation|System|
 
-|User|
+|System|
 start
-:Enter Words into Search Bar;
+:Send User Profile Saved Folders;
+
+|User|
+:Select Which Folder to save Article in;
+:Send Article + ID to save;
 
 |System|
-:Acesses relevant articles;
-:Displays Articles in List of most relevant;
+if (Validate ID) then (yes)
+:Save Article + ID to user's location;
+stop
 
-|User|
-:Clicks on most relevant article;
+else (no)
+:Do not save article;
+:Display Unable to Save Article;
 
 stop
 @enduml
