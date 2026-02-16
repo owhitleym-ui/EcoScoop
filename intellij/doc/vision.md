@@ -33,55 +33,40 @@ skin rose
 actor "User" as user
 
 'system actors
-actor "Point System" <<system>> as pointSystem
-actor "History System" <<system>> as historySystem
-actor "Internet System" <<system>> as internetSystem
-actor "Learning System" <<system>> as learningSystem
+actor "Website System" <<system>> as internetSystem
 
 ' list all use cases in package
 package EcoScoop{
-    usecase "Open EcoScoop" as openEcoscoop
-    usecase "Open Articles" as openArticles
+ 
     usecase "Access Article" as accessArticle
     usecase "Search for Article" as searchArticle
     usecase "React to Article" as reactArticle
     usecase "Save Article" as saveArticle
-    usecase "Open Profile" as openProfile
+    usecase "View Profile" as viewProfile
     usecase "Configure Settings" as changeSettings
     usecase "Access History" as accessHistory
-    usecase "Open Dashboard" as openDashboard
-    usecase "Access Eco Stats" as accessEcoStats
-    usecase "Access Fun Stats" as accessFunStats
+    usecase "View Dashboard" as viewDashboard
 }
 
 'list associations
-user --> openEcoscoop
+user --> viewDashboard
 
-openEcoscoop <|-down- openArticles : <<extends>>
-openEcoscoop <|-down- openProfile : <<extends>>
-openEcoscoop <|-down- openDashboard : <<extends>>
+viewDashboard <|-down- searchArticle : <<extends>>
+viewDashboard <|-down- viewProfile : <<extends>>
 
-openArticles <|-down- accessArticle : <<extends>>
-openArticles <|-down- searchArticle : <<extends>>
 
-accessArticle <|-right- searchArticle : <<extends>>
+searchArticle <|-down- accessArticle : <<extends>>
+
+
 accessArticle <|-down- reactArticle : <<extends>>
 accessArticle <|-down- saveArticle : <<extends>>
 
-accessArticle --> pointSystem
-accessArticle --> internetSystem
-accessArticle --> learningSystem
-reactArticle --> pointSystem
-reactArticle --> historySystem
-saveArticle --> historySystem
+internetSystem <|-right- accessArticle 
 
-openProfile <|-down- accessHistory : <<extends>>
-openProfile <|-right- changeSettings : <<includes>>
+viewProfile <|-down- accessHistory : <<extends>>
+accessHistory <|-left- accessArticle : <<extends>>
+viewProfile <|-- changeSettings : <<extends>>
 
-accessHistory --> historySystem 
-
-openDashboard <|-down- accessEcoStats : <<extends>>
-openDashboard <|-down- accessFunStats : <<extends>>
 
 @enduml
 ```
