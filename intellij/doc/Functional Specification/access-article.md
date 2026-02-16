@@ -1,8 +1,6 @@
 # Access Article 
 
 ## 1. Primary actor and goals
-Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:
-
 __User__: wants to obtain relevant articles on environment. Wants relevant, topical news and no outdated entries. Wants to read news in a readable format, with togglable display settings
 
 
@@ -10,21 +8,13 @@ __User__: wants to obtain relevant articles on environment. Wants relevant, topi
 
 * __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers. 
 * __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
-* 
-
 
 ## 3. Preconditions
-
-What must be true prior to the start of the use case.
-For example, for _access article_:
-
-* User is authenticated or logged in
-* User is in the right hub tab
+* User is authenticated.
+* User is in the Article hub tab.
 
 ## 4. Postconditions
-
-What must be true upon successful completion of the use case. 
-For example, for _access article_:
+For _access article_:
 
 * Article is saved to history.
 * Tags are added to user preference
@@ -44,53 +34,34 @@ The workflow can be specified at different levels of detail:
 
 Please be sure indicate what level of detail the workflow you include represents. 
 
-For example, for _process sale_:
+For example, for _access-article_:
 
 ```plantuml
 @startuml
 
 skin rose
 
-title Process sale (casual level)
+title Access Article (casual level)
 
 'define the lanes
-|#application|Customer|
-|#technology|Cashier|
-|#implementation|System|
+|#application|User|
+|#implementation|Website System|
 
-|Customer|
+|User|
 start
-:Arrive at checkout with items to purchase;
-
-|Cashier|
-while (More items?) is (yes)
-  :Enter item info (id and quantity);
-  |System|
-  :Validate line item;
-  :Record line item;
-  :Show line item detail and running total;
-  |Cashier|
-endwhile (no)
-
-
-:Ask for payment type;
-
-|Customer|
-:Indicate payment type;
-
-|Cashier|
-if (Payment type?) is  ( Cash ) then
-:Execute __Pay by cash__;
-else ( Card ) 
-:Execute __Pay by credit card__;
-endif
-
-|System|
-:Validate payment;
-:Record payment;
-:Print receipt;
-|Cashier|
-:Hand receipt to customer;
+    if (Refresh) then (yes)
+    elseif(Find Article)
+    while (Open Article Tab) is (yes)
+        :Click Article;
+        :Read Article;
+        |Website System|
+        :Save to history;
+        :Save preferences;
+        |User|
+        :Return;
+        
+    endwhile (no)
+    endif
 stop
 @enduml
 ```
