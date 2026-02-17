@@ -59,7 +59,6 @@ start
         :Save preferences;
         |User|
         :Return;
-        
     endwhile (no)
     endif
 stop

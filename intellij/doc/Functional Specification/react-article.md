@@ -1,4 +1,4 @@
-# Search Article
+# React Article
 
 ## 1. Primary actor and goals
 Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:

@@ -45,6 +45,7 @@ start
     repeat :Open profile;
         :Click settings;
         :Click history;
+        :Access article;
         repeat while (Go back?) is (yes) not (no)
 
 stop

@@ -1,32 +1,28 @@
-# Search Article
+# View Eco Dashboard
 
 ## 1. Primary actor and goals
-Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:
 
-__User__: Wants to look for relevant articles depending on keywords and other searches. Looking for relevant, topical news that all relate to what the user inputs and is searching for.
+__User__: Wants to access quick, relevant info on sustainability stats and current information on the environment. Wants to be able to read the charts and click on them for more interactivity.
 
 ## 2. Other stakeholders and their goals
 
-* __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers.
-* __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
+* __Sources__: Want credit for data used.
 
 
 ## 3. Preconditions
 
 What must be true prior to the start of the use case.
-For example, for _process sale_:
+For example, for _view-dashboard_:
 
-* User opens EcoScoop
-* User switches to Article Section
-* User clicks the search icon
+* Daily information has been compressed into easily digestible graphics.
+* User has opened the app or switched back into Eco Dashboard tab.
 
 ## 4. Postconditions
 
 What must be true upon successful completion of the use case.
-For example, for _process sale_:
+For example, for _view-dashboard_:
 
-* List of relevant articles are shown
-* Ordered from most relevant
+* User has quick and easy access to stats.
 
 ## 5. Workflow
 
@@ -40,30 +36,35 @@ The workflow can be specified at different levels of detail:
 
 Please be sure indicate what level of detail the workflow you include represents.
 
-For example, for _process sale_:
+For example, for _view-dashboard_:
 
 ```plantuml
 @startuml
 
 skin rose
 
-title Search Article (Casual)
+title View Dashboard (Casual)
 
 'define the lanes
 |#application|User|
-|#implementation|System|
+|#implementation|Website System|
 
 |User|
 start
-:Enter Words into Search Bar;
-
-|System|
-:Acesses relevant articles;
-:Displays Articles in List of most relevant;
-
-|User|
-:Clicks on most relevant article;
-
+switch (Open Eco Dashboard)
+    case (Click)
+    :Open fossil fuel data;
+    case (Click)
+    :Open energy consumption data;
+    case (Click)
+    :Check air emissions;
+    case(Click)
+    :Open waste data;
+    case (Click)
+    :Open water data;
+endswitch
+|Website System|
+:Extend diagram view;
 stop
 @enduml
 ```
