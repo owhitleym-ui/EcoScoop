@@ -11,40 +11,22 @@ __User__: Wants to save article for later viewing or to organize into a folder. 
 
 ## 3. Preconditions
 
-For _save-article_:
-
 * User opens EcoScoop
 * User switches to Article Section
-* User Accessed Article
+* User accesses Article
 * User has clicked Save Article Button
 
 ## 4. Postconditions
-
-For _save-article_:
-
-* List of relevant articles are shown
-* Ordered from most relevant
+* Stores Article into a Saved Folder
 
 ## 5. Workflow
-
-The sequence of steps involved in the execution of the use case, in the form of one or more activity diagrams (please feel free to decompose into multiple diagrams for readability).
-
-The workflow can be specified at different levels of detail:
-
-* __Brief__: main success scenario only;
-* __Casual__: most common scenarios and variations;
-* __Fully-dressed__: all scenarios and variations.
-
-Please be sure indicate what level of detail the workflow you include represents.
-
-For example, for _save-article_:
 
 ```plantuml
 @startuml
 
 skin rose
 
-title Save Article(Casual)
+title Save Article (Casual Level)
 
 'define the lanes
 |#application|User|
@@ -60,7 +42,7 @@ start
 
 |System|
 if (Validate ID) then (yes)
-:Save Article + ID to user's location;
+:Save Article + ID to user's preferred location;
 stop
 
 else (no)
