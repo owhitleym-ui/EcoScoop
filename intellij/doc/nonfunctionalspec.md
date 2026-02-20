@@ -4,7 +4,7 @@
 ## Usability
 - Text should be easily able to change with comfort for different preferences (i.e., Light Mode, Dark Mode, text font, etc.)
 - Colors associated with common forms of color blindness should be avoided.
-- Gamefied options are easy to access and simple to read
+- Gameified options are easy to access and simple to read
 - Navigation should be clear and intuitive, with minimal steps to find articles or features.
 - The app should provide clear feedback when users complete actions (earning points, saving articles, etc.).
 
@@ -26,8 +26,11 @@
 - Software must run on Android devices. 
 - Software must be written using Java.
 
-
 ## External interfaces
 - Website articles must be accessed from a 3rd-party database
 - The system should securely handle communication with external data sources. 
-- External API failures should not crash the application.
+- External API failures should not crash the application. 
+
+## Legal
+- Websites should be referenced with a hyperlink for attribution and credit purposes
+- Articles should be under free copyright usage (public domain)

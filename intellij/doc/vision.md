@@ -19,9 +19,9 @@ Our News Hub application addresses customer needs that other products do not:
 - Rating System allowing for more interaction and what is trending
 
 ## 4. Stakeholder goals summary
-- **User**: obtain relevant articles on environment, topical news, readable format, interact with articles
-- **Author**: write articles, develop news feeds,
-- **Websites**: provide articles, want credit and attribution
+- **User**: Wants to have ease of access obtaining relevant articles about their specific interests on the environment, fact-based news, and a readable format.
+- **Author**: Requires attribution/credit for written articles and information relating to their article (i.e, comments, reactions, saved/share).
+- **Websites**: Requires attribution/credit for published articles and information relating to the articles they have published (i.e., preferred tags, keywords, reactions, saves)
 
 
 ## Use case diagram

@@ -32,7 +32,8 @@ start
 :Click History;
 
 |System|
-:Display previously read articles;
+:Fetch User's Article History;
+:Display Folders of Read Articles;
 
 |User|
 :Select article;
