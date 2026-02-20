@@ -14,8 +14,6 @@ __User__: wants to obtain relevant articles on environment. Wants relevant, topi
 * User is in the Article hub tab.
 
 ## 4. Postconditions
-For _access article_:
-
 * Article is saved to history.
 * Tags are added to user preference
 * Points are calculated and added to score after user finishes reading.
@@ -24,28 +22,16 @@ For _access article_:
 
 ## 5. Workflow
 
-The sequence of steps involved in the execution of the use case, in the form of one or more activity diagrams (please feel free to decompose into multiple diagrams for readability).
-
-The workflow can be specified at different levels of detail:
-
-* __Brief__: main success scenario only;
-* __Casual__: most common scenarios and variations;
-* __Fully-dressed__: all scenarios and variations.
-
-Please be sure indicate what level of detail the workflow you include represents. 
-
-For example, for _access-article_:
-
 ```plantuml
 @startuml
 
 skin rose
 
-title Access Article (casual level)
+title Access Article (Casual Level)
 
 'define the lanes
 |#application|User|
-|#implementation|Website System|
+|#implementation|System|
 
 |User|
 start
@@ -54,7 +40,7 @@ start
     while (Open Article Tab) is (yes)
         :Click Article;
         :Read Article;
-        |Website System|
+        |System|
         :Save to history;
         :Save preferences;
         |User|

@@ -1,32 +1,20 @@
 # View Profile
 
 ## 1. Primary actor and goals
-Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:
-
 __User__: Wants to check achievements, access stats and points, change bio, review tags. Wants clear 
 
 ## 2. Other stakeholders and their goals
-
-* __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers.
-* __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
-
+No other stakeholders
 
 ## 3. Preconditions
 
-What must be true prior to the start of the use case.
-For example, for _process sale_:
-
 * User opens EcoScoop
-* User switches to Article Section
-* User clicks the search icon
+* User switches to Profile Section
 
 ## 4. Postconditions
 
-What must be true upon successful completion of the use case.
-For example, for _process sale_:
-
-* List of relevant articles are shown
-* Ordered from most relevant
+* Displays the User Profile
+* Displays Level/Gamified Aspects
 
 ## 5. Workflow
 

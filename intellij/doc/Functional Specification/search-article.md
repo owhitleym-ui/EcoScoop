@@ -10,24 +10,14 @@ __User__: Wants to look for relevant articles depending on keywords, tags, autho
 
 
 ## 3. Preconditions
-
 * User opens EcoScoop
 * User switches to Article Section
 
 ## 4. Postconditions
-
 * List of relevant articles are shown
 * Ordered from most relevant based on relevancy from keywords
+
 ## 5. Workflow
-
-* __Brief__: main success scenario only;
-* __Casual__: most common scenarios and variations;
-* __Fully-dressed__: all scenarios and variations.
-
-Please be sure indicate what level of detail the workflow you include represents.
-
-For example, for _process sale_:
-
 ```plantuml
 @startuml
 skin rose
@@ -55,8 +45,6 @@ if (Click on Search Tab) then (yes)
 endif
 |User|
 :View List;
-
-
 
 stop
 @enduml
