@@ -10,7 +10,6 @@ __User__: Wants to look for relevant articles depending on keywords, tags, autho
 
 
 ## 3. Preconditions
-* User opens EcoScoop
 * User switches to Article Section
 
 ## 4. Postconditions

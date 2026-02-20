@@ -3,7 +3,7 @@
 
 ## 1. Introduction
 
-We envision EcoScoop as an engaging and dynamic News Hub application, designed to deliver diverse news content with real-time updates. It will feature interactive user experiences and incorporate gamification elements to enhance user engagement and encourage regular usage.
+We envision EcoScoop as an engaging and dynamic News Hub application, designed to deliver sustainable and environmentally-focused news with real-time updates. It will feature interactive user experiences and incorporate gamification elements to enhance user engagement and encourage regular usage.
 
 ## 2. Business case
 Our News Hub application addresses customer needs that other products do not:

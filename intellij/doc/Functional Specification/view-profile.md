@@ -38,12 +38,11 @@ start
 switch (Handle User selection)
 case ( Clicked Achievements?)
     |System|
-    :Execute __Access History__;
-    :Show articles read;
-    :Show comments left;
-    :Show likes and dislikes;
+    :Show number of articles read;
+    :Show number of comments left;
+    :Show stats on likes and dislikes;
 
-case ( Clicked Points?)
+case ( Clicked Level?)
     |System|
     :Show levels and point breakdown;
 

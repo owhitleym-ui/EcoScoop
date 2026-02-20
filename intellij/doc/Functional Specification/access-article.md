@@ -34,15 +34,14 @@ title Access Article (Casual)
 
 |User|
 start
-:Open Article Hub;
+if (Search?) then (yes)
+    :Execute __Search Article__;
 
-if (Refresh?) then (yes)
-  |System|
-  :Reload latest articles;
 endif
+|System|
+:Load latest articles;
 
 |User|
-:Execute __Search Article__;
 :Click Article;
 
 |System|

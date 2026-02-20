@@ -40,7 +40,7 @@ start
 :Give feedback on article;
 
 |System|
-switch (Gave Feedback?)
+switch (Handle Feedback)
 
     case ( Open Comment Section?)
         if (Make Comment?) then (yes)

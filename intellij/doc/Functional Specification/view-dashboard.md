@@ -33,7 +33,7 @@ title View Dashboard (Casual)
 
 |User|
 start
-:Click environment visual;
+:Click environmental visual;
 |System|
 switch (Handle User selection)
     case ( Fossil Fuel Data)

@@ -34,10 +34,11 @@ title Save Article (Casual)
 
 |System|
 start
-:Send User Profile Saved Folders;
+:Send Saved Folders to User;
 
 |User|
-:Select Which Folder to save Article in;
+:Select which Folder to save Article in;
+|System|
 :Send Article + ID to save;
 
 |System|

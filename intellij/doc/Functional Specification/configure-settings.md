@@ -1,7 +1,7 @@
 # Configure Settings
 
 ## 1. Primary actor and goals
-__User__: Ease of access chaning location settings, either local or global. Able to change the appearance of app through settings. Wants to view and/or change any relevant account information (i.e., profile picture, bio, etc.)
+__User__: Ease of access changing location settings, either local or global. Able to change the appearance of app through settings. Wants to view and/or change any relevant account information (i.e., profile picture, bio, etc.)
 
 ## 2. Other stakeholders and their goals
 No other stakeholders
@@ -56,7 +56,7 @@ repeat
 
 |User|
 
-repeat while (Go back to Settings?) is (yes)
+repeat while (Go back to Profile?) is (yes)
 
 stop
 @enduml

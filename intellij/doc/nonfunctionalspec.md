@@ -4,7 +4,7 @@
 ## Usability
 - Text should be easily able to change with comfort for different preferences (i.e., Light Mode, Dark Mode, text font, etc.)
 - Colors associated with common forms of color blindness should be avoided.
-- Gameified options are easy to access and simple to read
+- Gamified options are easy to access and simple to read
 - Navigation should be clear and intuitive, with minimal steps to find articles or features.
 - The app should provide clear feedback when users complete actions (earning points, saving articles, etc.).
 

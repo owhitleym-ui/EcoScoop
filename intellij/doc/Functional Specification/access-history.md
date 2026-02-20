@@ -36,14 +36,16 @@ start
 :Display Folders of Read Articles;
 
 |User|
-:Select article;
+:Select folder;
 
 |System|
-:Update article history;
-
-|User|
-:Execute __Access Article__ OR Return To Profile;
-
+:Display articles in folder;
+switch (Reread article?) 
+case (Returned to Profile?)
+    :Reset to Profile tab;
+case(Opened article?)
+    :Execute __Access Article__;
+endswitch
 stop
 @enduml
 ```
