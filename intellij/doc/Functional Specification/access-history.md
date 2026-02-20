@@ -29,8 +29,6 @@ title Access History (Casual)
 
 |User|
 start
-:Open View Profile;
-:Click Settings;
 :Click History;
 
 |System|
@@ -40,11 +38,10 @@ start
 :Select article;
 
 |System|
-:Execute __Access Article__;
 :Update article history;
 
 |User|
-:Read article or return to profile;
+:Execute __Access Article__ OR Return To Profile;
 
 stop
 @enduml

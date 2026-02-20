@@ -51,7 +51,7 @@ if (Give Feedback?) then (Yes)
         endif
     elseif (Like Article?) then (Yes)
         |System|
-        :Execute "Save Article" use case;
+        :Execute __Save Article__;
         :Show more related content;
     elseif (Dislike Article?) then (Yes)
         |System|

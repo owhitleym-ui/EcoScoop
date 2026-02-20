@@ -42,7 +42,7 @@ if (Refresh?) then (Yes)
 endif
 
 |User|
-:Search or browse articles;
+:Execute __Search Article__;
 :Click Article;
 
 |System|

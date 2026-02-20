@@ -36,6 +36,7 @@ start
 
 if (Click Achievements?) then (yes)
     |System|
+    :Execute __Access History__;
     :Show articles read;
     :Show comments left;
     :Show likes and dislikes;
