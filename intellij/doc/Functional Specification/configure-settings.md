@@ -33,30 +33,30 @@ start
 repeat
     :Click Settings;
 
-    if (Change Location?) then (Yes)
-        if (Local?) then (Yes)
+    if (Change Location?) then (yes)
+        if (Local?) then (yes)
             |System|
             :Update Local Location;
-        else (Global)
+        else (global)
             |System|
             :Update Global Location;
         endif
-    elseif (Update Profile?) then (Yes)
-        if (Change Picture?) then (Yes)
+    (no)elseif (Update Profile?) then (yes)
+        if (Change Picture?) then (yes)
             |System|
             :Update Profile Picture;
-        elseif (Change Bio?) then (Yes)
+        (no)elseif (Change Bio?) then (yes)
             |System|
             :Update Bio;
         endif
-    elseif (Change Appearance?) then (Yes)
+    (no)elseif (Change Appearance?) then (yes)
         |System|
         :Update App Appearance;
     endif
 
 |User|
 
-repeat while (Go back to Settings?) is (Yes)
+repeat while (Go back to Settings?) is (yes)
 
 stop
 @enduml

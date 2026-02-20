@@ -33,33 +33,37 @@ title View Profile (Casual)
 |User|
 start
 :Click Profile Tab;
-
-if (Click Achievements?) then (yes)
+:Navigate to menu item;
+|System|
+switch (Handle User selection)
+case ( Clicked Achievements?)
     |System|
     :Execute __Access History__;
     :Show articles read;
     :Show comments left;
     :Show likes and dislikes;
 
-elseif (Click Points?) then (yes)
+case ( Clicked Points?)
     |System|
     :Show levels and point breakdown;
 
-elseif (Check Tags?) then (yes)
-    |System|
+case ( Checked Tags?)
+    
     :Show most popular user tags;
-    |User|
-    if (Add Tag?) then (yes)
-        |System|
+    |System|
+    switch (Chose tags?)
+    |System|
+    case ( Added Tag?)
+    |System|
         :Save preferences and recommend more content with tag;
-    elseif (Remove Tag?) then (yes)
-        |System|
+    case ( Removed Tag?)
+    |System|
         :Save preferences and recommend less content with tag;
-    elseif (Keep Tags?) then (yes)
-        |System|
+    case ( Kept Tags?)
+    |System|
         :No changes to tags;
-    endif
-endif
+    endswitch
+endswitch
 
 |User|
 :Finish viewing profile;

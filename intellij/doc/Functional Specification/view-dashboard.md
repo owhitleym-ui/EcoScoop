@@ -33,34 +33,25 @@ title View Dashboard (Casual)
 
 |User|
 start
-:Open Eco Dashboard;
-
-switch (Select Dashboard Item)
-    case (Fossil Fuel Data)
-        |User|
-        :Click Fossil Fuel Chart;
+:Click environment visual;
+|System|
+switch (Handle User selection)
+    case ( Fossil Fuel Data)
         |System|
         :Display detailed fossil fuel stats;
-    case (Energy Consumption Data)
-        |User|
-        :Click Energy Consumption Chart;
+    case ( Energy Consumption Data)
         |System|
         :Display detailed energy usage stats;
-    case (Air Emissions)
-        |User|
-        :Click Air Emissions Chart;
+    case (   Air Emissions)
         |System|
         :Show air quality trends and stats;
-    case (Waste Data)
-        |User|
-        :Click Waste Chart;
+    case ( Waste Data)
         |System|
         :Display waste management statistics;
-    case (Water Data)
-        |User|
-        :Click Water Usage Chart;
+    case ( Water Data)
         |System|
         :Show water consumption trends;
+
 endswitch
 
 |System|

@@ -36,7 +36,7 @@ title Access Article (Casual)
 start
 :Open Article Hub;
 
-if (Refresh?) then (Yes)
+if (Refresh?) then (yes)
   |System|
   :Reload latest articles;
 endif
@@ -52,7 +52,7 @@ endif
 :Read Article;
 
 |System|
-if (User authenticated?) then (Yes)
+if (User authenticated?) then (yes)
   :Save to history;
   :Save preferences;
   :Calculate user points;

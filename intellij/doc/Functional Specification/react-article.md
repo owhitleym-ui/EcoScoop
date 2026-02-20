@@ -37,35 +37,31 @@ title React Article(Casual)
 
 |User|
 start
-:Click Article;
+:Give feedback on article;
 
-if (Give Feedback?) then (Yes)
+|System|
+switch (Gave Feedback?)
 
-    if (Open Comment Section?) then (Yes)
-        if (Make Comment?) then (Yes)
+    case ( Open Comment Section?)
+        if (Make Comment?) then (yes)
             |System|
             :Add comment to profile history;
-        elseif (Upvote or Downvote Comment?) then (Yes)
+        (no)elseif (Upvote or Downvote Comment?)
             |System|
             :Update comment stats;
         endif
-    elseif (Like Article?) then (Yes)
+    case (      Like Article?)
         |System|
         :Execute __Save Article__;
         :Show more related content;
-    elseif (Dislike Article?) then (Yes)
-        |System|
+    case ( Dislike Article?)
         :Show less content like this;
-    elseif (Save Author?) then (Yes)
+    case ( Save Author?) 
         |System|
         :Follow author;
         :Show author's content in articles tab;
-    endif
+endswitch
 
-elseif (Skip Feedback?) then (Yes)
-    |System|
-    :No action taken;
-endif
 
 |User|
 :Finish reaction;
@@ -73,3 +69,9 @@ endif
 stop
 @enduml
 ```
+
+
+elseif (Skip Feedback?) then (Yes)
+|System|
+:No action taken;
+endif
