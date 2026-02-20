@@ -5,8 +5,8 @@ __User__: Wants to look for relevant articles depending on keywords, tags, autho
 
 ## 2. Other stakeholders and their goals
 
-* __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers.
-* __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
+* __Websites__: Wants information about if their article was searched and accessed.
+* __Author__: Wants information if their article was searched for.
 
 
 ## 3. Preconditions
@@ -33,13 +33,13 @@ start
 if (Click on Search Tab) then (yes)
 |System|
     if (Keyword Search?) then (yes)
-    :Execute Search by Keywords;
+    :Search by Keywords;
     (no) elseif (Tag Search?) then (yes)
-    :Execute Search by Tags;
+    :Search by Tags;
     (no) elseif (Author Search?) then (yes)
-    :Execute Search by Author;
+    :Search by Author;
     (no) elseif (Publishing Date Search?) then (yes)
-    :Execute Search by Publishing Date;
+    :Search by Publishing Date;
     endif
 :Return List;
 endif

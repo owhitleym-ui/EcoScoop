@@ -1,14 +1,14 @@
 # Configure Settings
 
 ## 1. Primary actor and goals
-__User__: Wants to change location settings, either local or global. Wants to change appearance of app. Wants to view and/or change any other relevant account information.
+__User__: Ease of access chaning location settings, either local or global. Able to change the appearance of app through settings. Wants to view and/or change any relevant account information (i.e., profile picture, bio, etc.)
 
 ## 2. Other stakeholders and their goals
 No other stakeholders
 
 ## 3. Preconditions
+* User is authenticated
 * User is in Profile tab.
-* User has clicked settings button.
 
 ## 4. Postconditions
 
@@ -26,28 +26,27 @@ title Configure Settings (Casual)
 
 'define the lanes
 |#application|User|
-|#implementation|Website System|
+|#implementation|System|
 
 |User|
 start
-    repeat :Open profile tab;
-        :Click settings;
+    repeat :Click Settings;
         if (Change location) then (yes)
             if(Local) then (yes)
             (no) elseif (Global) then (yes)
             end if
-            |Website System|
-            :Execute __Location update__;
+            |System|
+            :Update Location;
         (no)elseif (Update profile) then (yes)
             |User|
             if (Change picture) then (yes)
             elseif (Change bio) then (yes)
             endif
-            |Website System|
-            :Execute __Profile Update__;
+            |System|
+            :Update Profile;
         (no)elseif (Change appearance) then (yes)
-            |Website System|
-            :Execute __Appearance change__;
+            |System|
+            :Update App Appearance;
 
         endif
         |User|

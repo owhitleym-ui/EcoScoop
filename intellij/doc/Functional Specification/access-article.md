@@ -1,17 +1,16 @@
 # Access Article 
 
 ## 1. Primary actor and goals
-__User__: wants to obtain relevant articles on environment. Wants relevant, topical news and no outdated entries. Wants to read news in a readable format, with togglable display settings
-
+__User__: Wants ease of access obtaining relevant articles concerning environmental news. Desires relevant topical news and new entries. Ease of access concerning reading format, with toggleable reader/display settings.
 
 ## 2. Other stakeholders and their goals
 
-* __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers. 
-* __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
+* __Websites__: Require credit and attribution of original article. Wants links and references on the article page. Attracting readers to their website for more content.
+
+* __Author__: Require credit and attribution for writing the article. Wants to be able to see views, upvotes, and other ratings on articles.
 
 ## 3. Preconditions
-* User is authenticated.
-* User is in the Article hub tab.
+* User is in the Article tab.
 
 ## 4. Postconditions
 * Article is saved to history.
@@ -27,7 +26,7 @@ __User__: wants to obtain relevant articles on environment. Wants relevant, topi
 
 skin rose
 
-title Access Article (Casual Level)
+title Access Article (Casual)
 
 'define the lanes
 |#application|User|
@@ -38,11 +37,16 @@ start
     if (Refresh) then (yes)
     elseif(Find Article)
     while (Open Article Tab) is (yes)
+        :Execute __Search Article__;
         :Click Article;
         :Read Article;
         |System|
+        if (Is User Authenticated?) then ( yes)
         :Save to history;
         :Save preferences;
+        :Calculates User Points;
+        :Recommends other articles;
+        endif
         |User|
         :Return;
     endwhile (no)

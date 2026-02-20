@@ -2,7 +2,7 @@
 
 ## 1. Primary actor and goals
 
-__User__: Wants to save article for later viewing or to organize into a folder. Wants to be able to easily access saved articles. 
+__User__: Ease of access storing articles for later reading or saving them in preferred folders. 
 
 ## 2. Other stakeholders and their goals
 
@@ -10,14 +10,14 @@ __User__: Wants to save article for later viewing or to organize into a folder. 
 
 
 ## 3. Preconditions
-
-* User opens EcoScoop
+* User is authenticated
 * User switches to Article Section
 * User accesses Article
 * User has clicked Save Article Button
 
 ## 4. Postconditions
 * Stores Article into a Saved Folder
+* Author is able to view how much saves
 
 ## 5. Workflow
 
@@ -26,7 +26,7 @@ __User__: Wants to save article for later viewing or to organize into a folder. 
 
 skin rose
 
-title Save Article (Casual Level)
+title Save Article (Casual)
 
 'define the lanes
 |#application|User|
@@ -43,6 +43,7 @@ start
 |System|
 if (Validate ID) then (yes)
 :Save Article + ID to user's preferred location;
+:Update amount of saves on Article;
 stop
 
 else (no)

@@ -2,17 +2,19 @@
 
 ## 1. Primary actor and goals
 
-__User__: Wants to look through previous articles read. Wants ease of access to react, or reread article.
+__User__: Wants to look through previous articles that they have read. Ease of access rereading articles, accessing history, and previous reactions
 
 ## 2. Other stakeholders and their goals
 * No other stakeholders.
 
 ## 3. Preconditions
+* User is authenticated
 * User switches to view profile tab.
 * User clicks settings tab.
 
 ## 4. Postconditions
 * History is accessed and user knows which articles they have read.
+* User is able to access an article from the history tab
 
 ## 5. Workflow
 ```plantuml
@@ -20,23 +22,23 @@ __User__: Wants to look through previous articles read. Wants ease of access to 
 
 skin rose
 
-title Access History (Casual Level)
+title Access History (Casual)
 'define the lanes
 |#application|User|
-|#implementation|Website System|
+|#implementation|System|
 
 |User|
 start
-    repeat :Open profile;
-        :Click settings;
+    repeat :Execute __View Profile__;
+        :Click Settings;
         |User|
-        :Click history;
-        |Website System|
+        :Click History;
+        |System|
         :Take to updated history of articles;
         |User|
         :Choose article;
-        |Website System|
-        :Refresh article and show on screen;
+        |System|
+        :Execute __Access Article__;
         :Update article history;
         |User|
         repeat while (Go back to profile?) is (yes) not (no)
