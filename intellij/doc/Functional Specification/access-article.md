@@ -34,23 +34,34 @@ title Access Article (Casual)
 
 |User|
 start
-    if (Refresh) then (yes)
-    elseif(Find Article)
-    while (Open Article Tab) is (yes)
-        :Execute __Search Article__;
-        :Click Article;
-        :Read Article;
-        |System|
-        if (Is User Authenticated?) then ( yes)
-        :Save to history;
-        :Save preferences;
-        :Calculates User Points;
-        :Recommends other articles;
-        endif
-        |User|
-        :Return;
-    endwhile (no)
-    endif
+:Open Article Hub;
+
+if (Refresh?) then (Yes)
+  |System|
+  :Reload latest articles;
+endif
+
+|User|
+:Search or browse articles;
+:Click Article;
+
+|System|
+:Load article content;
+
+|User|
+:Read Article;
+
+|System|
+if (User authenticated?) then (Yes)
+  :Save to history;
+  :Save preferences;
+  :Calculate user points;
+  :Recommend other articles;
+endif
+
+|User|
+:Return to Article Hub;
+
 stop
 @enduml
 ```

@@ -29,19 +29,22 @@ title Access History (Casual)
 
 |User|
 start
-    repeat :Execute __View Profile__;
-        :Click Settings;
-        |User|
-        :Click History;
-        |System|
-        :Take to updated history of articles;
-        |User|
-        :Choose article;
-        |System|
-        :Execute __Access Article__;
-        :Update article history;
-        |User|
-        repeat while (Go back to profile?) is (yes) not (no)
+:Open View Profile;
+:Click Settings;
+:Click History;
+
+|System|
+:Display previously read articles;
+
+|User|
+:Select article;
+
+|System|
+:Execute __Access Article__;
+:Update article history;
+
+|User|
+:Read article or return to profile;
 
 stop
 @enduml

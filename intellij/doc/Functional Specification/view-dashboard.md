@@ -33,20 +33,41 @@ title View Dashboard (Casual)
 
 |User|
 start
-switch (Open Eco Dashboard)
-    case (Click)
-    :Open fossil fuel data;
-    case (Click)
-    :Open energy consumption data;
-    case (Click)
-    :Check air emissions;
-    case(Click)
-    :Open waste data;
-    case (Click)
-    :Open water data;
+:Open Eco Dashboard;
+
+switch (Select Dashboard Item)
+    case (Fossil Fuel Data)
+        |User|
+        :Click Fossil Fuel Chart;
+        |System|
+        :Display detailed fossil fuel stats;
+    case (Energy Consumption Data)
+        |User|
+        :Click Energy Consumption Chart;
+        |System|
+        :Display detailed energy usage stats;
+    case (Air Emissions)
+        |User|
+        :Click Air Emissions Chart;
+        |System|
+        :Show air quality trends and stats;
+    case (Waste Data)
+        |User|
+        :Click Waste Chart;
+        |System|
+        :Display waste management statistics;
+    case (Water Data)
+        |User|
+        :Click Water Usage Chart;
+        |System|
+        :Show water consumption trends;
 endswitch
+
 |System|
-:Extend diagram view;
+:Enable extended interactive view;
+|User|
+:Switch between charts as needed;
+
 stop
 @enduml
 ```

@@ -30,27 +30,33 @@ title Configure Settings (Casual)
 
 |User|
 start
-    repeat :Click Settings;
-        if (Change location) then (yes)
-            if(Local) then (yes)
-            (no) elseif (Global) then (yes)
-            end if
-            |System|
-            :Update Location;
-        (no)elseif (Update profile) then (yes)
-            |User|
-            if (Change picture) then (yes)
-            elseif (Change bio) then (yes)
-            endif
-            |System|
-            :Update Profile;
-        (no)elseif (Change appearance) then (yes)
-            |System|
-            :Update App Appearance;
+repeat
+    :Click Settings;
 
+    if (Change Location?) then (Yes)
+        if (Local?) then (Yes)
+            |System|
+            :Update Local Location;
+        else (Global)
+            |System|
+            :Update Global Location;
         endif
-        |User|
-        repeat while (Go back?) is (yes) not (no)
+    elseif (Update Profile?) then (Yes)
+        if (Change Picture?) then (Yes)
+            |System|
+            :Update Profile Picture;
+        elseif (Change Bio?) then (Yes)
+            |System|
+            :Update Bio;
+        endif
+    elseif (Change Appearance?) then (Yes)
+        |System|
+        :Update App Appearance;
+    endif
+
+|User|
+
+repeat while (Go back to Settings?) is (Yes)
 
 stop
 @enduml

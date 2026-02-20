@@ -32,30 +32,37 @@ title View Profile (Casual)
 
 |User|
 start
-:Clicks profile tab;
+:Click Profile Tab;
 
-if (Click achievements) then (yes)
+if (Click Achievements?) then (yes)
     |System|
-    :Show Articles read;
-    :Show Comments left;
-    :Show Likes and Dislikes;
-    
-(no) elseif (Click on points) then (yes)
+    :Show articles read;
+    :Show comments left;
+    :Show likes and dislikes;
+
+elseif (Click Points?) then (yes)
     |System|
-    :See levels and breakdown;
-(no) elseif  (Check tags) then (yes)
-:Show most popular user tags;
+    :Show levels and point breakdown;
+
+elseif (Check Tags?) then (yes)
+    |System|
+    :Show most popular user tags;
     |User|
-    if (Add tag) then (yes)
+    if (Add Tag?) then (yes)
         |System|
-        :Save preferences and recommend more of tag;
-    (no) elseif (Remove tag) then (yes)
+        :Save preferences and recommend more content with tag;
+    elseif (Remove Tag?) then (yes)
         |System|
-        :Save preferences and recommend less of tag;
-    (no)elseif (Keep tags) then (yes)
+        :Save preferences and recommend less content with tag;
+    elseif (Keep Tags?) then (yes)
+        |System|
+        :No changes to tags;
     endif
-
 endif
+
+|User|
+:Finish viewing profile;
+
 stop
 @enduml
 ```
