@@ -37,29 +37,39 @@ title React Article(Casual)
 
 |User|
 start
-if (Give Feedback) then (yes)
-    if(Open comment section) then (yes)
-        if(Make comment) then (yes)
+:Click Article;
+
+if (Give Feedback?) then (Yes)
+
+    if (Open Comment Section?) then (Yes)
+        if (Make Comment?) then (Yes)
             |System|
-            :Add comment stat to profile;
-        (no) elseif (Upvote or downvote comment) then (yes)
+            :Add comment to profile history;
+        elseif (Upvote or Downvote Comment?) then (Yes)
+            |System|
+            :Update comment stats;
         endif
-    (no) elseif (Like) then (yes)
-       |System|
-       :Execute __Save Article__;
-       :Show more content related to liked material;
-    (no) elseif (Dislike) then (yes)
+    elseif (Like Article?) then (Yes)
         |System|
-        :Show less content like this;  
-    (no) elseif (Save Author) then (yes)
+        :Execute "Save Article" use case;
+        :Show more related content;
+    elseif (Dislike Article?) then (Yes)
         |System|
-        :Put author into following;
-        :Show content by author in tab in articles;
+        :Show less content like this;
+    elseif (Save Author?) then (Yes)
+        |System|
+        :Follow author;
+        :Show author's content in articles tab;
     endif
-(no) elseif (Skip Feedback) then (yes)
+
+elseif (Skip Feedback?) then (Yes)
+    |System|
+    :No action taken;
 endif
 
-|System|
+|User|
+:Finish reaction;
+
 stop
 @enduml
 ```
