@@ -39,14 +39,23 @@ skin rose
 title Access History (Casual)
 'define the lanes
 |#application|User|
+|#implementation|Website System|
 
 |User|
 start
     repeat :Open profile;
         :Click settings;
+        |User|
         :Click history;
-        :Access article;
-        repeat while (Go back?) is (yes) not (no)
+        |Website System|
+        :Take to updated history of articles;
+        |User|
+        :Choose article;
+        |Website System|
+        :Refresh article and show on screen;
+        :Update article history;
+        |User|
+        repeat while (Go back to profile?) is (yes) not (no)
 
 stop
 @enduml

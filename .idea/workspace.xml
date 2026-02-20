@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f22f104-d04f-4ac8-a838-488022a43d03" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-article.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-history.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/access-history.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/configure-settings.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/configure-settings.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/react-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/react-article.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/save-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/save-article.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/search-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/search-article.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/view-dashboard.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/view-dashboard.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/intellij/doc/Functional Specification/view-profile.md" beforeDir="false" afterPath="$PROJECT_DIR$/intellij/doc/Functional Specification/view-profile.md" afterDir="false" />
     </list>
@@ -35,14 +36,14 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.editor",
+    "settings.editor.selected.configurable": "Settings.Markdown",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -87,7 +88,15 @@
       <workItem from="1771272677783" duration="2097000" />
       <workItem from="1771275884112" duration="4123000" />
       <workItem from="1771285753223" duration="72000" />
-      <workItem from="1771285831379" duration="3324000" />
+      <workItem from="1771285831379" duration="3719000" />
+      <workItem from="1771549036750" duration="207000" />
+      <workItem from="1771549250441" duration="116000" />
+      <workItem from="1771549397000" duration="209000" />
+      <workItem from="1771549611902" duration="7000" />
+      <workItem from="1771549625592" duration="184000" />
+      <workItem from="1771549815654" duration="800000" />
+      <workItem from="1771550621548" duration="158000" />
+      <workItem from="1771550785129" duration="2781000" />
     </task>
     <servers />
   </component>

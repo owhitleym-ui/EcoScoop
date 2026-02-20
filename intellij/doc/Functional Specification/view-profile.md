@@ -3,7 +3,7 @@
 ## 1. Primary actor and goals
 Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:
 
-__User__: Wants to look for relevant articles depending on keywords and other searches. Looking for relevant, topical news that all relate to what the user inputs and is searching for.
+__User__: Wants to check achievements, access stats and points, change bio, review tags. Wants clear 
 
 ## 2. Other stakeholders and their goals
 

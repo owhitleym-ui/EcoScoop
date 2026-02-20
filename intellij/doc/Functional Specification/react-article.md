@@ -1,32 +1,24 @@
 # React Article
 
 ## 1. Primary actor and goals
-Who is the main interested party and what goal(s) this use case is designed to help them achieve. For example, for _process sale_:
-
-__User__: Wants to look for relevant articles depending on keywords and other searches. Looking for relevant, topical news that all relate to what the user inputs and is searching for.
+__User__: Wants to give feedback on article content based off of personal impression. Upvotes if they enjoyed reading and downvotes if they did not like article. Can leave a comment if they have any strong opinions on piece.
 
 ## 2. Other stakeholders and their goals
 
-* __Websites__: Want credits and attribution of original article. Want their page linked on hub. Want to attract readers.
-* __Author__: Wants credit for authoring article. Wants views, upvotes, and ratings on article.
+* __Author__: Wants feedback from users on their article, probably positive. Prefers likes to dislikes. Wants user to check out other articles they have written or to subscribe to their profile.
 
 
 ## 3. Preconditions
 
-What must be true prior to the start of the use case.
-For example, for _process sale_:
-
-* User opens EcoScoop
-* User switches to Article Section
-* User clicks the search icon
+* User is in articles tab and clicks an article.
+* User has opened and read through an article.
 
 ## 4. Postconditions
 
-What must be true upon successful completion of the use case.
-For example, for _process sale_:
-
-* List of relevant articles are shown
-* Ordered from most relevant
+* Liked article is saved to section in profile.
+* Preferences are saved, so user receives more liked content and less disliked content.
+* Comment is saved to user history.
+* Stats are updated in user profile.
 
 ## 5. Workflow
 
@@ -47,23 +39,37 @@ For example, for _process sale_:
 
 skin rose
 
-title Search Article (Casual)
+title React Article(Casual)
 
 'define the lanes
 |#application|User|
-|#implementation|System|
+|#implementation|Website System|
 
 |User|
 start
-:Enter Words into Search Bar;
+if (Give Feedback) then (yes)
+    if(Open comment section) then (yes)
+        if(Make comment) then (yes)
+            |Website System|
+            :Add comment stat to profile;
+        (no) elseif (Upvote or downvote comment) then (yes)
+        endif
+    (no) elseif (Like) then (yes)
+       |Website System|
+       :Save to liked folder;
+       :Show more content related to liked material;
+    (no) elseif (Dislike) then (yes)
+        |Website System|
+        :Show less content like this;  
+    (no) elseif (Save Author) then (yes)
+        |Website System|
+        :Put author into following;
+        :Show content by author in tab in articles;
+    endif
+(no) elseif (Skip Feedback) then (yes)
+endif
 
-|System|
-:Acesses relevant articles;
-:Displays Articles in List of most relevant;
-
-|User|
-:Clicks on most relevant article;
-
+|Website System|
 stop
 @enduml
 ```
