@@ -1,25 +1,17 @@
 # React Article
 
 ## 1. Primary actor and goals
-<<<<<<< HEAD
+
 __User__: Wants to give feedback on article content based off of personal impression. Upvotes if they enjoyed reading and downvotes if they did not like article. Can leave a comment if they have any strong opinions on piece.
 
+
 ## 2. Other stakeholders and their goals
 
+* __Websites__: Wants to know how many reactions the article has gotten for later use.
 * __Author__: Wants feedback from users on their article, probably positive. Prefers likes to dislikes. Wants user to check out other articles they have written or to subscribe to their profile.
-=======
-__User__: Wants to react (like, comment) on an article and have said reaction be shown.
-
-## 2. Other stakeholders and their goals
-
-* __Websites__: Wants to know how many reactions the article has gotten for later use
-* __Author__: Wants to know how many reactions the article has gotten and how many people like/disliked or commented on their article
->>>>>>> 30115799445c397d1e0a654ebf57ba75282b10b5
-
 
 ## 3. Preconditions
 
-<<<<<<< HEAD
 * User is in articles tab and clicks an article.
 * User has opened and read through an article.
 
@@ -29,17 +21,7 @@ __User__: Wants to react (like, comment) on an article and have said reaction be
 * Preferences are saved, so user receives more liked content and less disliked content.
 * Comment is saved to user history.
 * Stats are updated in user profile.
-=======
-* User opens EcoScoop
-* User switches to Article Section
-* User has read the article
-* User has clicked a react option
-
-## 4. Postconditions
-
-* Took in user input of reaction
 * Displays reaction (comment or like/dislike)
->>>>>>> 30115799445c397d1e0a654ebf57ba75282b10b5
 
 ## 5. Workflow
 
