@@ -1,9 +1,9 @@
 
-# NextGen Point Of Sale system - Vision document 
+# EcoScoop - Vision Document
 
 ## 1. Introduction
 
-We envision a robust News Hub application, EcoScoop, with the ability to support multiple news articles and user-based interaction, supporting a gameified feel to support usage.
+We envision EcoScoop as an engaging and dynamic News Hub application, designed to deliver diverse news content with real-time updates. It will feature interactive user experiences and incorporate gamification elements to enhance user engagement and encourage regular usage.
 
 ## 2. Business case
 Our News Hub application addresses customer needs that other products do not:
