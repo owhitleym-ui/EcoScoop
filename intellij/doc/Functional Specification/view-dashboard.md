@@ -17,6 +17,7 @@ __User__: Wants to access quick, relevant info on sustainability stats and curre
 ## 4. Postconditions
 
 * User has quick and easy access to stats.
+* User is able to switch data interactive view until satisfied.
 
 ## 5. Workflow
 
@@ -30,12 +31,16 @@ title View Dashboard (Casual)
 'define the lanes
 |#application|User|
 |#implementation|System|
+|#technology|ESS|
 
-|User|
 start
-:Click environmental visual;
+
+|ESS|
+:Retrieve environmental statistics;
+
+
 |System|
-switch (Handle User selection)
+switch (Data Display)
     case ( Fossil Fuel Data)
         |System|
         :Display detailed fossil fuel stats;
@@ -54,10 +59,24 @@ switch (Handle User selection)
 
 endswitch
 
-|System|
+repeat
+
+if ( Interactive View) then (yes)
 :Enable extended interactive view;
 |User|
-:Switch between charts as needed;
+:Click environmental visual;
+
+|System|
+:Display specific visual;
+(no) elseif ( Article View) then (yes)
+:Execute __Search Article__;
+
+(no) elseif (Profile View) then (yes)
+:Execute __View Profile__;
+endif
+
+repeat while (Switch tab?) is (yes) not (no)
+
 
 stop
 @enduml

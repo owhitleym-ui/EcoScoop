@@ -26,6 +26,7 @@ title Search Articles (Casual)
 'define the lanes
 |#application|User|
 |#implementation|System|
+|#technology|ESS|
 
 |User|
 start
@@ -44,6 +45,9 @@ if (Click on Search Tab) then (yes)
 endif
 |User|
 :View List;
+:Click article;
+
+|System|
 
 stop
 @enduml

@@ -35,15 +35,21 @@ title React Article(Casual)
 |#application|User|
 |#implementation|System|
 
+
 |User|
 start
+repeat
 :Give feedback on article;
-
 |System|
 switch (Handle Feedback)
-
+    
     case ( Open Comment Section?)
-        if (Make Comment?) then (yes)
+        if(Commented?) then (yes)
+            |User|
+            :Edit/Delete Comment;
+            |System|
+            :Updates or deletes Comment;
+        (no)elseif (Make Comment?) then (yes)
             |System|
             :Add comment to profile history;
         (no)elseif (Upvote or Downvote Comment?)
@@ -64,8 +70,8 @@ endswitch
 
 
 |User|
+repeat while (Finished reaction?) is (no) not (yes)
 :Finish reaction;
-
 stop
 @enduml
 ```

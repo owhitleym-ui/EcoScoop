@@ -33,7 +33,8 @@ skin rose
 actor "User" as user
 
 'system actors
-actor "Website System" <<system>> as internetSystem
+actor "News Collection System" <<system>> as internetSystem
+actor "Environmental Statistics System" <<system>> as envSystem
 
 ' list all use cases in package
 package EcoScoop{
@@ -62,6 +63,8 @@ accessArticle <|-down- reactArticle : <<extends>>
 accessArticle <|-down- saveArticle : <<extends>>
 
 internetSystem <|-right- accessArticle 
+
+envSystem <|-r- viewDashboard 
 
 viewProfile <|-down- accessHistory : <<extends>>
 accessHistory <|-l- accessArticle : <<extends>>

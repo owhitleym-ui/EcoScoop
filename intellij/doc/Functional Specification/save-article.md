@@ -34,12 +34,23 @@ title Save Article (Casual)
 
 |System|
 start
-:Send Saved Folders to User;
-
+if (Article is Saved?) then (no)
+:Display Saved Article Folders;
 |User|
+if(Update Saved Folders?) then (yes)
 :Select which Folder to save Article in;
+else()
+:Create New Folder;
+|System|
+:Save New Folder to Folders;
+endif
 |System|
 :Send Article + ID to save;
+ else ()
+:Remove Article;
+stop
+endif
+
 
 |System|
 if (Validate ID) then (yes)

@@ -24,39 +24,32 @@ skin rose
 
 title Configure Settings (Casual)
 
-'define the lanes
-|#application|User|
-|#implementation|System|
-
-|User|
 start
 repeat
-    :Click Settings;
+    #application:Click Settings;
 
-    if (Change Location?) then (yes)
-        if (Local?) then (yes)
-            |System|
-            :Update Local Location;
+    #application:if (Change Location?) then (yes)
+        #application:if (Local?) then (yes)
+        #application:Provide local information;
+            #implementation:Update Local Location;
         else (global)
-            |System|
-            :Update Global Location;
+            #application:Provide global information;
+            #implementation:Update Global Location;
         endif
-    (no)elseif (Update Profile?) then (yes)
-        if (Change Picture?) then (yes)
-            |System|
-            :Update Profile Picture;
-        (no)elseif (Change Bio?) then (yes)
-            |System|
-            :Update Bio;
+    #application:(no)elseif (Update Profile?) then (yes)
+        #application:if (Change Picture?) then (yes)
+            #application:Provide new profile picture;
+            #implementation:Update Profile Picture;
+        #application:(no)elseif (Change Bio?) then (yes)
+            #application:Provide updated Bio;
+            #implementation:Update Bio;
         endif
-    (no)elseif (Change Appearance?) then (yes)
-        |System|
-        :Update App Appearance;
+    #application:(no)elseif (Change Appearance?) then (yes)
+        #application:Select new App Appearance;
+        #implementation:Update App Appearance;
     endif
 
-|User|
-
-repeat while (Go back to Profile?) is (yes)
+repeat while(Go back to Profile?) is (yes)
 
 stop
 @enduml

@@ -10,7 +10,7 @@ __User__: Wants ease of access obtaining relevant articles concerning environmen
 * __Author__: Require credit and attribution for writing the article. Wants to be able to see views, upvotes, and other ratings on articles.
 
 ## 3. Preconditions
-* User is in the Article tab.
+* User is in the Article tab or has searched for article.
 
 ## 4. Postconditions
 * Article is saved to history.
@@ -32,12 +32,7 @@ title Access Article (Casual)
 |#application|User|
 |#implementation|System|
 
-|User|
 start
-if (Search?) then (yes)
-    :Execute __Search Article__;
-
-endif
 |System|
 :Load latest articles;
 
@@ -49,13 +44,23 @@ endif
 
 |User|
 :Read Article;
+if (React?) then (yes)
+    :Execute __React Article__;
+endif
 
 |System|
 if (User authenticated?) then (yes)
+if (User wants to save article?) then (yes)
+  :Execute __Save Article__;
+endif
   :Save to history;
-  :Save preferences;
   :Calculate user points;
   :Recommend other articles;
+  |User|
+  if(Clicked suggested article) then (yes)
+  |System|
+  :Execute __Access Article__;
+  endif
 endif
 
 |User|

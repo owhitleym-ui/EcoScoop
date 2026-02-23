@@ -38,16 +38,16 @@ start
 switch (Handle User selection)
 case ( Clicked Achievements?)
     |System|
-    :Show number of articles read;
-    :Show number of comments left;
-    :Show stats on likes and dislikes;
+    :Show number of articles read, 
+    number of comments left, 
+    stats on likes and dislikes;
 
 case ( Clicked Level?)
     |System|
     :Show levels and point breakdown;
 
 case ( Checked Tags?)
-    
+    repeat
     :Show most popular user tags;
     |System|
     switch (Chose tags?)
@@ -62,7 +62,10 @@ case ( Checked Tags?)
     |System|
         :No changes to tags;
     endswitch
+    repeat while (More tags?) is (yes) not (no)
 endswitch
+
+
 
 |User|
 :Finish viewing profile;
