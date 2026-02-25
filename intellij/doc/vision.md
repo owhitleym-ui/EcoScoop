@@ -45,7 +45,7 @@ package EcoScoop{
     usecase "Save Article" as saveArticle
     usecase "View Profile" as viewProfile
     usecase "Configure Settings" as changeSettings
-    usecase "Access History" as accessHistory
+    usecase "Access Saved Folders" as accessHistory
     usecase "View Dashboard" as viewDashboard
 }
 
@@ -66,6 +66,7 @@ internetSystem <|-right- accessArticle
 
 envSystem <|-r- viewDashboard 
 
+searchArticle <|-- accessHistory :<<includes>>
 viewProfile <|-down- accessHistory : <<extends>>
 accessHistory <|-l- accessArticle : <<extends>>
 viewProfile <|-- changeSettings : <<extends>>

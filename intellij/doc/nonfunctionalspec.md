@@ -27,7 +27,7 @@
 - Software must be written using Java.
 
 ## External interfaces
-- Website articles must be accessed from a 3rd-party database
+- Website articles must be accessed from a 3rd-party database, specifically RSS Feeds for easy pulling
 - The system should securely handle communication with external data sources. 
 - External API failures should not crash the application. 
 

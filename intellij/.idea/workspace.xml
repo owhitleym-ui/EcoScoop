@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="adfac9fc-f9cb-4faf-8d38-b2a3976c0a62" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/access-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/access-article.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/configure-settings.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/configure-settings.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/search-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/search-article.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/view-dashboard.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/view-dashboard.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/view-profile.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/view-profile.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/glossary.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/glossary.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/vision.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/vision.md" afterDir="false" />
     </list>
@@ -40,7 +31,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/owhitley/Desktop/team-c/intellij&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/owhitley/Desktop/team-c&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -49,6 +40,30 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="intellij" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="intellij" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="intellij" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="intellij" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -75,6 +90,11 @@
       <workItem from="1771880949784" duration="137000" />
       <workItem from="1771881093752" duration="1636000" />
       <workItem from="1771882736129" duration="167000" />
+      <workItem from="1772054535795" duration="442000" />
+      <workItem from="1772054980859" duration="35000" />
+      <workItem from="1772055048524" duration="148000" />
+      <workItem from="1772055203606" duration="914000" />
+      <workItem from="1772056589021" duration="429000" />
     </task>
     <servers />
   </component>
