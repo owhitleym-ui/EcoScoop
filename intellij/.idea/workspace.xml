@@ -6,17 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="adfac9fc-f9cb-4faf-8d38-b2a3976c0a62" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/access-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/access-article.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/configure-settings.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/configure-settings.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/access-history.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/access-saved-folders.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/Functional Specification/search-article.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/search-article.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/view-dashboard.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/view-dashboard.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/Functional Specification/view-profile.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/Functional Specification/view-profile.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/glossary.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/glossary.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/vision.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/vision.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +67,11 @@
       <workItem from="1771880949784" duration="137000" />
       <workItem from="1771881093752" duration="1636000" />
       <workItem from="1771882736129" duration="167000" />
+      <workItem from="1771882909969" duration="1843000" />
+      <workItem from="1772054361198" duration="11000" />
+      <workItem from="1772054378895" duration="670000" />
+      <workItem from="1772055241982" duration="1325000" />
+      <workItem from="1772056573451" duration="1740000" />
     </task>
     <servers />
   </component>

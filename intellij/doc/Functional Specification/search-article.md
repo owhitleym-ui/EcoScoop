@@ -30,6 +30,7 @@ title Search Articles (Casual)
 
 |User|
 start
+repeat 
 if (Click on Search Tab) then (yes)
 |System|
     if (Keyword Search?) then (yes)
@@ -38,17 +39,34 @@ if (Click on Search Tab) then (yes)
     :Search by Tags;
     (no) elseif (Author Search?) then (yes)
     :Search by Author;
-    (no) elseif (Publishing Date Search?) then (yes)
-    :Search by Publishing Date;
     endif
-:Return List;
+
 endif
+|ESS|
+:Load Articles by Search;
 |User|
 :View List;
+|System|
+    
+    if (Trending?) then (yes)
+    :Sort by most viewed articles;
+    (no) elseif (Rating?) then (yes)
+    :Sort by Rating;
+    (no) elseif (Sort by Date?) then (yes)
+    :Sort by Publishing Date;
+    (default) elseif (Sort by Relevance?) then (yes)
+    endif
+
+|ESS|
+:Sort loaded Articles;
+
+|User|
+
+repeat while (Finish Searching?) is (no) not (yes)
 :Click article;
 
 |System|
-
+:Execute __Access Article__;
 stop
 @enduml
 ```
