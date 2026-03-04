@@ -6,27 +6,33 @@ hide empty methods
 
 'classes
 class ArticleDescription{
-    articleTag
     description
     likes
     author
     dislikes
 }
 
+class ArticleTag{
+
+}
+
 class Article{
     articleID
 }
 
-class ArticleRetreiver{
-    XML
+class ArticleRetriever{
+    
 }
 
 class Display {
 }
 
 
+
 ' associations 
 ArticleDescription "1" -- "*" Article :Describes
+
+'Systems
 
 @enduml
 ```
