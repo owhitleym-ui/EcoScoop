@@ -70,4 +70,61 @@ stop
 @enduml
 ```
 
+## 6. Sequence Diagram
+```plantuml
+@startuml
+
+skin rose
+hide footbox
+
+title Access Article
+
+actor User as user
+participant ": Screen UI" as UI
+participant ": ArticleRetriever" as retriever
+participant ": UserProfile" as userprofile
+
+user -> UI : open article
+UI -> retriever: getArticle(id)
+retriever--> UI : articleData
+UI --> user : display article
+
+UI -> retriever:  fetchRecommended(tags)
+retriever--> UI :  recommendedList
+UI --> user :  show recommended
+
+
+alt user reacts
+    user -> UI :  react(type)
+    UI -> retriever:  saveReaction(articleId, type)
+    retriever--> user :  reactionConfirmed
+end
+
+opt user saves
+    user -> UI :  saveArticle()
+    UI -> userprofile :  addToSavedFolder(articleId)
+    userprofile --> user :  saved confirmation
+end
+
+opt user authenticated — on finish reading
+    UI -> userprofile :  addToHistory(articleId)
+    UI -> userprofile :  calculatePoints(articleId)
+    userprofile --> UI :  pointsAwarded
+    UI -> userprofile :  updateTagPreferences(tags)
+    UI --> user :  show point
+    UI -> retriever:  fetchNextSuggestion(tags)
+    retriever --> UI :  suggestedArticle
+    UI --> user :  display suggestion
+end
+
+user -> UI :  return to hub
+
+@enduml
+
+
+
+
+
+```
+
 
