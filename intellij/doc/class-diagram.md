@@ -12,25 +12,62 @@ class ArticleDescription{
     dislikes
 }
 
-class ArticleTag{
-
-}
-
 class Article{
-    articleID
+    title
+    content
+    publishDate
+    url
 }
 
-class ArticleRetriever{
-    
+class ArticleTag{
+    name
 }
 
-class Display {
+class Author{
+    name
 }
 
+class Source{
+    name
+    url
+}
+
+class User{
+   userId
+   points
+}
+
+class ArticleInteraction{
+    reactionType
+    saved
+}
+
+class ArticleRetriever {
+  +getArticles()
+  +searchArticles()
+}
+
+class RecommendationService {
+  +recommendArticles(user)
+}
+
+class UserProgressService {
+  +updatePoints(user)
+  +saveInteraction(interaction)
+}
 
 
 ' associations 
-ArticleDescription "1" -- "*" Article :Describes
+ArticleDescription "1" -- "0..*" Article : describes
+Author "1" -- "0..*" Article : writes
+Source "1" -- "0..*" Article : publishes
+
+Article "*" -- "*" ArticleTag : tagged with
+
+User "1" -- "0..*" ArticleInteraction : has
+Article "1" -- "0..*" ArticleInteraction : involved in
+
+User "*" -- "*" ArticleTag : prefers
 
 'Systems
 
