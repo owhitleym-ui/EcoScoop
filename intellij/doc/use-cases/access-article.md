@@ -115,6 +115,8 @@ Article --> controller : getContent()
 Article --> controller : id, author, url, 
 controller --> UI :displayArticle(id, content)
 
+participant UserProfile as UP
+
 opt user react
 user -> UI: reactToArticle(id)
 ref over user, controller, UI,UP
@@ -128,6 +130,13 @@ ref over user, controller, UI,UP
     saveArticle(id)
     end ref
 end
+
+controller -> UP : calculatePoints()
+controller -> UI : recommendArticles()
+controller --> UI: List<Article>
+
+user -> UI: return()
+
 
 @enduml
 ```
