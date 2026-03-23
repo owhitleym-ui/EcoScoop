@@ -106,14 +106,6 @@ participant Controller as controller
 participant ArticleDatabase as AD
 
 
-ref over AD, controller
-loadArticleDatabase
-end ref  
-
-AD --> controller : List<Article>
-controller --> UI : display(List<Article>)
-
-
 user -> UI : clickArticle(List[i])
 UI -> controller : getArticle(List[i])
 controller -> Article ** : getArticleData()
