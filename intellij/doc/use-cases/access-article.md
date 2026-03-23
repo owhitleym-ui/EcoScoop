@@ -69,62 +69,73 @@ endif
 stop
 @enduml
 ```
-
-## 6. Sequence Diagram
+## Sequence Diagram - Load Article Database
 ```plantuml
 @startuml
-
+title Load Article Database
 skin rose
 hide footbox
 
-title Access Article
+participant Controller as controller
+participant ArticleRetriever as AR 
 
-actor User as user
-participant ": Screen UI" as UI
-participant ": ArticleRetriever" as retriever
-participant ": UserProfile" as userprofile
+controller -> AR : getArticleList()
 
-user -> UI : open article
-UI -> retriever: getArticle(id)
-retriever--> UI : articleData
-UI --> user : display article
+AR -> Article ** : creates
 
-UI -> retriever:  fetchRecommended(tags)
-retriever--> UI :  recommendedList
-UI --> user :  show recommended
+controller <-- AR : List <Article>
 
+participant ArticleDatabase as AD
 
-alt user reacts
-    user -> UI :  react(type)
-    UI -> retriever:  saveReaction(articleId, type)
-    retriever--> user :  reactionConfirmed
-end
-
-opt user saves
-    user -> UI :  saveArticle()
-    UI -> userprofile :  addToSavedFolder(articleId)
-    userprofile --> user :  saved confirmation
-end
-
-opt user authenticated — on finish reading
-    UI -> userprofile :  addToHistory(articleId)
-    UI -> userprofile :  calculatePoints(articleId)
-    userprofile --> UI :  pointsAwarded
-    UI -> userprofile :  updateTagPreferences(tags)
-    UI --> user :  show point
-    UI -> retriever:  fetchNextSuggestion(tags)
-    retriever --> UI :  suggestedArticle
-    UI --> user :  display suggestion
-end
-
-user -> UI :  return to hub
+controller -> AD: save(List <Article>)
 
 @enduml
-
-
-
-
-
 ```
 
+## Sequence Diagram - Click on Article
+```plantuml
+@startuml
 
+title Click on Article
+skin rose
+hide footbox
+
+actor User as user
+participant ScreenUI as UI
+participant Controller as controller
+participant ArticleDatabase as AD
+
+
+ref over AD, controller
+loadArticleDatabase
+end ref  
+
+AD --> controller : List<Article>
+controller --> UI : display(List<Article>)
+
+
+user -> UI : clickArticle(List[i])
+UI -> controller : getArticle(List[i])
+controller -> Article ** : getArticleData()
+
+
+Article --> controller : getContent()
+Article --> controller : id, author, url, 
+controller --> UI :displayArticle(id, content)
+
+opt user react
+user -> UI: reactToArticle(id)
+ref over user, controller, UI,UP
+    reactArticle(id)
+    end ref
+end
+
+opt user save
+user -> UI: saveToArticle(id)
+ref over user, controller, UI,UP
+    saveArticle(id)
+    end ref
+end
+
+@enduml
+```
