@@ -75,9 +75,51 @@ repeat while (Finished reaction?) is (no) not (yes)
 stop
 @enduml
 ```
+## 6. Sequence Diagram
+```plantuml
+@startuml
+skin rose
+hide footbox
+title React Article (Sequence)
+
+actor User
+participant ": System UI" as UI
+participant ": Controller" as Controller
+participant ": RecommendationEngine" as Rec
 
 
-elseif (Skip Feedback?) then (Yes)
-|System|
-:No action taken;
-endif
+UI -> User : display reaction 
+    alt new comment
+        User -> UI : submit comment
+        UI -> Controller : addComment(articleId, input)
+        Controller --> UI : display comment\nadd to user history
+
+    else edit or delete existing comment
+        User -> UI : edit / delete comment
+        UI -> Controller : editComment(commentId, input)\nor deleteComment(commentId)
+        Controller --> UI : update comment display
+
+    else upvote or downvote comment
+        User -> UI : react to comment
+        UI -> Controller : reactToComment(commentId, type)
+        Controller --> UI : update comment stats
+
+
+else like article
+    User -> UI : click like
+    ref over UI, Controller
+        Save Article
+    end ref
+    Controller -> Rec : moreLikeThis(articleId)
+    Rec --> UI : update recommendations
+
+else dislike article
+    User -> UI : click dislike
+    UI -> Controller : dislikeArticle(articleId)
+    Controller -> Rec : lessLikeThis(articleId)
+    Rec --> UI : update recommendations
+
+end
+
+@enduml
+```

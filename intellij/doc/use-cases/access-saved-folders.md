@@ -72,19 +72,19 @@ stop
 @enduml
 ```
 
-## 5. Workflow
+## 6. Sequence Diagram
 ```plantuml
 @startuml
 skin rose
+hide footbox
 
 title Access Saved Folders (Sequence)
 
 actor User
-participant "System UI" as UI
-participant "Folder\nname, contents[]" as Folder
-participant "Article Retriever" as ArticleRetriever
+participant ": ScreenUI" as UI
+participant ": Folder\nname, contents[]" as Folder
+participant ": ArticleRetriever" as ArticleRetriever
 
-== Open Folder ==
 User -> UI : click folder
 UI -> Folder : open()
 
@@ -128,7 +128,6 @@ ArticleRetriever --> UI : render article
 UI --> User : article displayed
 
 end
-@enduml
 
 
 @enduml

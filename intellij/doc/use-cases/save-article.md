@@ -45,7 +45,7 @@ else()
 :Save New Folder to Folders;
 endif
 |System|
-:Send Article + ID to save;
+:Send Article to save;
  else ()
 :Remove Article;
 stop
@@ -54,7 +54,7 @@ endif
 
 |System|
 if (Validate ID) then (yes)
-:Save Article + ID to user's preferred location;
+:Save Article to user's preferred location;
 :Update amount of saves on Article;
 stop
 
@@ -64,4 +64,51 @@ else (no)
 
 stop
 @enduml
+```
+
+## 6. Sequence Diagram
+```plantuml
+@startuml@startuml
+skin rose
+hide footbox
+title Save Article (Sequence)
+
+actor User
+participant ": System UI" as UI
+participant ": Controller" as Controller
+participant "f : Folder" as Folder
+
+UI -> User : display save/unsave option
+
+alt article not yet saved
+    User -> UI : click save
+
+    alt save to existing folder
+        UI -> User : display folder list
+        User -> UI : select folder
+        UI -> Controller : saveToFolder(articleId, folderName)
+
+    else create new folder
+        User -> UI : create new folder
+        UI -> Controller : createFolder(folderName)
+        Controller -> Folder ** : f = create(folderName)
+        UI -> Controller : saveToFolder(articleId, folderName)
+    end
+
+    Controller -> Controller : validateUserId()
+
+    alt valid ID
+        Controller --> UI : article saved\nupdate save count
+    else invalid ID
+        Controller --> UI : display unable to save
+    end
+
+else article already saved
+    User -> UI : click unsave
+    UI -> Controller : removeArticle(articleId)
+    Controller --> UI : article removed
+end
+
+@enduml
+
 ```

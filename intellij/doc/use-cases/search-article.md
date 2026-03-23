@@ -70,3 +70,40 @@ repeat while (Finish Searching?) is (no) not (yes)
 stop
 @enduml
 ```
+## 6. Sequence Diagram
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Search Article (Sequence)
+
+actor User
+participant ": System UI" as UI
+participant ": SearchController" as Controller
+participant ": ArticleDatabase" as Database
+
+User -> UI : open search tab
+User -> UI : enter search input\n(keyword / tag / author / year)
+UI -> Controller : submitSearch(query, type)
+
+ref over Database 
+loadArticleDatabase
+end ref
+
+Controller -> Database : loadArticles(query, type)
+Database --> Controller : return matching articles
+
+Controller --> UI : display results
+User -> UI : choose sort criteria\n(relevance / date / rating / trending)
+UI -> Controller : sortArticles(criteria)
+Controller --> UI : display sorted results
+
+
+User -> UI : select article
+ref over UI, Controller
+  Access Article
+end ref
+
+@enduml
+
+```
