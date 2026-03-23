@@ -71,3 +71,65 @@ endswitch
 stop
 @enduml
 ```
+
+## 5. Workflow
+```plantuml
+@startuml
+skin rose
+
+title Access Saved Folders (Sequence)
+
+actor User
+participant "System UI" as UI
+participant "Folder\nname, contents[]" as Folder
+participant "Article Retriever" as ArticleRetriever
+
+== Open Folder ==
+User -> UI : click folder
+UI -> Folder : open()
+
+alt name = "History"
+    Folder -> ArticleRetriever : fetchHistory()
+    ArticleRetriever --> Folder : articles (newest→oldest)
+    Folder --> UI : display contents
+else other folder
+    Folder --> UI : return contents[]
+end
+
+UI --> User : show folder contents
+
+opt user confirms folder choice
+
+' Rename
+User -> UI : rename folder
+UI -> Folder : edit(newName)
+UI --> User : show updated name
+
+' Add article
+User -> UI : add article to folder
+UI -> Folder : addArticle(article)
+Folder --> UI : updated contents[]
+
+' Remove article
+User -> UI : remove article
+UI -> Folder : removeArticle(id)
+Folder --> UI : updated contents[]
+
+' Delete folder
+    User -> UI : delete folder
+    UI -> Folder : delete()
+    Folder --> UI : folder removed
+    UI --> User : return to folder list
+
+User -> UI : open article
+UI -> ArticleRetriever : executeAccessArticle(id)
+ArticleRetriever --> Folder : update history log
+ArticleRetriever --> UI : render article
+UI --> User : article displayed
+
+end
+@enduml
+
+
+@enduml
+```
