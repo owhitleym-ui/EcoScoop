@@ -17,8 +17,7 @@ class ArticleController {
 }
 
 class ArticleRetriever {
-  + getArticles() : List<Article>
-  + searchArticles() : List<Article>
+  + loadArticles() : List<Article>
   + fetchHistory() : List<Article>
   + executeAccessArticle(id : int) : Article
 }
@@ -75,9 +74,9 @@ class Source {
 }
 
 SearchController --> ArticleController : delegates to
-SearchController --> ArticleRetriever : uses
-ArticleController --> ArticleRetriever : uses
-ArticleRetriever --> ArticleDatabase : queries
+SearchController --> ArticleDatabase : queries
+ArticleController --> ArticleDatabase : uses
+ArticleRetriever --> ArticleDatabase : updates
 ArticleRetriever --> Article : creates
 ArticleController --> Article : manages
 ArticleController --> User : updates
