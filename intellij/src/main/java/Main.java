@@ -32,7 +32,10 @@ public class Main {
                 System.out.println("Parsing file: "+args[i]);
                 xpp.setInput ( new FileReader( args [i] ) );
                 app.processDocument(xpp);
-            }
+                }
+        }
+        for (Article article : app.getArticles()) {
+            System.out.println(article);
         }
     }
 }
