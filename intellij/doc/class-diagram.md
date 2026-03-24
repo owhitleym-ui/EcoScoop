@@ -1,150 +1,96 @@
 ```plantuml
 @startuml
 skin rose
-hide empty methods
+skinparam linetype ortho
 
-'skinparam classAttributeIconSize 0
-
-'classes
-
-class User{
-- profile : userprofile
-- username : String = "John/Jane Doe"
+class SearchController {
+  + submitSearch(query : String, type : String) : List<Article>
+  + sortArticles(criteria : String) : List<Article>
 }
 
-class UserProfile {
-- points : double
-- savedArticles : List <List <Article>>
-}
-
-class Article {
-- id : int
-- title : String
-- description : String
-- author : String
-- url : String
-- content : String
-- publishDate : String
-}
-
-class ArticleController{
-
-}
-
-class SearchController{
-
-}
-
-class ArticleRetriever{
-}
-
-class ArticleDatabase{
-- articleList: Set<Article> [1..*]
-- articleIds : Set<Integer> [1..*]
-}
-
-@enduml
-```
-
-
-class ArticleDescription{
-description
-likes
-author
-dislikes
-}
-
-class Article{
-title
-content
-publishDate
-url
-}
-
-class ArticleTag{
-name
-}
-
-class Author{
-name
-}
-
-class Source{
-name
-url
-}
-
-class User{
-userId
-points
-}
-
-class ArticleInteraction{
-reactionType
-saved
+class ArticleController {
+  + getArticle(id : int) : Article
+  + saveArticle(id : int) : void
+  + calculatePoints() : double
+  + recommendArticles() : List<Article>
+  + displayArticle(id : int, content : String) : void
 }
 
 class ArticleRetriever {
-+getArticles()
-+searchArticles()
+  + getArticles() : List<Article>
+  + searchArticles() : List<Article>
+  + fetchHistory() : List<Article>
+  + executeAccessArticle(id : int) : Article
 }
 
-class RecommendationService {
-+recommendArticles(user)
+class ArticleDatabase {
+  - articleList : Set<Article>
+  - articleIds : Set<Integer>
+  + save(articles : List<Article>) : void
 }
 
-class UserProgressService {
-+updatePoints(user)
-+saveInteraction(interaction)
+class Article {
+  - id : int
+  - title : String
+  - description : String
+  - author : String
+  - url : String
+  - content : String
+  - publishDate : String
 }
 
-
-' associations
-ArticleDescription "1" -- "0..*" Article : describes
-Author "1" -- "0..*" Article : writes
-Source "1" -- "0..*" Article : publishes
-
-Article "*" -- "*" ArticleTag : tagged with
-class ArticleDescription{
-description
-likes
-author
-dislikes
+class User {
+  - username : String
+  - points : double
+  - savedArticles : List<List<Article>>
 }
 
-class Article{
-title
-content
-publishDate
-url
+class Folder {
+  - name : String
+  - contents : List<Article>
+  + open() : void
+  + addArticle(article : Article) : void
+  + removeArticle(id : int) : void
+  + edit(newName : String) : void
+  + delete() : void
 }
 
-class ArticleTag{
-name
+enum ArticleTag {
+  - name : String
 }
 
-class Author{
-name
+class ArticleInteraction {
+  - reactionType : String
+  - saved : bool
+  - comment : String
 }
 
-class Source{
-name
-url
+class Author {
+  - name : String
 }
 
-class User{
-userId
-points
+class Source {
+  - name : String
+  - url : String
 }
 
-class ArticleInteraction{
-reactionType
-saved
-}
+SearchController --> ArticleController : delegates to
+SearchController --> ArticleRetriever : uses
+ArticleController --> ArticleRetriever : uses
+ArticleRetriever --> ArticleDatabase : queries
+ArticleRetriever --> Article : creates
+ArticleController --> Article : manages
+ArticleController --> User : updates
+ArticleController --> Folder : manages
+SearchController --> Article : returns
+Author "1" --> "0..*" Article : writes
+Source "1" --> "0..*" Article : publishes
+Article "*" --> "*" ArticleTag : tagged with
+User "1" --> "0..*" ArticleInteraction : has
+User "1" --> "0..*" Folder : owns
+Article "1" --> "0..*" ArticleInteraction : involved in
+User "*" --> "*" ArticleTag : prefers
+Folder "0..*" --> "*" Article : contains
 
-User "1" -- "0..*" ArticleInteraction : has
-Article "1" -- "0..*" ArticleInteraction : involved in
-
-User "*" -- "*" ArticleTag : prefers
-
-'Systems
+@enduml
+```
