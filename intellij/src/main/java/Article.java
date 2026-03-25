@@ -3,45 +3,46 @@ import java.util.ArrayList;
 
 public class Article {
     private int  id;
-
     private String title;
-    private String url;
     private String description;
-
-    private ArrayList<String> category;
-    private ArrayList<String> author;
+    private ArrayList<Author> authors;
+    private Source source;
+    private String content;
+    private ArrayList<Tag> tagList;
 
     private String publishDate;
 
-    public Article(int id, String title, String url, String description, ArrayList category, ArrayList author, String publishDate) {
+    public Article(int id, String title, String description, ArrayList<Author> authors, ArrayList<Tag> tagList, Source source, String content) {
         this.id = id;
         this.title = title;
-        this.url = url;
         this.description = description;
-        this.category = category;
-        this.author = author;
-        this.publishDate = publishDate;
+        this.authors = authors;
+        this.source = source;
+        this.tagList = tagList;
+        this.content = content;
     }
 
-    public Article(String title, String url, String description, ArrayList category, ArrayList author, String publishDate) {
+    public Article(String title, String url, String description, ArrayList<Tag> tagList, ArrayList<Author> authors, Source source) {
         this.title = title;
-        this.url = url;
         this.description = description;
-        this.category = category;
-        this.author = author;
+        this.authors = authors;
+        this.source = source;
+        this.tagList = tagList;
     }
     public Article() {
-        id =0;
-        title = "";
-        url = "";
-        description = "";
-        category = new ArrayList();
-        author = new ArrayList();
-        publishDate = "";
+        this.id = 0;
+        this.title = "";
+        this.description = "";
+        this.authors = new ArrayList<Author>();
+        this.source = new Source("","","");
+        this.tagList = new ArrayList<Tag>();
+        this.content = "";
     }
 
+
+    @Override
     public String toString(){
-        return "Article " + id + ": {" + title + ", "+ url + ", " + description + ", " + category + ", "+ author + ", "+ publishDate + "}";
+        return title;
     }
 
 

@@ -71,18 +71,18 @@ public class MyXmlPullApp {
 
     private void handleEndTag(String tagName) {
         if (tagName.equals("item")) {
-            articleList.add(buildArticle());
+            //articleList.add(buildArticle());
             insideItem = false;
         }
         currentTag = "";
     }
 
-    private Article buildArticle() {
+    //private Article buildArticle() {
         // TODO: construct Article from buffers
-        idCounter++;
-        Article article = new Article(idCounter, currentTitle,currentUrl,currentDescription,new ArrayList<>(categoryList), new ArrayList<>(authorList),currentPubDate);
-        return article;
-    }
+        //idCounter++;
+        //Article article = new Article(idCounter, currentTitle,currentUrl,currentDescription,new ArrayList<>(categoryList), new ArrayList<>(authorList),currentPubDate);
+        //return article;
+    //}
 
     private void resetBuffers() {
         currentTitle = null;
