@@ -40,6 +40,7 @@ public class Article {
     }
 
 
+
     @Override
     public String toString(){
         return "Title: " + title + "\n Description: " + description + "\n Authors:" + authors + "\n Source:" + source + "\n Tags: " + tagList + "\n Content: " + content;

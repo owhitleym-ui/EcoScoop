@@ -20,4 +20,10 @@ public class ArticleDatabase {
 
         return this.database;
     }
+
+    public void saveArticles(ArrayList<Article>  articles){
+        for (Article a : articles) {
+            database.put(a.getId(), a);
+        }
+    }
 }
