@@ -16,24 +16,9 @@ public class Main {
         Path filePath = Paths.get("Earth911");
         String content = Files.readString(filePath);
 
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
-        System.out.println("parser implementation class is "+xpp.getClass());
-
         ArticleParser app = new ArticleParser();
+        app.parse(args, content, "Earth911");
 
-        if(args.length == 0) {
-            System.out.println("Parsing simple sample XML");//:\n"+ SAMPLE_XML);
-            xpp.setInput( new StringReader( content ) );
-            app.processDocument(xpp);
-        } else {
-            for (int i = 0; i < args.length; i++) {
-                System.out.println("Parsing file: "+args[i]);
-                xpp.setInput ( new FileReader( args [i] ) );
-                app.processDocument(xpp);
-                }
-        }
         for (Article article : app.loadArticles()) {
             System.out.println(article);
         }
