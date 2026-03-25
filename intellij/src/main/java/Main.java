@@ -1,26 +1,26 @@
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Main {
-    public static void main (String args[])
-            throws XmlPullParserException, IOException
-    {
-        Path filePath = Paths.get("Grist");
-        String content = Files.readString(filePath);
+    public static void main(String[] args) throws Exception {
 
-        ArticleParser app = new ArticleParser();
-        app.parse(args, content, "Grist");
+        Map<String, String> feeds = new LinkedHashMap<>();
+        feeds.put("Earth911",            "https://earth911.com/feed/");
+        feeds.put("Grist",               "https://grist.org/feed/");
+        feeds.put("Inside Climate News",   "https://insideclimatenews.org/feed/");
+        feeds.put("Yale Climate Connections", "https://yaleclimateconnections.org/feed/");
 
-        for (Article article : app.loadArticles()) {
+
+        FeedFetcher fetcher = new FeedFetcher();
+        ArrayList<Article> articles = fetcher.fetchAll(feeds);
+
+        ArticleDatabase database = new ArticleDatabase();
+        database.saveArticles(articles);
+
+        for (Article article : articles) {
             System.out.println(article);
+            System.out.println("--------------------------------------------------");
         }
     }
 }

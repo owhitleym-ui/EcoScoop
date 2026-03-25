@@ -9,86 +9,145 @@ import java.util.ArrayList;
 
 public class ArticleParser {
 
-    // Stored Variables
     private final ArrayList<Article> articleList = new ArrayList<>();
+
     private ArrayList<String> tagList = new ArrayList<>();
     private ArrayList<String> authorList = new ArrayList<>();
+    private ArrayList<String> content = new ArrayList<>();
 
     private String website;
 
-    // parse buffers
-    private String currentTag = "";
     private boolean insideItem = false;
+
+    private static final String MEDIA_NS = "http://search.yahoo.com/mrss/";
+
+    private int mediaDepth = 0;
+
+    private String currentTag = "";
+
     private String currentTitle;
     private String currentUrl;
     private String currentDescription;
     private String currentPubDate;
-    private ArrayList<String> content = new ArrayList<>();
+
     private int idCounter = 0;
 
     private final XmlPullParser xpp;
 
-
     public ArticleParser() throws XmlPullParserException {
-        // Private XmlPull Class
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
         this.xpp = factory.newPullParser();
     }
 
-    public void processDocument()
+    public void parse(String[] args, String content, String fileWebsite)
             throws XmlPullParserException, IOException {
 
+        this.website = fileWebsite;
+
+        if (args.length == 0) {
+            xpp.setInput(new StringReader(content));
+            processDocument();
+        } else {
+            for (String file : args) {
+                xpp.setInput(new FileReader(file));
+                processDocument();
+            }
+        }
+    }
+
+    private void processDocument() throws XmlPullParserException, IOException {
         int eventType = xpp.getEventType();
+
         while (eventType != XmlPullParser.END_DOCUMENT) {
-            processEvent(eventType);
+
+            if (eventType == XmlPullParser.START_TAG) {
+                handleStartTag();
+            }
+            else if (eventType == XmlPullParser.TEXT) {
+                handleText(xpp.getText());
+            }
+            else if (eventType == XmlPullParser.END_TAG) {
+                handleEndTag();
+            }
+
             eventType = xpp.next();
         }
     }
 
-    private void processEvent(int eventType)
-            throws XmlPullParserException, IOException {
-        switch (eventType) {
-            case XmlPullParser.START_TAG:
-                handleStartTag(xpp.getName());
-                break;
-            case XmlPullParser.TEXT:
-                handleText(xpp.getText());
-                break;
-            case XmlPullParser.END_TAG:
-                handleEndTag(xpp.getName());
-                break;
+    private void handleStartTag() {
+        String tagName = xpp.getName();
+        String namespace = xpp.getNamespace();
+        if (MEDIA_NS.equals(namespace)) {
+            mediaDepth++;
         }
-    }
 
-    private void handleStartTag(String tagName) {
         if (tagName.equals("item")) {
             insideItem = true;
             resetBuffers();
         }
-        currentTag = tagName;
-    }
 
-    private void handleText(String text) {
-        if (!insideItem || text.trim().isEmpty()) return;
-
-        switch (currentTag) {
-            case "title":       currentTitle = text; break;
-            case "link":        currentUrl = text; break;
-            case "description": currentDescription = text; break;
-            case "pubDate":     currentPubDate = text; break;
-            case "category":    tagList.add(text); break;
-            case "creator":     authorList.add(text); break;
-            case "p":           content.add(text); break;
+        if (mediaDepth == 0) {
+            currentTag = tagName;
         }
     }
 
-    private void handleEndTag(String tagName) {
+    private void handleText(String text) {
+        if (!insideItem) return;
+        if (mediaDepth > 0) return;  // ignore everything inside media:*
+        if (text == null || text.trim().isEmpty()) return;
+
+        text = text.trim();
+
+        switch (currentTag) {
+            case "title":
+                currentTitle = text;
+                break;
+            case "link":
+                currentUrl = text;
+                break;
+            case "description":
+                currentDescription = text;
+                break;
+            case "pubDate":
+                currentPubDate = text;
+                break;
+            case "category":
+                tagList.add(text);
+                break;
+            case "creator":
+                authorList.add(text);
+                break;
+            case "p":
+                content.add(text);
+                break;
+            case "encoded":
+                String plainText = text.replaceAll("<[^>]+>", " ")
+                                       .replaceAll("\\s{2,}", " ")
+                                       .trim();
+                if (!plainText.isEmpty()) {
+                    content.add(plainText);
+                }
+                break;
+        }
+    }
+
+    private void handleEndTag() {
+        String tagName = xpp.getName();
+        String namespace = xpp.getNamespace();
+
+        if (MEDIA_NS.equals(namespace)) {
+            mediaDepth--;
+        }
+
         if (tagName.equals("item")) {
             articleList.add(buildArticle());
             insideItem = false;
         }
-        currentTag = "";
+
+        if (mediaDepth == 0) {
+            currentTag = "";
+        }
     }
 
     private Article buildArticle() {
@@ -120,29 +179,13 @@ public class ArticleParser {
         currentUrl = null;
         currentDescription = null;
         currentPubDate = null;
+
         tagList.clear();
         authorList.clear();
-    }
-
-    public void parse(String[] args, String content, String fileWebsite)
-            throws XmlPullParserException, IOException {
-        this.website = fileWebsite;
-        if (args.length == 0) {
-            System.out.println("Parsing simple sample XML");
-            xpp.setInput(new StringReader(content));
-            processDocument();
-        } else {
-            for (int i = 0; i < args.length; i++) {
-                System.out.println("Parsing file: " + args[i]);
-                xpp.setInput(new FileReader(args[i]));
-                processDocument();
-            }
-        }
+        content.clear();
     }
 
     public ArrayList<Article> loadArticles() {
         return articleList;
     }
-
-
 }
