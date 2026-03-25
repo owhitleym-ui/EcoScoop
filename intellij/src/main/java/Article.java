@@ -45,5 +45,8 @@ public class Article {
         return title;
     }
 
+    public int getId() {
+        return id;
+    }
 
 }

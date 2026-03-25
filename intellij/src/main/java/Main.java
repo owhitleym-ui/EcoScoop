@@ -21,7 +21,7 @@ public class Main {
         XmlPullParser xpp = factory.newPullParser();
         System.out.println("parser implementation class is "+xpp.getClass());
 
-        MyXmlPullApp app = new MyXmlPullApp();
+        ArticleParser app = new ArticleParser();
 
         if(args.length == 0) {
             System.out.println("Parsing simple sample XML");//:\n"+ SAMPLE_XML);
@@ -34,7 +34,7 @@ public class Main {
                 app.processDocument(xpp);
                 }
         }
-        for (Article article : app.getArticles()) {
+        for (Article article : app.loadArticles()) {
             System.out.println(article);
         }
     }

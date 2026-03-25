@@ -1,11 +1,9 @@
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
-public class MyXmlPullApp {
+public class ArticleParser {
 
     // result list
     private ArrayList<Article> articleList = new ArrayList<>();
@@ -93,8 +91,9 @@ public class MyXmlPullApp {
         authorList.clear();
     }
 
-    public ArrayList<Article> getArticles() {
+    public ArrayList<Article> loadArticles() {
         return articleList;
     }
+
 
 }
