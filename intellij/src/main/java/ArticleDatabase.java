@@ -1,19 +1,23 @@
+import org.xmlpull.v1.XmlPullParserException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ArticleDatabase {
-    private final ArrayList<Article> articleList;
-    private final ArrayList<Integer> articleIds;
+    public final HashMap<Integer, Article> database = new HashMap<>();
+    public ArrayList<Article> articles;
+    ArticleParser app;
 
-    public ArticleDatabase() {
-        articleList = new ArrayList<>();
-        articleIds = new ArrayList<>();
-    }
-
-    public void saveArticles(ArrayList<Article> articles){
-        articleList.addAll(articles);
-
-        for(Article article : articleList){
-            articleIds.add(article.getId());
+    public ArticleDatabase() throws XmlPullParserException {
+         app = new ArticleParser();
         }
+
+    public HashMap<Integer, Article> getDatabase(){
+        this.articles = app.loadArticles();
+
+        for (Article a : articles) {
+            database.put(a.getId(), a);
+        }
+
+        return this.database;
     }
 }

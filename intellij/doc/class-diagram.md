@@ -8,7 +8,7 @@ class SearchController {
   + sortArticles(criteria : String) : List<Article>
 }
 
-class ArticleController {
+class ArticleRetriever {
   + getArticle(id : int) : Article
   + saveArticle(id : int) : void
   + calculatePoints() : double
@@ -16,7 +16,7 @@ class ArticleController {
   + displayArticle(id : int, content : String) : void
 }
 
-class ArticleRetriever {
+class ArticleParser {
   + loadArticles() : List<Article>
   + fetchHistory() : List<Article>
   + executeAccessArticle(id : int) : Article
@@ -73,14 +73,14 @@ class Source {
   - url : String
 }
 
-SearchController --> ArticleController : delegates to
+SearchController --> ArticleRetriever : delegates to
 SearchController --> ArticleDatabase : queries
-ArticleController --> ArticleDatabase : uses
-ArticleRetriever --> ArticleDatabase : updates
-ArticleRetriever --> Article : creates
-ArticleController --> Article : manages
-ArticleController --> User : updates
-ArticleController --> Folder : manages
+ArticleRetriever --> ArticleDatabase : uses
+ArticleParser --> ArticleDatabase : updates
+ArticleParser --> Article : creates
+ArticleRetriever --> Article : manages
+ArticleRetriever --> User : updates
+ArticleRetriever --> Folder : manages
 SearchController --> Article : returns
 Author "1" --> "0..*" Article : writes
 Source "1" --> "0..*" Article : publishes
