@@ -20,4 +20,8 @@ public class Source {
     public String getPublishDate() {
         return publishDate;
     }
+
+    public String toString(){
+        return websiteName + " " + url + " " + publishDate;
+    }
 }

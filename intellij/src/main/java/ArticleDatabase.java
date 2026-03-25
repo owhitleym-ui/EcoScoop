@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class ArticleDatabase {
-    private ArrayList<Article> articleList;
-    private ArrayList<Integer> articleIds;
+    private final ArrayList<Article> articleList;
+    private final ArrayList<Integer> articleIds;
 
     public ArticleDatabase() {
         articleList = new ArrayList<>();

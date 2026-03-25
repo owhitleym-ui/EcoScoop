@@ -10,11 +10,11 @@ import java.util.ArrayList;
 public class ArticleParser {
 
     // Stored Variables
+    private final ArrayList<Article> articleList = new ArrayList<>();
     private ArrayList<String> tagList = new ArrayList<>();
     private ArrayList<String> authorList = new ArrayList<>();
-    private final ArrayList<Article> articleList = new ArrayList<>();
+
     private String website;
-    private String content;
 
     // parse buffers
     private String currentTag = "";
@@ -23,6 +23,7 @@ public class ArticleParser {
     private String currentUrl;
     private String currentDescription;
     private String currentPubDate;
+    private ArrayList<String> content = new ArrayList<>();
     private int idCounter = 0;
 
     private final XmlPullParser xpp;
@@ -78,6 +79,7 @@ public class ArticleParser {
             case "pubDate":     currentPubDate = text; break;
             case "category":    tagList.add(text); break;
             case "creator":     authorList.add(text); break;
+            case "p":           content.add(text); break;
         }
     }
 
@@ -109,7 +111,7 @@ public class ArticleParser {
                 authors,
                 tags,
                 new Source(website, currentUrl, currentPubDate),
-                content
+                String.join(" ", content)
         );
     }
 
@@ -124,7 +126,6 @@ public class ArticleParser {
 
     public void parse(String[] args, String content, String fileWebsite)
             throws XmlPullParserException, IOException {
-        this.content = content;
         this.website = fileWebsite;
         if (args.length == 0) {
             System.out.println("Parsing simple sample XML");

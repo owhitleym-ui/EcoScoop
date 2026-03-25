@@ -13,11 +13,11 @@ public class Main {
     public static void main (String args[])
             throws XmlPullParserException, IOException
     {
-        Path filePath = Paths.get("Earth911");
+        Path filePath = Paths.get("Grist");
         String content = Files.readString(filePath);
 
         ArticleParser app = new ArticleParser();
-        app.parse(args, content, "Earth911");
+        app.parse(args, content, "Grist");
 
         for (Article article : app.loadArticles()) {
             System.out.println(article);
