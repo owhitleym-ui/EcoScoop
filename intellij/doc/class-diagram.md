@@ -75,8 +75,10 @@ class Source {
 
 SearchController --> ArticleRetriever : delegates to
 SearchController --> ArticleDatabase : queries
+
 ArticleRetriever --> ArticleDatabase : uses
 ArticleParser --> ArticleDatabase : updates
+ArticleDatabase "1" --> "0..*" Article : stores
 ArticleParser --> Article : creates
 ArticleRetriever --> Article : manages
 ArticleRetriever --> User : updates

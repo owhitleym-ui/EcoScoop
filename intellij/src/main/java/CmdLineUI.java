@@ -19,7 +19,17 @@ public class CmdLineUI implements UI{
 
     @Override
     public void runClickArticle(Article article) {
-
+        while(true) {
+            this.ostream.print("Enter ID (0 for none): ");
+            final Integer articleId = this.iscanner.nextInt();
+            if (articleId == 0) {
+                if (this.listener != null) this.listener.onCancel();
+                break;
+            }
+            if (this.listener != null) {
+                this.listener.onChooseArticle(articleId);
+            }
+        }
     }
 
     @Override
