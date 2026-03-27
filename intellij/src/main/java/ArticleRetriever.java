@@ -8,9 +8,10 @@ public class ArticleRetriever {
     public ArrayList<Article> articleList;
 
 
-    public ArticleRetriever() throws XmlPullParserException {
-        this.databaseMap = new ArticleDatabase().database;
-        this.articleList = new ArticleDatabase().articles;
+    public ArticleRetriever() throws Exception {
+        ArticleDatabase artData = new ArticleDatabase();
+        this.databaseMap = artData.getDatabase();
+        this.articleList = artData.articles;
     }
 
     public Article getArticle(int id){

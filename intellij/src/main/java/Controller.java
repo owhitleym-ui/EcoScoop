@@ -6,16 +6,16 @@ public class Controller implements UI.Listener{
 
     //Private Fields
     private UI ui;
-    private ArticleRetriever retriever = new ArticleRetriever();
-    private ArrayList<Article> articleList = retriever.articleList;
+    private final ArticleRetriever retriever = new ArticleRetriever();
+    private final ArrayList<Article> articleList = retriever.articleList;
     private Article currentArticle = new Article();
 
-    private Controller(final UI ui) throws XmlPullParserException {
+    private Controller(final UI ui) throws Exception {
         this.ui = ui;
         this.ui.setListener(this);
     }
 
-    public static void main(String[] args) throws XmlPullParserException {
+    public static void main(String[] args) throws Exception {
         final UI ui = new CmdLineUI();
         final Controller controller = new Controller(ui);
         controller.run();
@@ -38,12 +38,11 @@ public class Controller implements UI.Listener{
     public void onDisplayArticle(Article article){
         this.ui.runDisplayArticle(article);
     }
+
     @Override
     public void onChooseArticle() {
         this.ui.runChooseArticle();
     }
-
-
 
     public void onViewArticleTab(){
         this.ui.runArticleTab();

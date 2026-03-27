@@ -30,7 +30,7 @@ public class ArticleParser {
     private String currentDescription;
     private String currentPubDate;
 
-    private int idCounter = 0;
+    private int idCounter = 1;
 
     private final XmlPullParser xpp;
 

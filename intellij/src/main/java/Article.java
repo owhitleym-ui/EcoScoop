@@ -47,7 +47,11 @@ public class Article {
     }
 
     public String printArticle(){
-        return title + "\n" + authors + "\n" + description + "\n" + getContent() + source + tagList;
+        return "" + title + "\n" + authors + "\n \n" + getContent() + "\n \n" + source + "\n" + tagList;
+    }
+
+    public String getSummary(){
+        return "ID:" + "id -- " + title + "\n" + authors + "\n \n" + wordWrap(description, 80) + "\n \n" + source.getWebsiteName() + " -- " + source.getPublishDate() + "\n" + tagList;
     }
     public String getContent() {
         String cleaned = content.replaceAll("&nbsp;", " ")
