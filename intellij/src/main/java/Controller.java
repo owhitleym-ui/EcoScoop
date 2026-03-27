@@ -26,7 +26,7 @@ public class Controller implements UI.Listener{
         this.ui.runMainMenu();
     }
 
-    //Listener -  Methods
+    //Listener -  Article Display Methods
 
     @Override
     public void onGetArticle(int id){
@@ -51,6 +51,22 @@ public class Controller implements UI.Listener{
     @Override
     public void onDisplayArticleList() {
         this.ui.runDisplayArticleList(articleList);
+    }
+
+    // Listener - Article Search Methods
+    @Override
+    public void onSearchArticles() {
+        this.ui.runSearchArticles();
+    }
+
+    @Override
+    public ArrayList<Article> onSearchQuery(String query, String type) {
+        return retriever.searchArticles(query, type);
+    }
+
+    @Override
+    public ArrayList<Article> onSortResults(ArrayList<Article> results, String criteria) {
+        return retriever.sortArticles(results, criteria);
     }
 
 }
