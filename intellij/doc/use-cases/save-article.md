@@ -1,4 +1,4 @@
-# Save Article
+# Save model.Article
 
 ## 1. Primary actor and goals
 
@@ -11,13 +11,13 @@ __User__: Ease of access storing articles for later reading or saving them in pr
 
 ## 3. Preconditions
 * User is authenticated
-* User switches to Article Section
-* User accesses Article
-* User has clicked Save Article Button
+* User switches to model.Article Section
+* User accesses model.Article
+* User has clicked Save model.Article Button
 
 ## 4. Postconditions
-* Stores Article into a Saved Folder
-* Author is able to view how much saves
+* Stores model.Article into a Saved model.Folder
+* model.Author is able to view how much saves
 
 ## 5. Workflow
 
@@ -26,7 +26,7 @@ __User__: Ease of access storing articles for later reading or saving them in pr
 
 skin rose
 
-title Save Article (Casual)
+title Save model.Article (Casual)
 
 'define the lanes
 |#application|User|
@@ -34,33 +34,33 @@ title Save Article (Casual)
 
 |System|
 start
-if (Article is Saved?) then (no)
-:Display Saved Article Folders;
+if (model.Article is Saved?) then (no)
+:Display Saved model.Article Folders;
 |User|
 if(Update Saved Folders?) then (yes)
-:Select which Folder to save Article in;
+:Select which model.Folder to save model.Article in;
 else()
-:Create New Folder;
+:Create New model.Folder;
 |System|
-:Save New Folder to Folders;
+:Save New model.Folder to Folders;
 endif
 |System|
-:Send Article to save;
+:Send model.Article to save;
  else ()
-:Remove Article;
+:Remove model.Article;
 stop
 endif
 
 
 |System|
 if (Validate ID) then (yes)
-:Save Article to user's preferred location;
-:Update amount of saves on Article;
+:Save model.Article to user's preferred location;
+:Update amount of saves on model.Article;
 stop
 
 else (no)
 :Do not save article;
-:Display Unable to Save Article;
+:Display Unable to Save model.Article;
 
 stop
 @enduml
@@ -71,42 +71,42 @@ stop
 @startuml@startuml
 skin rose
 hide footbox
-title Save Article (Sequence)
+title Save model.Article (Sequence)
 
 actor User
-participant ": System UI" as UI
-participant ": Controller" as Controller
-participant "f : Folder" as Folder
+participant ": System view.UI" as view.UI
+participant ": controller.Controller" as controller.Controller
+participant "f : model.Folder" as model.Folder
 
-UI -> User : display save/unsave option
+view.UI -> User : display save/unsave option
 
 alt article not yet saved
-    User -> UI : click save
+    User -> view.UI : click save
 
     alt save to existing folder
-        UI -> User : display folder list
-        User -> UI : select folder
-        UI -> Controller : saveToFolder(articleId, folderName)
+        view.UI -> User : display folder list
+        User -> view.UI : select folder
+        view.UI -> controller.Controller : saveToFolder(articleId, folderName)
 
     else create new folder
-        User -> UI : create new folder
-        UI -> Controller : createFolder(folderName)
-        Controller -> Folder ** : f = create(folderName)
-        UI -> Controller : saveToFolder(articleId, folderName)
+        User -> view.UI : create new folder
+        view.UI -> controller.Controller : createFolder(folderName)
+        controller.Controller -> model.Folder ** : f = create(folderName)
+        view.UI -> controller.Controller : saveToFolder(articleId, folderName)
     end
 
-    Controller -> Controller : validateUserId()
+    controller.Controller -> controller.Controller : validateUserId()
 
     alt valid ID
-        Controller --> UI : article saved\nupdate save count
+        controller.Controller --> view.UI : article saved\nupdate save count
     else invalid ID
-        Controller --> UI : display unable to save
+        controller.Controller --> view.UI : display unable to save
     end
 
 else article already saved
-    User -> UI : click unsave
-    UI -> Controller : removeArticle(articleId)
-    Controller --> UI : article removed
+    User -> view.UI : click unsave
+    view.UI -> controller.Controller : removeArticle(articleId)
+    controller.Controller --> view.UI : article removed
 end
 
 @enduml

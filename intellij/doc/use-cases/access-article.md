@@ -1,4 +1,4 @@
-# Access Article 
+# Access model.Article 
 
 ## 1. Primary actor and goals
 __User__: Wants ease of access obtaining relevant articles concerning environmental news. Desires relevant topical news and new entries. Ease of access concerning reading format, with toggleable reader/display settings.
@@ -10,10 +10,10 @@ __User__: Wants ease of access obtaining relevant articles concerning environmen
 * __Author__: Require credit and attribution for writing the article. Wants to be able to see views, upvotes, and other ratings on articles.
 
 ## 3. Preconditions
-* User is in the Article tab or has searched for article.
+* User is in the model.Article tab or has searched for article.
 
 ## 4. Postconditions
-* Article is saved to history.
+* model.Article is saved to history.
 * Tags are added to user preference
 * Points are calculated and added to score after user finishes reading.
 * Other articles are recommended.
@@ -26,7 +26,7 @@ __User__: Wants ease of access obtaining relevant articles concerning environmen
 
 skin rose
 
-title Access Article (Casual)
+title Access model.Article (Casual)
 
 'define the lanes
 |#application|User|
@@ -37,13 +37,13 @@ start
 :Load latest articles;
 
 |User|
-:Click Article;
+:Click model.Article;
 
 |System|
 :Load article content;
 
 |User|
-:Read Article;
+:Read model.Article;
 if (React?) then (yes)
     :Execute __React Article__;
 endif
@@ -64,78 +64,78 @@ endif
 endif
 
 |User|
-:Return to Article Hub;
+:Return to model.Article Hub;
 
 stop
 @enduml
 ```
-## Sequence Diagram - Load Article Database
+## Sequence Diagram - Load model.Article Database
 ```plantuml
 @startuml
-title Load Article Database
+title Load model.Article Database
 skin rose
 hide footbox
 
-participant Controller as controller
-participant ArticleRetriever as AR 
+participant controller.Controller as controller
+participant model.ArticleRetriever as AR 
 
 controller -> AR : getArticleList()
 
-AR -> Article ** : creates
+AR -> model.Article ** : creates
 
-controller <-- AR : List <Article>
+controller <-- AR : List <model.Article>
 
-participant ArticleDatabase as AD
+participant model.ArticleDatabase as AD
 
-controller -> AD: save(List <Article>)
+controller -> AD: save(List <model.Article>)
 
 @enduml
 ```
 
-## Sequence Diagram - Click on Article
+## Sequence Diagram - Click on model.Article
 ```plantuml
 @startuml
 
-title Click on Article
+title Click on model.Article
 skin rose
 hide footbox
 
 actor User as user
-participant ScreenUI as UI
-participant Controller as controller
-participant ArticleDatabase as AD
+participant ScreenUI as view.UI
+participant controller.Controller as controller
+participant model.ArticleDatabase as AD
 
 
-user -> UI : clickArticle(List[i])
-UI -> controller : getArticle(List[i])
-controller -> Article ** : getArticleData()
+user -> view.UI : clickArticle(List[i])
+view.UI -> controller : getArticle(List[i])
+controller -> model.Article ** : getArticleData()
 
 
-Article --> controller : getContent()
-Article --> controller : id, author, url, 
-controller --> UI :displayArticle(id, content)
+model.Article --> controller : getContent()
+model.Article --> controller : id, author, url, 
+controller --> view.UI :displayArticle(id, content)
 
 participant UserProfile as UP
 
 opt user react
-user -> UI: reactToArticle(id)
-ref over user, controller, UI,UP
+user -> view.UI: reactToArticle(id)
+ref over user, controller, view.UI,UP
     reactArticle(id)
     end ref
 end
 
 opt user save
-user -> UI: saveToArticle(id)
-ref over user, controller, UI,UP
+user -> view.UI: saveToArticle(id)
+ref over user, controller, view.UI,UP
     saveArticle(id)
     end ref
 end
 
 controller -> UP : calculatePoints()
-controller -> UI : recommendArticles()
-controller --> UI: List<Article>
+controller -> view.UI : recommendArticles()
+controller --> view.UI: List<model.Article>
 
-user -> UI: return()
+user -> view.UI: return()
 
 
 @enduml

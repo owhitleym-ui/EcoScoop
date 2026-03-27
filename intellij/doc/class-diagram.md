@@ -3,96 +3,96 @@
 skin rose
 skinparam linetype ortho
 
-interface UI {
+interface view.UI {
   + setListener(listener : Listener)
   + runMainMenu()
   + runArticleTab()
-  + runDisplayArticle(article : Article)
+  + runDisplayArticle(article : model.Article)
   + runChooseArticle()
-  + runDisplayArticleList(articleList : List<Article>)
+  + runDisplayArticleList(articleList : List<model.Article>)
   + runSearchArticles()
   + runSearchInput()
-  + runDisplaySearchResults(results : List<Article>)
-  + runSortOptions(results : List<Article>)
+  + runDisplaySearchResults(results : List<model.Article>)
+  + runSortOptions(results : List<model.Article>)
 }
 
-class CmdLineUI {
+class view.CmdLineUI {
   - iscanner : Scanner
   - ostream : PrintStream
   - listener : Listener
-  + CmdLineUI()
+  + view.CmdLineUI()
   + clearConsole()
 }
 
 interface UIListener {
   + onViewArticleTab()
   + onGetArticle(id : int)
-  + onDisplayArticle(article : Article)
+  + onDisplayArticle(article : model.Article)
   + onChooseArticle()
   + onDisplayArticleList()
   + onSearchArticles()
-  + onSearchQuery(query : String, type : String) : List<Article>
-  + onSortResults(results : List<Article>, criteria : String) : List<Article>
+  + onSearchQuery(query : String, type : String) : List<model.Article>
+  + onSortResults(results : List<model.Article>, criteria : String) : List<model.Article>
 }
 
-class Controller {
-  - ui : UI
-  - retriever : ArticleRetriever
-  - articleList : List<Article>
-  - curArticle : Article
-  + Controller(ui : UI)
+class controller.Controller {
+  - ui : view.UI
+  - retriever : model.ArticleRetriever
+  - articleList : List<model.Article>
+  - curArticle : model.Article
+  + controller.Controller(ui : view.UI)
   + main(args : String[])
 }
 
-class ArticleRetriever {
-  + databaseMap : Map<Integer, Article>
-  + articleList : List<Article>
-  - folderManager : FolderManager
-  + ArticleRetriever()
-  + getArticle(id : int) : Article
-  + searchArticles(query : String, type : String) : List<Article>
-  + sortArticles(articles : List<Article>, criteria : String) : List<Article>
-  + createFolder(name : String) : Folder
+class model.ArticleRetriever {
+  + databaseMap : Map<Integer, model.Article>
+  + articleList : List<model.Article>
+  - folderManager : model.FolderManager
+  + model.ArticleRetriever()
+  + getArticle(id : int) : model.Article
+  + searchArticles(query : String, type : String) : List<model.Article>
+  + sortArticles(articles : List<model.Article>, criteria : String) : List<model.Article>
+  + createFolder(name : String) : model.Folder
   + deleteFolder(name : String) : boolean
-  + getFolder(name : String) : Folder
+  + getFolder(name : String) : model.Folder
   + saveToFolder(articleId : int, folderName : String)
-  + getFolders() : List<Folder>
+  + getFolders() : List<model.Folder>
 }
 
-class ArticleDatabase {
-  + database : Map<Integer, Article>
-  + articles : List<Article>
-  ~ app : ArticleParser
-  + ArticleDatabase()
-  + getDatabase() : Map<Integer, Article>
-  + saveArticles(articles : List<Article>)
+class model.ArticleDatabase {
+  + database : Map<Integer, model.Article>
+  + articles : List<model.Article>
+  ~ app : model.ArticleParser
+  + model.ArticleDatabase()
+  + getDatabase() : Map<Integer, model.Article>
+  + saveArticles(articles : List<model.Article>)
 }
 
-class FeedFetcher {
-  + fetchAll(feeds : Map<String, String>) : List<Article>
+class model.FeedFetcher {
+  + fetchAll(feeds : Map<String, String>) : List<model.Article>
 }
 
-class ArticleParser {
-  - articleList : List<Article>
+class model.ArticleParser {
+  - articleList : List<model.Article>
   - tagList : List<String>
   - authorList : List<String>
   - content : List<String>
-  + ArticleParser()
+  + model.ArticleParser()
   + parse(args : String[], content : String, fileWebsite : String)
-  + loadArticles() : List<Article>
+  + loadArticles() : List<model.Article>
 }
 
-class Article {
+class model.Article {
   - id : int
   - title : String
   - description : String
-  - authors : List<Author>
-  - source : Source
-  - tagList : List<Tag>
+  - authors : List<model.Author>
+  - source : model.Source
+  - tagList : List<model.Tag>
   - content : String
   - publishDate : String
-  + Article()
-  + Article(id, title, description, authors, tagList, source, content)
+  + model.Article()
+  + model.Article(id, title, description, authors, tagList, source, content)
   + printArticle() : String
   + getSummary() : String
   + getContent() : String
@@ -102,59 +102,59 @@ class Article {
   + getId() : int
   + getTitle() : String
   + getDescription() : String
-  + getAuthors() : List<Author>
-  + getTagList() : List<Tag>
-  + getSource() : Source
+  + getAuthors() : List<model.Author>
+  + getTagList() : List<model.Tag>
+  + getSource() : model.Source
   + getLikes() : int
   + getDislikes() : int
 }
 
-class Author {
+class model.Author {
   - name : String
-  + Author(name : String)
+  + model.Author(name : String)
   + getName() : String
   + toString() : String
 }
 
-class Tag {
+class model.Tag {
   - name : String
-  + Tag(name : String)
+  + model.Tag(name : String)
   + getName() : String
   + toString() : String
 }
 
-class Source {
+class model.Source {
   - websiteName : String
   - url : String
   - publishDate : String
-  + Source(name : String, url : String, date : String)
+  + model.Source(name : String, url : String, date : String)
   + getWebsiteName() : String
   + getUrl() : String
   + getPublishDate() : String
   + toString() : String
 }
 
-class FolderManager {
-  - folders : List<Folder>
-  - retriever : ArticleRetriever
-  + FolderManager(retriever : ArticleRetriever)
-  + createFolder(name : String) : Folder
+class model.FolderManager {
+  - folders : List<model.Folder>
+  - retriever : model.ArticleRetriever
+  + model.FolderManager(retriever : model.ArticleRetriever)
+  + createFolder(name : String) : model.Folder
   + deleteFolder(name : String) : boolean
-  + getFolder(name : String) : Folder
+  + getFolder(name : String) : model.Folder
   + saveToFolder(articleId : int, folderName : String)
-  + getFolders() : List<Folder>
+  + getFolders() : List<model.Folder>
 }
 
-class Folder {
+class model.Folder {
   - name : String
   - articleIds : List<Integer>
-  - retriever : ArticleRetriever
-  + Folder(name : String, retriever : ArticleRetriever)
+  - retriever : model.ArticleRetriever
+  + model.Folder(name : String, retriever : model.ArticleRetriever)
   + getFolderName() : String
   + rename(newName : String)
   + addArticle(id : int)
   + removeArticle(id : int)
-  + open() : List<Article>
+  + open() : List<model.Article>
 }
 
 class Main {
@@ -162,33 +162,33 @@ class Main {
 }
 
 ' Front-End Associations
-CmdLineUI ..|> UI : implements
-Controller ..|> UIListener : implements
-Controller "1" --> "(1) ui" UI : delegates to
-UIListener "0..1" -- "1" CmdLineUI
+view.CmdLineUI ..|> view.UI : implements
+controller.Controller ..|> UIListener : implements
+controller.Controller "1" --> "(1) ui" view.UI : delegates to
+UIListener "0..1" -- "1" view.CmdLineUI
 
 ' Back-End Associations
-Controller "1" --> "1" ArticleRetriever : queries
-ArticleRetriever "1" --> "1" ArticleDatabase : gets articles
-ArticleDatabase "1" --> "1" FeedFetcher : uses
-FeedFetcher "1" ..> "0..*" ArticleParser : creates per feed
-ArticleParser ..> Article : creates
-ArticleParser ..> Author : creates
-ArticleParser ..> Tag : creates
-ArticleParser ..> Source : creates
+controller.Controller "1" --> "1" model.ArticleRetriever : queries
+model.ArticleRetriever "1" --> "1" model.ArticleDatabase : gets articles
+model.ArticleDatabase "1" --> "1" model.FeedFetcher : uses
+model.FeedFetcher "1" ..> "0..*" model.ArticleParser : creates per feed
+model.ArticleParser ..> model.Article : creates
+model.ArticleParser ..> model.Author : creates
+model.ArticleParser ..> model.Tag : creates
+model.ArticleParser ..> model.Source : creates
 
 ' Domain Associations
-Article "1" *-- "1" Source : contains
-Article "1" *-- "0..*" Author : written by
-Article "1" *-- "0..*" Tag : categorized by
+model.Article "1" *-- "1" model.Source : contains
+model.Article "1" *-- "0..*" model.Author : written by
+model.Article "1" *-- "0..*" model.Tag : categorized by
 
-' Folder Associations
-ArticleRetriever "1" *-- "1" FolderManager : owns
-FolderManager "1" *-- "0..*" Folder : manages
-Folder "0..*" --> "1" ArticleRetriever : looks up articles
+' model.Folder Associations
+model.ArticleRetriever "1" *-- "1" model.FolderManager : owns
+model.FolderManager "1" *-- "0..*" model.Folder : manages
+model.Folder "0..*" --> "1" model.ArticleRetriever : looks up articles
 
 ' Test Harness
-Main ..> ArticleRetriever : uses
+Main ..> model.ArticleRetriever : uses
 
 @enduml
 ```

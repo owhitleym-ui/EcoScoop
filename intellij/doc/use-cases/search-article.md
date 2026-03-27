@@ -1,4 +1,4 @@
-# Search Article
+# Search model.Article
 
 ## 1. Primary actor and goals
 __User__: Wants to look for relevant articles depending on keywords, tags, authors, or publishing year. Looking for relevant, topical news that all relate to what the user inputs and is searching for.
@@ -10,7 +10,7 @@ __User__: Wants to look for relevant articles depending on keywords, tags, autho
 
 
 ## 3. Preconditions
-* User switches to Article Section
+* User switches to model.Article Section
 
 ## 4. Postconditions
 * List of relevant articles are shown
@@ -35,10 +35,10 @@ if (Click on Search Tab) then (yes)
 |System|
     if (Keyword Search?) then (yes)
     :Search by Keywords;
-    (no) elseif (Tag Search?) then (yes)
+    (no) elseif (model.Tag Search?) then (yes)
     :Search by Tags;
-    (no) elseif (Author Search?) then (yes)
-    :Search by Author;
+    (no) elseif (model.Author Search?) then (yes)
+    :Search by model.Author;
     endif
 
 endif
@@ -75,33 +75,33 @@ stop
 @startuml
 skin rose
 hide footbox
-title Search Article (Sequence)
+title Search model.Article (Sequence)
 
 actor User
-participant ": System UI" as UI
-participant ": SearchController" as Controller
-participant ": ArticleDatabase" as Database
+participant ": System view.UI" as view.UI
+participant ": SearchController" as controller.Controller
+participant ": model.ArticleDatabase" as Database
 
-User -> UI : open search tab
-User -> UI : enter search input\n(keyword / tag / author / year)
-UI -> Controller : submitSearch(query, type)
+User -> view.UI : open search tab
+User -> view.UI : enter search input\n(keyword / tag / author / year)
+view.UI -> controller.Controller : submitSearch(query, type)
 
 ref over Database 
 loadArticleDatabase
 end ref
 
-Controller -> Database : loadArticles(query, type)
-Database --> Controller : return matching articles
+controller.Controller -> Database : loadArticles(query, type)
+Database --> controller.Controller : return matching articles
 
-Controller --> UI : display results
-User -> UI : choose sort criteria\n(relevance / date / rating / trending)
-UI -> Controller : sortArticles(criteria)
-Controller --> UI : display sorted results
+controller.Controller --> view.UI : display results
+User -> view.UI : choose sort criteria\n(relevance / date / rating / trending)
+view.UI -> controller.Controller : sortArticles(criteria)
+controller.Controller --> view.UI : display sorted results
 
 
-User -> UI : select article
-ref over UI, Controller
-  Access Article
+User -> view.UI : select article
+ref over view.UI, controller.Controller
+  Access model.Article
 end ref
 
 @enduml

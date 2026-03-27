@@ -1,4 +1,4 @@
-# React Article
+# React model.Article
 
 ## 1. Primary actor and goals
 
@@ -29,7 +29,7 @@ __User__: Ease of access giving feedback on article content from personal impres
 
 skin rose
 
-title React Article(Casual)
+title React model.Article(Casual)
 
 'define the lanes
 |#application|User|
@@ -56,13 +56,13 @@ switch (Handle Feedback)
             |System|
             :Update comment stats;
         endif
-    case (      Like Article?)
+    case (      Like model.Article?)
         |System|
         :Execute __Save Article__;
         :Show more related content;
-    case ( Dislike Article?)
+    case ( Dislike model.Article?)
         :Show less content like this;
-    case ( Save Author?) 
+    case ( Save model.Author?) 
         |System|
         :Follow author;
         :Show author's content in articles tab;
@@ -80,40 +80,40 @@ stop
 @startuml
 skin rose
 hide footbox
-title React Article (Sequence)
+title React model.Article (Sequence)
 
 actor User
-participant ": CmdLineUI" as UI
-participant ": Controller" as Controller
-participant "a : Article" as Article
+participant ": view.CmdLineUI" as view.UI
+participant ": controller.Controller" as controller.Controller
+participant "a : model.Article" as model.Article
 
-note over UI : Shown automatically after\nthe user exits an article
+note over view.UI : Shown automatically after\nthe user exits an article
 
-UI -> User : display react prompt\n(skip / like / dislike / comment)
+view.UI -> User : display react prompt\n(skip / like / dislike / comment)
 
 alt like
-    User -> UI : enter 1
-    UI -> Controller : onLikeArticle(articleId)
-    Controller -> Article : addLike()
-    UI --> User : "Liked! (N likes)"
+    User -> view.UI : enter 1
+    view.UI -> controller.Controller : onLikeArticle(articleId)
+    controller.Controller -> model.Article : addLike()
+    view.UI --> User : "Liked! (N likes)"
 
 else dislike
-    User -> UI : enter 2
-    UI -> Controller : onDislikeArticle(articleId)
-    Controller -> Article : addDislike()
-    UI --> User : "Disliked! (N dislikes)"
+    User -> view.UI : enter 2
+    view.UI -> controller.Controller : onDislikeArticle(articleId)
+    controller.Controller -> model.Article : addDislike()
+    view.UI --> User : "Disliked! (N dislikes)"
 
 else comment
-    User -> UI : enter 3
-    UI -> User : prompt for comment text
-    User -> UI : enter comment
-    UI -> Controller : onCommentArticle(articleId, comment)
-    Controller -> Article : addComment(comment)
-    UI --> User : "Comment added."
+    User -> view.UI : enter 3
+    view.UI -> User : prompt for comment text
+    User -> view.UI : enter comment
+    view.UI -> controller.Controller : onCommentArticle(articleId, comment)
+    controller.Controller -> model.Article : addComment(comment)
+    view.UI --> User : "Comment added."
 
 else skip
-    User -> UI : enter 0
-    UI --> User : return to article list
+    User -> view.UI : enter 0
+    view.UI --> User : return to article list
 
 end
 
