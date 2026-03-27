@@ -3,182 +3,192 @@
 skin rose
 skinparam linetype ortho
 
-
-interface UI{
+interface UI {
   + setListener(listener : Listener)
   + runMainMenu()
   + runArticleTab()
   + runDisplayArticle(article : Article)
   + runChooseArticle()
   + runDisplayArticleList(articleList : List<Article>)
+  + runSearchArticles()
+  + runSearchInput()
+  + runDisplaySearchResults(results : List<Article>)
+  + runSortOptions(results : List<Article>)
 }
 
-class CmdLineUI{
+class CmdLineUI {
   - iscanner : Scanner
   - ostream : PrintStream
+  - listener : Listener
   + CmdLineUI()
   + clearConsole()
 }
 
-interface UIListener{
+interface UIListener {
   + onViewArticleTab()
   + onGetArticle(id : int)
-  + onDisplayArticle(article: Article)
+  + onDisplayArticle(article : Article)
   + onChooseArticle()
   + onDisplayArticleList()
+  + onSearchArticles()
+  + onSearchQuery(query : String, type : String) : List<Article>
+  + onSortResults(results : List<Article>, criteria : String) : List<Article>
 }
 
-
 class Controller {
-  - articleRetriever : ArticleRetriever
-  - articleList : articleList
+  - ui : UI
+  - retriever : ArticleRetriever
+  - articleList : List<Article>
   - curArticle : Article
-  + Controller(ui: Ui)
-  + main(args: String[])
-  + run()
+  + Controller(ui : UI)
+  + main(args : String[])
 }
 
 class ArticleRetriever {
-  - database : Map<Integer, Article>
-  - articleList: List<Article>
+  + databaseMap : Map<Integer, Article>
+  + articleList : List<Article>
+  - folderManager : FolderManager
   + ArticleRetriever()
-  + getArticle(id :int) : Article
-  
-  ' TODO: Extra Methods
-  '+ submitSearch(query : String, type : String) : List<Article>
-  '+ sortArticles(criteria : String) : List<Article>
-  '+ getArticle(id : int) : Article
-  '+ saveArticle(id : int) : void
-  '+ calculatePoints() : double
-  '+ recommendArticles() : List<Article>
-  '+ displayArticle(id : int, content : String) : void
-}
-
-class FeedFetcher{
-  + fetchAll(feeds : Map<String, String>) : allArticles : List<Article>
-}
-
-class ArticleParser {
-  - authorList : List<Author>
-  - tagList : List<Tag>
-  - content : List<String>
-  - articleList : List<Article>
-  
-  + ArticleParser()
-  + parse(args : String[], content : String, fileWebsite: String)
-  + loadArticles() : List<Article>
+  + getArticle(id : int) : Article
+  + searchArticles(query : String, type : String) : List<Article>
+  + sortArticles(articles : List<Article>, criteria : String) : List<Article>
+  + createFolder(name : String) : Folder
+  + deleteFolder(name : String) : boolean
+  + getFolder(name : String) : Folder
+  + saveToFolder(articleId : int, folderName : String)
+  + getFolders() : List<Folder>
 }
 
 class ArticleDatabase {
-  - database : Map<Integer, Article>
-  - articleList : List<Integer>
-  
+  + database : Map<Integer, Article>
+  + articles : List<Article>
+  ~ app : ArticleParser
   + ArticleDatabase()
   + getDatabase() : Map<Integer, Article>
+  + saveArticles(articles : List<Article>)
+}
+
+class FeedFetcher {
+  + fetchAll(feeds : Map<String, String>) : List<Article>
+}
+
+class ArticleParser {
+  - articleList : List<Article>
+  - tagList : List<String>
+  - authorList : List<String>
+  - content : List<String>
+  + ArticleParser()
+  + parse(args : String[], content : String, fileWebsite : String)
+  + loadArticles() : List<Article>
 }
 
 class Article {
   - id : int
   - title : String
   - description : String
-  - authorList : List<Author>
+  - authors : List<Author>
   - source : Source
   - tagList : List<Tag>
   - content : String
+  - publishDate : String
   + Article()
-  + toString() : String
+  + Article(id, title, description, authors, tagList, source, content)
   + printArticle() : String
   + getSummary() : String
   + getContent() : String
+  + addLike()
+  + addDislike()
+  + matchesSearch(query : String) : boolean
   + getId() : int
-}
-
-class User {
-  - username : String
-  - points : double
-  - savedArticles : List<List<Article>>
-}
-
-class Folder {
-  - name : String
-  - articleIds : List<Integer>
-  - retriever : ArticleRetriever
-  
-  + Folder(name : String, retriever : ArticleRetriever)
-  + rename(newName : String)
-  + addArticle(id : int)
-  + removeArticle(id : int)
-  + open() : contents : List<Article>
-  
-  
-  ' TODO : Extra Methods
-  '+ addArticle(article : Article) : void
-  '+ removeArticle(id : int) : void
-  '+ edit(newName : String) : void
-  '+ delete() : void
-}
-
-class ArticleTag {
-  - name : String
-  + Tag(name : String)
-  + getName() : name
-  + 
-  
+  + getTitle() : String
+  + getDescription() : String
+  + getAuthors() : List<Author>
+  + getTagList() : List<Tag>
+  + getSource() : Source
+  + getLikes() : int
+  + getDislikes() : int
 }
 
 class Author {
   - name : String
+  + Author(name : String)
+  + getName() : String
+  + toString() : String
+}
+
+class Tag {
+  - name : String
+  + Tag(name : String)
+  + getName() : String
+  + toString() : String
 }
 
 class Source {
   - websiteName : String
   - url : String
   - publishDate : String
-  
-  + Source(name:String, url:String, date:String)
-  + getUrl() : url : String
-  + getPublishDate() : publishDate : String
-  + getWebsiteName() : webSiteName : String
+  + Source(name : String, url : String, date : String)
+  + getWebsiteName() : String
+  + getUrl() : String
+  + getPublishDate() : String
+  + toString() : String
 }
 
-'Front-End Associations
-User --> UI
+class FolderManager {
+  - folders : List<Folder>
+  - retriever : ArticleRetriever
+  + FolderManager(retriever : ArticleRetriever)
+  + createFolder(name : String) : Folder
+  + deleteFolder(name : String) : boolean
+  + getFolder(name : String) : Folder
+  + saveToFolder(articleId : int, folderName : String)
+  + getFolders() : List<Folder>
+}
+
+class Folder {
+  - name : String
+  - articleIds : List<Integer>
+  - retriever : ArticleRetriever
+  + Folder(name : String, retriever : ArticleRetriever)
+  + getFolderName() : String
+  + rename(newName : String)
+  + addArticle(id : int)
+  + removeArticle(id : int)
+  + open() : List<Article>
+}
+
+class Main {
+  + main(args : String[])
+}
+
+' Front-End Associations
+CmdLineUI ..|> UI : implements
+Controller ..|> UIListener : implements
+Controller "1" --> "(1) ui" UI : delegates to
 UIListener "0..1" -- "1" CmdLineUI
-CmdLineUI ..> UI
-Controller "1" -- "(1) ui" UI
-Controller ..> UIListener
 
-'Back-End Associations
-Controller "1" -- "1" ArticleRetriever
+' Back-End Associations
+Controller "1" --> "1" ArticleRetriever : queries
 ArticleRetriever "1" --> "1" ArticleDatabase : gets articles
-ArticleRetriever --> Folder : contains
-ArticleParser --> ArticleDatabase : provides articles
-FeedFetcher --> ArticleParser : provides feeds
-FeedFetcher <-- ArticleDatabase : uses
+ArticleDatabase "1" --> "1" FeedFetcher : uses
+FeedFetcher "1" ..> "0..*" ArticleParser : creates per feed
+ArticleParser ..> Article : creates
+ArticleParser ..> Author : creates
+ArticleParser ..> Tag : creates
+ArticleParser ..> Source : creates
 
-ArticleRetriever --> Article : uses
-ArticleDatabase --> Article : stores
-ArticleParser --> Article : creates
-Folder --> Article : stores
-Article --> Source : contains
-Article --> Author : contains
-Article --> ArticleTag : contains
+' Domain Associations
+Article "1" *-- "1" Source : contains
+Article "1" *-- "0..*" Author : written by
+Article "1" *-- "0..*" Tag : categorized by
 
+' Folder Associations
+ArticleRetriever "1" *-- "1" FolderManager : owns
+FolderManager "1" *-- "0..*" Folder : manages
+Folder "0..*" --> "1" ArticleRetriever : looks up articles
 
-'Controller --> ArticleRetriever : delegates to
-'ArticleRetriever --> ArticleDatabase : uses
-'ArticleParser --> ArticleDatabase : updates
-'ArticleDatabase "1" --> "0..*" Article : stores
-'ArticleParser --> Article : creates
-'ArticleRetriever --> Article : manages
-'ArticleRetriever --> User : updates
-'ArticleRetriever --> Folder : manages
-'Author "1" --> "0..*" Article : writes
-'Source "1" --> "0..*" Article : publishes
-'Article "*" --> "*" ArticleTag : tagged with
-'User "1" --> "0..*" Folder : owns
-'User "*" --> "*" ArticleTag : prefers
-'Folder "0..*" --> "*" Article : contains
+' Test Harness
+Main ..> ArticleRetriever : uses
 
 @enduml
 ```
