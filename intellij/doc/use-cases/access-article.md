@@ -76,18 +76,52 @@ title Load Article Database
 skin rose
 hide footbox
 
-participant Controller as controller
-participant ArticleParser as AP
+participant ": Controller" as controller
 
-controller -> AP : getArticleList()
+create participant "ar : ArticleRetriever" as AR
+controller -> AR : ar = new ArticleRetriever()
 
-AP -> Article ** : creates
+create participant "ad : ArticleDatabase" as AD
+AR -> AD : ad = new ArticleDatabase()
 
-controller <-- AP : List <Article>
+create participant "fm : FolderManager" as FM
+AR -> FM : fm = new FolderManager(this)
 
-participant ArticleDatabase as AD
+AR -> AD : getDatabase()
 
-controller -> AD: save(List <Article>)
+create participant "f : FeedFetcher" as FF
+AD -> FF : f = new FeedFetcher()
+AD -> FF : fetchAll(feeds)
+
+loop for each feed (Grist, Carbon Brief)
+  create participant "ap : ArticleParser" as AP
+  FF -> AP : ap = new ArticleParser()
+  FF -> AP : parse(args, xml, siteName)
+
+  create participant "s : Source" as S
+  AP -> S : s = new Source(website, url, pubDate)
+
+  create participant "a : Author" as A
+  AP -> A : a = new Author(name)
+
+  create participant "t : Tag" as T
+  AP -> T : t = new Tag(category)
+
+  create participant "art : Article" as ART
+  AP -> ART : art = new Article(id, title, desc, authors, tags, source, content)
+
+  FF <-- AP : loadArticles() : List<Article>
+end
+
+AD <-- FF : List<Article>
+
+loop for each article
+  AD -> AD : database.put(article.getId(), article)
+end
+
+AR <-- AD : HashMap<Integer, Article>
+
+controller <-- AR : retriever ready
 
 @enduml
 ```
@@ -96,47 +130,44 @@ controller -> AD: save(List <Article>)
 ```plantuml
 @startuml
 
-title Click on Article
+title Click on Article (Access Article)
 skin rose
 hide footbox
 
 actor User as user
-participant CmdLineUI as UI
-participant Controller as controller
-participant ArticleDatabase as AD
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "art : Article" as article
 
+user -> UI : enters article ID
+UI -> controller : onGetArticle(id)
+controller -> AR : getArticle(id)
+AR --> controller : art : Article
+controller -> UI : runDisplayArticle(art)
+UI -> article : printArticle()
+article --> UI : formatted article string
+UI --> user : displays article with likes/dislikes/comments
 
-user -> UI : clickArticle(List[i])
-UI -> controller : getArticle(List[i])
-controller -> Article ** : getArticleData()
-
-
-Article --> controller : getContent()
-Article --> controller : id, author, url, 
-controller --> UI :displayArticle(id, content)
-
-participant UserProfile as UP
-
-opt user react
-user -> UI: reactToArticle(id)
-ref over user, controller, UI,UP
-    reactArticle(id)
-    end ref
+opt user reacts
+  ref over user, UI, controller, AR, article
+    React Article(id)
+  end ref
 end
 
-opt user save
-user -> UI: saveToArticle(id)
-ref over user, controller, UI,UP
-    saveArticle(id)
-    end ref
+opt user saves
+  ref over user, UI, controller, AR
+    Save Article(articleId, folderName)
+  end ref
 end
 
-controller -> UP : calculatePoints()
-controller -> UI : recommendArticles()
-controller --> UI: List<Article>
+opt user searches
+  ref over user, UI, controller, AR
+    Search Articles(query, type)
+  end ref
+end
 
-user -> UI: return()
-
+user -> UI : return to article list
 
 @enduml
 ```

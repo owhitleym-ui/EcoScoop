@@ -78,57 +78,167 @@ stop
 skin rose
 hide footbox
 
-title Sequence Diagram - Access Saved Folders
+title View All Folders
 
-actor User
-participant ": ScreenUI" as UI
-participant ": Folder\nname, contents[]" as Folder
-participant ": ArticleRetriever" as ArticleRetriever
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "fm : FolderManager" as FM
 
-User -> UI : click folder
-UI -> Folder : open()
+user -> UI : view folders
+UI -> controller : onGetFolders()
+controller -> AR : getFolders()
+AR -> FM : getFolders()
+FM --> AR : List<Folder>
+AR --> controller : List<Folder>
+controller -> UI : displayFolders(List<Folder>)
+UI --> user : show folder list
 
-alt name = "History"
-    Folder -> ArticleRetriever : fetchHistory()
-    ArticleRetriever --> Folder : articles (newest→oldest)
-    Folder --> UI : display contents
-else other folder
-    Folder --> UI : return contents[]
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+
+title Open a Folder
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "fm : FolderManager" as FM
+participant "folder : Folder" as F
+
+user -> UI : select folder by name
+UI -> controller : onGetFolder(name)
+controller -> AR : getFolder(name)
+AR -> FM : getFolder(name)
+FM --> AR : folder : Folder
+AR --> controller : folder
+controller -> UI : displayFolder(folder)
+UI -> F : open()
+
+loop for each articleId in folder
+  F -> AR : getArticle(id)
+  AR --> F : art : Article
 end
 
-UI --> User : show folder contents
+F --> UI : List<Article>
+UI --> user : show folder contents
 
-opt user confirms folder choice
+@enduml
+```
 
-' Rename
-User -> UI : rename folder
-UI -> Folder : edit(newName)
-UI --> User : show updated name
+```plantuml
+@startuml
+skin rose
+hide footbox
 
-' Add article
-User -> UI : add article to folder
-UI -> Folder : addArticle(article)
-Folder --> UI : updated contents[]
+title Rename Folder
 
-' Remove article
-User -> UI : remove article
-UI -> Folder : removeArticle(id)
-Folder --> UI : updated contents[]
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "folder : Folder" as F
 
-' Delete folder
-    User -> UI : delete folder
-    UI -> Folder : delete()
-    Folder --> UI : folder removed
-    UI --> User : return to folder list
+user -> UI : rename folder
+UI -> F : rename(newName)
+UI --> user : show updated name
 
-User -> UI : open article
-UI -> ArticleRetriever : executeAccessArticle(id)
-ArticleRetriever --> Folder : update history log
-ArticleRetriever --> UI : render article
-UI --> User : article displayed
+@enduml
+```
 
+```plantuml
+@startuml
+skin rose
+hide footbox
+
+title Save Article to Folder
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "fm : FolderManager" as FM
+
+user -> UI : enters folder name
+UI -> controller : onSaveToFolder(articleId, folderName)
+controller -> AR : saveToFolder(articleId, folderName)
+AR -> FM : saveToFolder(articleId, folderName)
+FM -> FM : getFolder(folderName)
+
+alt folder does not exist
+  create participant "folder : Folder" as F
+  FM -> F : folder = new Folder(name, retriever)
 end
 
+FM -> F : addArticle(articleId)
+
+@enduml
+
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+
+title Remove Article from Folder
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "folder : Folder" as F
+
+user -> UI : remove article
+UI -> F : removeArticle(id)
+UI --> user : show updated contents
+
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+
+title Delete Folder
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "fm : FolderManager" as FM
+
+user -> UI : delete folder
+UI -> controller : onDeleteFolder(name)
+controller -> AR : deleteFolder(name)
+AR -> FM : deleteFolder(name)
+FM --> AR : boolean
+AR --> controller : boolean
+controller -> UI : confirmDeletion()
+UI --> user : return to folder list
+
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+
+title Open Article from Folder
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+
+user -> UI : select article from folder
+ref over user, UI, controller, AR
+  Access Article(id)
+end ref
 
 @enduml
 ```

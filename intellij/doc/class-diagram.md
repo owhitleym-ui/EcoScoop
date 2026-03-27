@@ -27,12 +27,17 @@ class view.CmdLineUI {
 interface UIListener {
   + onViewArticleTab()
   + onGetArticle(id : int)
+  + getArticleCount() : int
   + onDisplayArticle(article : model.Article)
   + onChooseArticle()
   + onDisplayArticleList()
   + onSearchArticles()
   + onSearchQuery(query : String, type : String) : List<model.Article>
   + onSortResults(results : List<model.Article>, criteria : String) : List<model.Article>
+  + onSaveToFolder(articleId : int, folderName : String)
+  + onLikeArticle(id : int)
+  + onDislikeArticle(id : int)
+  + onCommentArticle(id : int, comment : String)
 }
 
 class controller.Controller {
@@ -91,6 +96,9 @@ class model.Article {
   - tagList : List<model.Tag>
   - content : String
   - publishDate : String
+  - likes : int
+  - dislikes : int
+  - comments : List<String>
   + model.Article()
   + model.Article(id, title, description, authors, tagList, source, content)
   + printArticle() : String
@@ -98,6 +106,8 @@ class model.Article {
   + getContent() : String
   + addLike()
   + addDislike()
+  + addComment(comment : String)
+  + getComments() : List<String>
   + matchesSearch(query : String) : boolean
   + getId() : int
   + getTitle() : String

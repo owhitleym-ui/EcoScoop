@@ -63,27 +63,27 @@ hide footbox
 title Configure Settings (Sequence)
 
 actor User
-participant ": System view.UI" as view.UI
-participant ": controller.Controller" as controller.Controller
+participant ": System UI" as UI
+participant ": Controller" as Controller
 participant ": Profile" as Profile
 
-User -> view.UI : click settings
-view.UI -> controller.Controller : loadSettings()
-controller.Controller -> Profile : getProfileData()
-Profile --> controller.Controller : return profile data
-controller.Controller --> view.UI : display settings
+User -> UI : click settings
+UI -> Controller : loadSettings()
+Controller -> Profile : getProfileData()
+Profile --> Controller : return profile data
+Controller --> UI : display settings
 
-User -> view.UI : modify settings
-view.UI -> controller.Controller : saveSettings(settingsData)
-controller.Controller -> Profile : update(settingsData)
-Profile --> controller.Controller : confirmed
-controller.Controller --> view.UI : refresh display
+User -> UI : modify settings
+UI -> Controller : saveSettings(settingsData)
+Controller -> Profile : update(settingsData)
+Profile --> Controller : confirmed
+Controller --> UI : refresh display
 
-User -> view.UI : go back to profile
-view.UI -> controller.Controller : loadProfile()
-controller.Controller -> Profile : getProfileData()
-Profile --> controller.Controller : return profile data
-controller.Controller --> view.UI : display profile
+User -> UI : go back to profile
+UI -> Controller : loadProfile()
+Controller -> Profile : getProfileData()
+Profile --> Controller : return profile data
+Controller --> UI : display profile
 
 @enduml
 ```

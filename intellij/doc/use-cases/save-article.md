@@ -1,4 +1,4 @@
-# Save model.Article
+# Save Article
 
 ## 1. Primary actor and goals
 
@@ -11,13 +11,13 @@ __User__: Ease of access storing articles for later reading or saving them in pr
 
 ## 3. Preconditions
 * User is authenticated
-* User switches to model.Article Section
-* User accesses model.Article
-* User has clicked Save model.Article Button
+* User switches to Article Section
+* User accesses Article
+* User has clicked Save Article Button
 
 ## 4. Postconditions
-* Stores model.Article into a Saved model.Folder
-* model.Author is able to view how much saves
+* Stores Article into a Saved Folder
+* Author is able to view how much saves
 
 ## 5. Workflow
 
@@ -26,7 +26,7 @@ __User__: Ease of access storing articles for later reading or saving them in pr
 
 skin rose
 
-title Save model.Article (Casual)
+title Save Article (Casual)
 
 'define the lanes
 |#application|User|
@@ -34,33 +34,33 @@ title Save model.Article (Casual)
 
 |System|
 start
-if (model.Article is Saved?) then (no)
-:Display Saved model.Article Folders;
+if (Article is Saved?) then (no)
+:Display Saved Article Folders;
 |User|
 if(Update Saved Folders?) then (yes)
-:Select which model.Folder to save model.Article in;
+:Select which Folder to save Article in;
 else()
-:Create New model.Folder;
+:Create New Folder;
 |System|
-:Save New model.Folder to Folders;
+:Save New Folder to Folders;
 endif
 |System|
-:Send model.Article to save;
+:Send Article to save;
  else ()
-:Remove model.Article;
+:Remove Article;
 stop
 endif
 
 
 |System|
 if (Validate ID) then (yes)
-:Save model.Article to user's preferred location;
-:Update amount of saves on model.Article;
+:Save Article to user's preferred location;
+:Update amount of saves on Article;
 stop
 
 else (no)
 :Do not save article;
-:Display Unable to Save model.Article;
+:Display Unable to Save Article;
 
 stop
 @enduml
@@ -68,47 +68,75 @@ stop
 
 ## 6. Sequence Diagram
 ```plantuml
-@startuml@startuml
+@startuml
 skin rose
 hide footbox
-title Save model.Article (Sequence)
+title Save Article to Folder
 
-actor User
-participant ": System view.UI" as view.UI
-participant ": controller.Controller" as controller.Controller
-participant "f : model.Folder" as model.Folder
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "fm : FolderManager" as FM
 
-view.UI -> User : display save/unsave option
+UI -> user : display save prompt\n(0. No / 1. Yes)
+user -> UI : enters 1
+UI -> user : "Enter folder name: "
+user -> UI : enters folderName
+UI -> controller : onSaveToFolder(articleId, folderName)
+controller -> AR : saveToFolder(articleId, folderName)
+AR -> FM : saveToFolder(articleId, folderName)
+FM -> FM : getFolder(folderName)
 
-alt article not yet saved
-    User -> view.UI : click save
-
-    alt save to existing folder
-        view.UI -> User : display folder list
-        User -> view.UI : select folder
-        view.UI -> controller.Controller : saveToFolder(articleId, folderName)
-
-    else create new folder
-        User -> view.UI : create new folder
-        view.UI -> controller.Controller : createFolder(folderName)
-        controller.Controller -> model.Folder ** : f = create(folderName)
-        view.UI -> controller.Controller : saveToFolder(articleId, folderName)
-    end
-
-    controller.Controller -> controller.Controller : validateUserId()
-
-    alt valid ID
-        controller.Controller --> view.UI : article saved\nupdate save count
-    else invalid ID
-        controller.Controller --> view.UI : display unable to save
-    end
-
-else article already saved
-    User -> view.UI : click unsave
-    view.UI -> controller.Controller : removeArticle(articleId)
-    controller.Controller --> view.UI : article removed
+alt folder does not exist
+  create participant "folder : Folder" as F
+  FM -> F : folder = new Folder(name, retriever)
+  FM -> FM : folders.add(folder)
+else folder exists
+  FM -> F : folder found
 end
+
+FM -> F : addArticle(articleId)
+F -> AR : getArticle(articleId)
+AR --> F : art : Article
+F -> F : articleIds.add(id)
+
+UI --> user : "Saved to folder 'folderName'."
 
 @enduml
 
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Save Article Declined
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+
+UI -> user : display save prompt\n(0. No / 1. Yes)
+user -> UI : enters 0
+UI --> user : return to article list
+
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Remove Article from Folder
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "folder : Folder" as F
+
+user -> UI : remove article from folder
+UI -> F : removeArticle(id)
+F -> F : articleIds.remove(id)
+UI --> user : show updated folder contents
+
+@enduml
 ```

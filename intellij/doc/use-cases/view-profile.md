@@ -52,10 +52,10 @@ case ( Checked Tags?)
     |System|
     switch (Chose tags?)
     |System|
-    case ( Added model.Tag?)
+    case ( Added Tag?)
     |System|
         :Save preferences and recommend more content with tag;
-    case ( Removed model.Tag?)
+    case ( Removed Tag?)
     |System|
         :Save preferences and recommend less content with tag;
     case ( Kept Tags?)
@@ -81,52 +81,52 @@ hide footbox
 title View Profile (Sequence)
 
 actor User
-participant ": System view.UI" as view.UI
-participant ": controller.Controller" as controller.Controller
-participant ": model.Tag" as model.Tag
+participant ": System UI" as UI
+participant ": Controller" as Controller
+participant ": Tag" as Tag
 participant ": Profile" as Profile
-participant ": model.ArticleRetriever" as Retriever
+participant ": ArticleRetriever" as Retriever
 
-User -> view.UI : click profile
-view.UI -> controller.Controller : displayProfile()
-controller.Controller -> Profile : getStats()
-Profile --> controller.Controller : return user stats
-controller.Controller --> view.UI : show user stats
+User -> UI : click profile
+UI -> Controller : displayProfile()
+Controller -> Profile : getStats()
+Profile --> Controller : return user stats
+Controller --> UI : show user stats
 
 opt show achievements
-User -> view.UI : click achievements
-view.UI -> controller.Controller : displayAchievementScreen()
-controller.Controller -> Profile : getAchievements()
-Profile --> controller.Controller : return achievements
-controller.Controller --> view.UI : show user achievement
+User -> UI : click achievements
+UI -> Controller : displayAchievementScreen()
+Controller -> Profile : getAchievements()
+Profile --> Controller : return achievements
+Controller --> UI : show user achievement
 
 else show level
-User -> view.UI : click level
-view.UI -> controller.Controller : displayLevel()
-controller.Controller -> Profile : getLevel()
-Profile --> controller.Controller : return user's levels
-controller.Controller --> view.UI : show level stats
+User -> UI : click level
+UI -> Controller : displayLevel()
+Controller -> Profile : getLevel()
+Profile --> Controller : return user's levels
+Controller --> UI : show level stats
 
 else show tags
-User -> view.UI : click tags
-view.UI -> controller.Controller : displayTags()
-controller.Controller -> Retriever : getArticleTags()
-Retriever --> controller.Controller : return tags
-controller.Controller --> view.UI : show tags of liked articles
+User -> UI : click tags
+UI -> Controller : displayTags()
+Controller -> Retriever : getArticleTags()
+Retriever --> Controller : return tags
+Controller --> UI : show tags of liked articles
 
 alt add tag
-User -> view.UI : click add tag
-view.UI -> controller.Controller : addTag()
-controller.Controller -> model.Tag : addTag()
-model.Tag --> controller.Controller : updates tags
-controller.Controller --> view.UI : shows updated tags
+User -> UI : click add tag
+UI -> Controller : addTag()
+Controller -> Tag : addTag()
+Tag --> Controller : updates tags
+Controller --> UI : shows updated tags
 
 else remove tag
-User -> view.UI : click remove tag
-view.UI -> controller.Controller : addTag()
-controller.Controller -> model.Tag : removeTag()
-model.Tag --> controller.Controller : updates tags
-controller.Controller --> view.UI : shows updated tags
+User -> UI : click remove tag
+UI -> Controller : addTag()
+Controller -> Tag : removeTag()
+Tag --> Controller : updates tags
+Controller --> UI : shows updated tags
 end alt
 
 

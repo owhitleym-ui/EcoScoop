@@ -68,7 +68,7 @@ if ( Interactive View) then (yes)
 
 |System|
 :Display specific visual;
-(no) elseif ( model.Article View) then (yes)
+(no) elseif ( Article View) then (yes)
 :Execute __Search Article__;
 
 (no) elseif (Profile View) then (yes)
@@ -90,66 +90,66 @@ hide footbox
 title View Dashboard (Sequence)
 
 actor User
-participant ": System view.UI" as view.UI
-participant ": controller.Controller" as controller.Controller
+participant ": System UI" as UI
+participant ": Controller" as Controller
 participant ": Dashboard" as Dashboard
 participant ": ESS" as ESS
 participant ": Diagram" as Diagram
 
-User -> view.UI : click dashboard tab
-view.UI -> controller.Controller : loadDashboard()
-controller.Controller -> ESS : fetchEnvironmentalStats()
-ESS --> controller.Controller : return raw stats
-controller.Controller -> Dashboard : processStats(rawStats)
-Dashboard --> controller.Controller : return processed stats
-controller.Controller -> Diagram : generateVisuals(stats)
-Diagram --> controller.Controller : return visuals
-controller.Controller --> view.UI : display dashboard overview
+User -> UI : click dashboard tab
+UI -> Controller : loadDashboard()
+Controller -> ESS : fetchEnvironmentalStats()
+ESS --> Controller : return raw stats
+Controller -> Dashboard : processStats(rawStats)
+Dashboard --> Controller : return processed stats
+Controller -> Diagram : generateVisuals(stats)
+Diagram --> Controller : return visuals
+Controller --> UI : display dashboard overview
 
 alt view fossil fuels
-    User -> view.UI : click fossil fuels
-    view.UI -> controller.Controller : loadDetail(fossilFuels)
-    controller.Controller -> Diagram : getDetailedVisual(fossilFuels)
-    Diagram --> controller.Controller : return expanded visual
-    controller.Controller --> view.UI : show fossil fuel stats
+    User -> UI : click fossil fuels
+    UI -> Controller : loadDetail(fossilFuels)
+    Controller -> Diagram : getDetailedVisual(fossilFuels)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show fossil fuel stats
 
 else view energy usage
-    User -> view.UI : click energy usage
-    view.UI -> controller.Controller : loadDetail(energy)
-    controller.Controller -> Diagram : getDetailedVisual(energy)
-    Diagram --> controller.Controller : return expanded visual
-    controller.Controller --> view.UI : show energy usage stats
+    User -> UI : click energy usage
+    UI -> Controller : loadDetail(energy)
+    Controller -> Diagram : getDetailedVisual(energy)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show energy usage stats
 
 else view air emissions
-    User -> view.UI : click air emissions
-    view.UI -> controller.Controller : loadDetail(airEmissions)
-    controller.Controller -> Diagram : getDetailedVisual(airEmissions)
-    Diagram --> controller.Controller : return expanded visual
-    controller.Controller --> view.UI : show air emissions stats
+    User -> UI : click air emissions
+    UI -> Controller : loadDetail(airEmissions)
+    Controller -> Diagram : getDetailedVisual(airEmissions)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show air emissions stats
 
 else view waste data
-    User -> view.UI : click waste
-    view.UI -> controller.Controller : loadDetail(waste)
-    controller.Controller -> Diagram : getDetailedVisual(waste)
-    Diagram --> controller.Controller : return expanded visual
-    controller.Controller --> view.UI : show waste stats
+    User -> UI : click waste
+    UI -> Controller : loadDetail(waste)
+    Controller -> Diagram : getDetailedVisual(waste)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show waste stats
 
 else view water data
-    User -> view.UI : click water
-    view.UI -> controller.Controller : loadDetail(water)
-    controller.Controller -> Diagram : getDetailedVisual(water)
-    Diagram --> controller.Controller : return expanded visual
-    controller.Controller --> view.UI : show water stats
+    User -> UI : click water
+    UI -> Controller : loadDetail(water)
+    Controller -> Diagram : getDetailedVisual(water)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show water stats
 end
-User -> view.UI : switch to article view
+User -> UI : switch to article view
 
-ref over view.UI, controller.Controller
-    Search model.Article
+ref over UI, Controller
+    Search Article
 end ref
 
-User -> view.UI : switch to profile view
+User -> UI : switch to profile view
 
-ref over view.UI, controller.Controller
+ref over UI, Controller
     View Profile
 end ref
 

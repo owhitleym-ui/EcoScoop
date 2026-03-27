@@ -1,4 +1,4 @@
-# Search model.Article
+# Search Article
 
 ## 1. Primary actor and goals
 __User__: Wants to look for relevant articles depending on keywords, tags, authors, or publishing year. Looking for relevant, topical news that all relate to what the user inputs and is searching for.
@@ -10,7 +10,7 @@ __User__: Wants to look for relevant articles depending on keywords, tags, autho
 
 
 ## 3. Preconditions
-* User switches to model.Article Section
+* User switches to Article Section
 
 ## 4. Postconditions
 * List of relevant articles are shown
@@ -35,10 +35,10 @@ if (Click on Search Tab) then (yes)
 |System|
     if (Keyword Search?) then (yes)
     :Search by Keywords;
-    (no) elseif (model.Tag Search?) then (yes)
+    (no) elseif (Tag Search?) then (yes)
     :Search by Tags;
-    (no) elseif (model.Author Search?) then (yes)
-    :Search by model.Author;
+    (no) elseif (Author Search?) then (yes)
+    :Search by Author;
     endif
 
 endif
@@ -75,35 +75,155 @@ stop
 @startuml
 skin rose
 hide footbox
-title Search model.Article (Sequence)
+title Search by Keyword
 
-actor User
-participant ": System view.UI" as view.UI
-participant ": SearchController" as controller.Controller
-participant ": model.ArticleDatabase" as Database
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "art : Article" as article
 
-User -> view.UI : open search tab
-User -> view.UI : enter search input\n(keyword / tag / author / year)
-view.UI -> controller.Controller : submitSearch(query, type)
+user -> UI : selects "Search Articles"
+UI -> user : display search type menu\n(0. Return / 1. Keyword / 2. Tag / 3. Author)
+user -> UI : enters 1
+UI -> user : "Enter search query: "
+user -> UI : enters query
+UI -> controller : onSearchQuery(query, "keyword")
+controller -> AR : searchArticles(query, "keyword")
 
-ref over Database 
-loadArticleDatabase
-end ref
+loop for each article in articleList
+  AR -> article : getTitle(), getDescription(), getContent()
+  AR -> AR : count keyword hits in title,\ndescription, and content
+end
 
-controller.Controller -> Database : loadArticles(query, type)
-Database --> controller.Controller : return matching articles
+AR -> AR : sort results by keyword hit count (descending)
+AR --> controller : List<Article>
+controller --> UI : results
+UI --> user : display search results (N found)
 
-controller.Controller --> view.UI : display results
-User -> view.UI : choose sort criteria\n(relevance / date / rating / trending)
-view.UI -> controller.Controller : sortArticles(criteria)
-controller.Controller --> view.UI : display sorted results
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Search by Tag
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "art : Article" as article
+participant "t : Tag" as tag
+
+user -> UI : selects "Search Articles"
+UI -> user : display search type menu\n(0. Return / 1. Keyword / 2. Tag / 3. Author)
+user -> UI : enters 2
+UI -> user : "Enter search query: "
+user -> UI : enters query
+UI -> controller : onSearchQuery(query, "tag")
+controller -> AR : searchArticles(query, "tag")
+
+loop for each article in articleList
+  AR -> article : getTagList()
+  loop for each tag
+    AR -> tag : getName()
+    AR -> AR : check if tag name contains query
+  end
+end
+
+AR --> controller : List<Article>
+controller --> UI : results
+UI --> user : display search results (N found)
+
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Search by Author
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "art : Article" as article
+participant "a : Author" as author
+
+user -> UI : selects "Search Articles"
+UI -> user : display search type menu\n(0. Return / 1. Keyword / 2. Tag / 3. Author)
+user -> UI : enters 3
+UI -> user : "Enter search query: "
+user -> UI : enters query
+UI -> controller : onSearchQuery(query, "author")
+controller -> AR : searchArticles(query, "author")
+
+loop for each article in articleList
+  AR -> article : getAuthors()
+  loop for each author
+    AR -> author : getName()
+    AR -> AR : check if author name contains query
+  end
+end
+
+AR --> controller : List<Article>
+controller --> UI : results
+UI --> user : display search results (N found)
+
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Sort Search Results
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
 
 
-User -> view.UI : select article
-ref over view.UI, controller.Controller
-  Access model.Article
+UI -> user : display sort menu\n(0. Skip / 1. Relevance / 2. Date / 3. Rating / 4. Trending)
+user -> UI : enters sort choice
+UI -> controller : onSortResults(results, criteria)
+controller -> AR : sortArticles(results, criteria)
+
+alt criteria = "date"
+  AR -> AR : sort by publishDate (newest first)
+else criteria = "rating"
+  note right : Not yet implemented
+else criteria = "trending"
+  note right : Not yet implemented
+else criteria = "relevance" (default)
+  note right : Not yet implemented
+end
+
+AR --> controller : List<Article> (sorted)
+controller --> UI : sorted results
+UI --> user : display sorted search results
+
+@enduml
+```
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Open Article from Search Results
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+
+user -> UI : select article from results
+ref over user, UI, controller, AR
+  Access Article(id)
 end ref
 
 @enduml
-
 ```

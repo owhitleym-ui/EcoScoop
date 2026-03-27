@@ -1,4 +1,4 @@
-# React model.Article
+# React Article
 
 ## 1. Primary actor and goals
 
@@ -29,7 +29,7 @@ __User__: Ease of access giving feedback on article content from personal impres
 
 skin rose
 
-title React model.Article(Casual)
+title React Article(Casual)
 
 'define the lanes
 |#application|User|
@@ -56,13 +56,13 @@ switch (Handle Feedback)
             |System|
             :Update comment stats;
         endif
-    case (      Like model.Article?)
+    case (      Like Article?)
         |System|
         :Execute __Save Article__;
         :Show more related content;
-    case ( Dislike model.Article?)
+    case ( Dislike Article?)
         :Show less content like this;
-    case ( Save model.Author?) 
+    case ( Save Author?) 
         |System|
         :Follow author;
         :Show author's content in articles tab;
@@ -80,42 +80,85 @@ stop
 @startuml
 skin rose
 hide footbox
-title React model.Article (Sequence)
+title Like Article
 
-actor User
-participant ": view.CmdLineUI" as view.UI
-participant ": controller.Controller" as controller.Controller
-participant "a : model.Article" as model.Article
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "art : Article" as article
 
-note over view.UI : Shown automatically after\nthe user exits an article
+UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
+user -> UI : enters 1
+UI -> controller : onLikeArticle(id)
+controller -> AR : getArticle(id)
+AR --> controller : art : Article
+controller -> article : addLike()
+UI --> user : "Liked! (N likes)"
 
-view.UI -> User : display react prompt\n(skip / like / dislike / comment)
+@enduml
+```
 
-alt like
-    User -> view.UI : enter 1
-    view.UI -> controller.Controller : onLikeArticle(articleId)
-    controller.Controller -> model.Article : addLike()
-    view.UI --> User : "Liked! (N likes)"
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Dislike Article
 
-else dislike
-    User -> view.UI : enter 2
-    view.UI -> controller.Controller : onDislikeArticle(articleId)
-    controller.Controller -> model.Article : addDislike()
-    view.UI --> User : "Disliked! (N dislikes)"
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "art : Article" as article
 
-else comment
-    User -> view.UI : enter 3
-    view.UI -> User : prompt for comment text
-    User -> view.UI : enter comment
-    view.UI -> controller.Controller : onCommentArticle(articleId, comment)
-    controller.Controller -> model.Article : addComment(comment)
-    view.UI --> User : "Comment added."
+UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
+user -> UI : enters 2
+UI -> controller : onDislikeArticle(id)
+controller -> AR : getArticle(id)
+AR --> controller : art : Article
+controller -> article : addDislike()
+UI --> user : "Disliked! (N dislikes)"
 
-else skip
-    User -> view.UI : enter 0
-    view.UI --> User : return to article list
+@enduml
+```
 
-end
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Comment on Article
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+participant "controller : Controller" as controller
+participant "ar : ArticleRetriever" as AR
+participant "art : Article" as article
+
+UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
+user -> UI : enters 3
+UI -> user : "Enter your comment: "
+user -> UI : enters comment text
+UI -> controller : onCommentArticle(id, comment)
+controller -> AR : getArticle(id)
+AR --> controller : art : Article
+controller -> article : addComment(comment)
+UI --> user : "Comment added."
+
+@enduml
+```
+
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Skip Reaction
+
+actor User as user
+participant "ui : CmdLineUI" as UI
+
+UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
+user -> UI : enters 0
+UI --> user : return to article list
 
 @enduml
 ```
