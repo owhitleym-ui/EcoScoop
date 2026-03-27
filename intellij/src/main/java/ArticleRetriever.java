@@ -1,14 +1,10 @@
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class ArticleRetriever {
     public HashMap<Integer, Article> databaseMap;
     public ArrayList<Article> articleList;
+    private FolderManager folderManager;
 
     // Search type constants
     public static final String SEARCH_KEYWORD = "keyword";
@@ -25,6 +21,34 @@ public class ArticleRetriever {
         ArticleDatabase artData = new ArticleDatabase();
         this.databaseMap = artData.getDatabase();
         this.articleList = artData.articles;
+        this.folderManager = new FolderManager(this);
+    }
+
+    // --- Folder delegation methods ---
+
+    /** Creates a new empty folder. */
+    public Folder createFolder(String name) {
+        return folderManager.createFolder(name);
+    }
+
+    /** Deletes the folder with the given name. Returns true if it existed. */
+    public boolean deleteFolder(String name) {
+        return folderManager.deleteFolder(name);
+    }
+
+    /** Returns the folder with the given name, or null. */
+    public Folder getFolder(String name) {
+        return folderManager.getFolder(name);
+    }
+
+    /** Saves an article to a folder, creating the folder if needed. */
+    public void saveToFolder(int articleId, String folderName) {
+        folderManager.saveToFolder(articleId, folderName);
+    }
+
+    /** Returns all user-created folders. */
+    public ArrayList<Folder> getFolders() {
+        return folderManager.getFolders();
     }
 
     public Article getArticle(int id) {

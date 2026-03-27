@@ -30,6 +30,8 @@ public class ArticleParser {
     private String currentDescription;
     private String currentPubDate;
 
+    private static final String CONTENT_NS = "http://purl.org/rss/1.0/modules/content/";
+
     private static int idCounter = 0;
 
     private final XmlPullParser xpp;
@@ -101,16 +103,16 @@ public class ArticleParser {
 
         switch (currentTag) {
             case "title":
-                currentTitle = text;
+                currentTitle += text;
                 break;
             case "link":
-                currentUrl = text;
+                currentUrl += text;
                 break;
             case "description":
-                currentDescription = text;
+                currentDescription += text;
                 break;
             case "pubDate":
-                currentPubDate = text;
+                currentPubDate += text;
                 break;
             case "category":
                 tagList.add(text);
@@ -163,17 +165,27 @@ public class ArticleParser {
             tags.add(new Tag(category));
         }
 
-        return new Article(idCounter, currentTitle, currentDescription, authors, tags,
+        // Strip HTML tags and extra whitespace from description so it displays cleanly
+        String cleanDesc = currentDescription
+                .replaceAll("<[^>]+>", " ")
+                .replaceAll("&[a-zA-Z]+;", " ")
+                .replaceAll("\\s+", " ")
+                .trim();
+
+        // If no body content was parsed (feed has no content:encoded), fall back to description
+        String body = content.isEmpty() ? cleanDesc : String.join(" ", content);
+
+        return new Article(idCounter, currentTitle, cleanDesc, authors, tags,
                 new Source(website, currentUrl, currentPubDate),
-                String.join(" ", content)
+                body
         );
     }
 
     private void resetBuffers() {
-        currentTitle = null;
-        currentUrl = null;
-        currentDescription = null;
-        currentPubDate = null;
+        currentTitle = "";
+        currentUrl = "";
+        currentDescription = "";
+        currentPubDate = "";
 
         tagList.clear();
         authorList.clear();
