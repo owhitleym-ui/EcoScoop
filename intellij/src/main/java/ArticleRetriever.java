@@ -24,7 +24,7 @@ public class ArticleRetriever {
         this.folderManager = new FolderManager(this);
     }
 
-    // --- Folder delegation methods ---
+    // --- Folder Methods ---
 
     /** Creates a new empty folder. */
     public Folder createFolder(String name) {
@@ -50,6 +50,8 @@ public class ArticleRetriever {
     public ArrayList<Folder> getFolders() {
         return folderManager.getFolders();
     }
+
+    /** Returns an Article from the Database */
 
     public Article getArticle(int id) {
         return databaseMap.get(id);
@@ -142,16 +144,16 @@ public class ArticleRetriever {
                 break;
 
             case SORT_RATING:
-                // sorted.sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
+                // NOT YET IMPLEMENTED
                 break;
 
             case SORT_TRENDING:
-                // sorted.sort((a, b) -> Integer.compare(b.getViewCount(), a.getViewCount()));
+                // NOT YET IMPLEMENTED
                 break;
 
             case SORT_RELEVANCE:
             default:
-                // already relevance-sorted from the search step
+                // NOT YET IMPLEMENTED
                 break;
         }
         return sorted;
