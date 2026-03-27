@@ -12,7 +12,7 @@ An engaging and dynamic News Hub Application that aggregates environmental news 
 ## Limitations
 
 - All data is only stored per session and cannot be remembered
-- The three RSS sources are hardcoded and cannot be changed.
+- The two RSS sources are hardcoded and cannot be changed.
 - Text-base leaves less interactable uses
 - Cannot access folders due to no user profile implementation
 - Search uses simple substring matching
@@ -26,7 +26,7 @@ An engaging and dynamic News Hub Application that aggregates environmental news 
 - Internet connection (feeds are fetched live on startup)
 
 ### Compile & Run
-The entry point is `Controller.main()`. A secondary `Main.main()` is available for quick testing — it prints all article summaries and exits.
+The entry point is `Controller.main()`. A secondary `Main.main()` is available for quick testing — it prints all article summaries and exits. You can find these in the files './src/main/java/Controller'
 
 ## Project Structure
 
