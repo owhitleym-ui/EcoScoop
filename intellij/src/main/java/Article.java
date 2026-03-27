@@ -15,9 +15,10 @@ public class Article {
     private String publishDate;
     private int likes;
     private int dislikes;
+    private ArrayList<String> comments;
 
     /**
-     * Creates a fully populated article with all fields.
+     * Creates an article with all fields.
      *
      * @param id          unique article ID
      * @param title       article headline
@@ -37,6 +38,7 @@ public class Article {
         this.content = content;
         this.likes = 0;
         this.dislikes = 0;
+        this.comments = new ArrayList<>();
     }
 
 
@@ -53,6 +55,7 @@ public class Article {
         this.content = "";
         this.likes = 0;
         this.dislikes = 0;
+        this.comments = new ArrayList<>();
     }
 
     @Override
@@ -64,7 +67,18 @@ public class Article {
      * Returns a formatted string for displaying the full article with reactions.
      */
     public String printArticle(){
-        return "" + title + "\n" + authors + "\n \n" + getContent() + "\n \n" + source + "\n" + tagList + "\n Likes: " + likes + " | Dislikes: " + dislikes;
+        StringBuilder sb = new StringBuilder();
+        sb.append(title).append("\n").append(authors).append("\n \n")
+          .append(getContent()).append("\n \n")
+          .append(source).append("\n").append(tagList)
+          .append("\n Likes: ").append(likes).append(" | Dislikes: ").append(dislikes);
+        if (!comments.isEmpty()) {
+            sb.append("\n\n--- Comments ---");
+            for (int i = 0; i < comments.size(); i++) {
+                sb.append("\n ").append(i + 1).append(". ").append(comments.get(i));
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -75,7 +89,7 @@ public class Article {
     }
 
     /**
-     * Returns the article body cleaned of HTML entities and word-wrapped at 80 characters.
+     * Returns the article body with no HTML entities and word-wrapped at 80 characters.
      */
     public String getContent() {
         String cleaned = content.replaceAll("&nbsp;", " ")
@@ -85,17 +99,31 @@ public class Article {
     }
 
     /**
-     * Increments the like count by one.
+     * Increments like count by one.
      */
     public void addLike() {
         this.likes++;
     }
 
     /**
-     * Increments the dislike count by one.
+     * Increments dislike count by one.
      */
     public void addDislike() {
         this.dislikes++;
+    }
+
+    /**
+     * Adds a user comment to this article.
+     *
+     * @param comment the comment text
+     */
+    public void addComment(String comment) {
+        this.comments.add(comment);
+    }
+
+    /** Returns all comments left on this article. */
+    public ArrayList<String> getComments() {
+        return comments;
     }
 
 

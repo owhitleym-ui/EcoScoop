@@ -8,7 +8,7 @@ This report describes the system tests performed on the EcoScoop prototype (Phas
 
 ## Test 1 — App Launch and Feed Loading
 
-**What we tested:** Starting the app and confirming that articles load from the RSS feeds (Grist and Carbon Brief).
+**Tested:** Starting the app and confirming that articles load from the RSS feeds (Grist and Carbon Brief).
 
 **Input:** Run the app. No user input yet.
 
@@ -35,7 +35,7 @@ Available Actions:
 
 ## Test 2 — Navigate to Article Tab
 
-**What we tested:** Choosing option 1 from the main menu to enter the Article Tab.
+**Tested:** Choosing option 1 from the main menu to enter the Article Tab.
 
 **Input:** At the main menu, enter `1`.
 
@@ -72,7 +72,7 @@ Carbon Brief -- Wed, 25 Mar 2026 16:10:07 +0000
 
 ## Test 3 — Read an Article
 
-**What we tested:** Choosing an article by ID and reading its full content.
+**Tested:** Choosing an article by ID and reading its full content.
 
 **Input:** From the Article Tab, enter `1` to choose an article. When prompted for an ID, enter the ID of any article shown in the list (e.g. `1`).
 
@@ -131,7 +131,7 @@ Available Actions:
 
 ## Test 4 — Save an Article to a Folder
 
-**What we tested:** Saving an article to a folder after reading it.
+**Tested:** Saving an article to a folder after reading it.
 
 **Input:** After reading an article, enter `0` to return. When prompted with the save question, enter `1` (Yes). Enter a folder name, e.g. `climate`.
 
@@ -158,7 +158,7 @@ Saved to folder 'Iran'.
 
 ## Test 5 — Decline to Save an Article
 
-**What we tested:** Choosing not to save an article after reading it.
+**Tested:** Choosing not to save an article after reading it.
 
 **Input:** After reading an article, enter `0` to return. When prompted with the save question, enter `0` (No).
 
@@ -176,7 +176,7 @@ Saved to folder 'Iran'.
 
 ## Test 6 — Search Articles by Keyword
 
-**What we tested:** Searching for articles using a keyword.
+**Tested:** Searching for articles using a keyword.
 
 **Input:** From the Article Tab, enter `2` for Search Articles. Choose `1` for Keyword. Enter a search term that should appear in at least one article, e.g. `climate`.
 
@@ -249,9 +249,9 @@ Grist -- Mon, 23 Mar 2026 08:45:00 +0000
 
 ## Test 7 — Search Returns No Results
 
-**What we tested:** Searching for a term that does not appear in any article.
+**Tested:** Searching for a term that does not appear in any article.
 
-**Input:** From the Article Tab, enter `2` for Search Articles. Choose `1` for Keyword. Enter a nonsense term, e.g. `zzzzzzz`.
+**Input:** From the Article Tab, enter 2 for Search Articles. Choose 1 for Keyword. Enter a nonsense term, e.g. `zzzzzzz`.
 
 **Expected output:** The app prints `No articles found.` and returns to the search menu without crashing.
 
@@ -265,6 +265,8 @@ Search Type:
  3. Author
  Response: 1
 Enter search query: fjekwfhwef
+
+No articles found.
 ```
 
 **Result:** __Pass__ / Fail
@@ -273,11 +275,11 @@ Enter search query: fjekwfhwef
 
 ## Test 8 — Invalid Menu Input (Wrong Number)
 
-**What we tested:** Entering a menu option that does not exist.
+**Tested:** Entering a menu option that does not exist.
 
 **Input:** From the main menu, enter a number that is not listed, e.g. `9`.
 
-**Expected output:** The app prints `Invalid option, please try again.` and shows the menu again without crashing.
+**Expected output:** The app prints "Invalid option, please try again." and shows the menu again without crashing.
 
 **Actual output:**
 
@@ -298,11 +300,11 @@ Available Actions:
 
 ## Test 9 — Invalid Menu Input (Not a Number)
 
-**What we tested:** Entering a non-number where the app expects a number.
+**Tested:** Entering a non-number where the app expects a number.
 
-**Input:** From the main menu, type `abc` and press enter.
+**Input:** From the main menu, type abc and press enter.
 
-**Expected output:** The app prints `Invalid input. Please enter a number.` and shows the menu again without crashing.
+**Expected output:** The app prints "Invalid input. Please enter a number." and shows the menu again without crashing.
 
 **Actual output:**
 
@@ -324,9 +326,9 @@ Available Actions:
 
 ## Test 10 — Invalid Article ID
 
-**What we tested:** Entering an article ID that does not exist.
+**Tested:** Entering an article ID that does not exist.
 
-**Input:** From the Article Tab, enter `1` to choose an article. When prompted for an ID, enter a number that is not in the list, e.g. `9999`.
+**Input:** From the Article Tab, enter 1 to choose an article. When prompted for an ID, enter a number that is not in the list, e.g. 9999.
 
 **Expected output:** The app does not crash. It either skips silently or shows an error, and returns to the ID prompt.
 
@@ -349,9 +351,9 @@ Article ID not found. Please enter an ID between 1 and 30.
 
 ## Test 11 — Return to Main Menu from Article Tab
 
-**What we tested:** Navigating back to the main menu from the Article Tab.
+**Tested:** Navigating back to the main menu from the Article Tab.
 
-**Input:** From the Article Tab, enter `0`.
+**Input:** From the Article Tab, enter 0.
 
 **Expected output:** The app returns to the main menu and displays it again.
 
@@ -374,9 +376,9 @@ Available Actions:
 
 ## Test 12 — Exit the App
 
-**What we tested:** Exiting the application cleanly.
+**Tested:** Exiting the application cleanly.
 
-**Input:** From the main menu, enter `0`.
+**Input:** From the main menu, enter 0.
 
 **Expected output:** The app prints `~~~~~~ Thank you for visiting EcoSCOOP! ~~~~~~` and exits without errors.
 
@@ -393,3 +395,79 @@ Available Actions:
 
 **Result:** __Pass__ / Fail
 
+## Test 13 — Reactions
+
+### Like
+**Tested:** Liking an article
+**Input:** From the reaction menu, enter 1 to like.
+**Expected Output:** `Liked! (1 likes)`
+
+**Actual output:**
+```
+React to this article?
+ 0. Skip
+ 1. Like
+ 2. Dislike
+ 3. Leave a comment
+ Response: 1
+Liked! (1 likes)
+```
+
+### Dislike
+**Tested:** Disliking the article
+
+**Input:** From the reaction menu, enter 1 to like.
+
+**Expected Output:** `Disliked! (1 dislikes)`
+
+```
+Available Actions:
+ 0. Return to Article List 
+ 1. React 
+ 2. Save 
+ Response: 1
+
+React to this article?
+ 0. Skip
+ 1. Like
+ 2. Dislike
+ 3. Leave a comment
+ Response: 2
+```
+
+### Comment
+**Tested:** Commenting on the article
+
+**Input:** From the reaction menu, enter 3 to comment.
+
+**Expected Output:** `Comment added.`
+
+```
+Available Actions:
+ 0. Return to Article List 
+ 1. React 
+ 2. Save 
+ Response: 1
+
+React to this article?
+ 0. Skip
+ 1. Like
+ 2. Dislike
+ 3. Leave a comment
+ Response: 3
+Enter your comment: Hello!
+Comment added.
+```
+
+### Showing Comments and Likes from Above Test
+__Output__:
+```
+Grist https://grist.org/language/climate-federal-research-grants-national-science-foundation/ Fri, 27 Mar 2026 08:45:00 +0000
+[Food and Agriculture, Language, Politics, Science]
+ Likes: 1 | Dislikes: 1
+
+--- Comments ---
+ 1. Hello!
+```
+
+All reactions show up!

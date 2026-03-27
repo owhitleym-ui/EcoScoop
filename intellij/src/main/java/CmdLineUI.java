@@ -87,12 +87,19 @@ public class CmdLineUI implements UI {
     public void runDisplayArticle(Article article) {
         clearConsole();
         this.ostream.print(article.printArticle());
-        this.ostream.print("\n\nAvailable Actions:\n 0. Return to Article List\n Response: ");
+        this.ostream.print("\n\nAvailable Actions:\n 0. Return to Article List \n 1. React \n 2. Save \n Response: ");
 
         boolean running = true;
         while (running) {
             switch (readInt()) {
                 case 0:
+                    running = false;
+                    break;
+                case 1:
+                    runReactPrompt(article);
+                    running = false;
+                    break;
+                case 2:
                     runSavePrompt(article);
                     running = false;
                     break;
@@ -118,6 +125,40 @@ public class CmdLineUI implements UI {
                     String folderName = iscanner.next();
                     listener.onSaveToFolder(article.getId(), folderName);
                     this.ostream.println("Saved to folder '" + folderName + "'.");
+                    running = false;
+                    break;
+                default:
+                    this.ostream.println("Invalid option, please try again.");
+                    break;
+            }
+        }
+    }
+
+    // Called after the save prompt, lets  user like, dislike, or comment on article.
+    private void runReactPrompt(Article article) {
+        boolean running = true;
+        while (running) {
+            this.ostream.print("\nReact to this article?\n 0. Skip\n 1. Like\n 2. Dislike\n 3. Leave a comment\n Response: ");
+            switch (readInt()) {
+                case 0:
+                    running = false;
+                    break;
+                case 1:
+                    listener.onLikeArticle(article.getId());
+                    this.ostream.println("Liked! (" + article.getLikes() + " likes)");
+                    running = false;
+                    break;
+                case 2:
+                    listener.onDislikeArticle(article.getId());
+                    this.ostream.println("Disliked! (" + article.getDislikes() + " dislikes)");
+                    running = false;
+                    break;
+                case 3:
+                    this.ostream.print("Enter your comment: ");
+                    iscanner.nextLine(); // consume leftover newline
+                    String comment = iscanner.nextLine();
+                    listener.onCommentArticle(article.getId(), comment);
+                    this.ostream.println("Comment added.");
                     running = false;
                     break;
                 default:

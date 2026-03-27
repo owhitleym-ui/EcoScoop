@@ -6,6 +6,7 @@ An engaging and dynamic News Hub Application that aggregates environmental news 
 
 - **Live RSS fetching** from Earth911, Grist, and Carbon Brief
 - **Browse & read** articles with word-wrapped full-text display
+- **React (Like, Dislike, Comment)** articles are shown with reaction stats from user
 - **Search** by keyword, tag, or author with relevance-ranked results
 - **Folder Management** to store folders for next uses
 

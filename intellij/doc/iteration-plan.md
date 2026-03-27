@@ -18,51 +18,39 @@ In phase #2, we hope to create a prototype featuring the first two use cases.
 ---
 
 # Phase #3 Iteration Plan
-Phase #3 has two main goals: implement our remaining use cases (View Profile, EcoBoard, Configure Settings) and migrate the project from our IntelliJ command-line app to Android Studio. To avoid extra rework, we will build new features directly in Android rather than implementing them in the command line first and converting later.
 
-Most of our existing classes (Article, Folder, FeedFetcher, ArticleParser, etc.) are plain Java and can be moved into Android with little to no changes. The biggest update will be replacing CmdLineUI with a real Android interface (buttons, screens, navigation).
-
-### 1. Moving from IntelliJ to Android Studio
-
-Before adding new features, we need to separate what transfers cleanly and what must be redesigned.
-
-### 2. What carries over easily:
-Our backend logic (Article, Author, Source, Tag, Folder, FolderManager, ArticleRetriever, ArticleDatabase, FeedFetcher, ArticleParser, etc.) can be copied directly into Android Studio. The Controller also carries over since it only interacts with the UI through the UI interface.
-
-### 3. What must be rebuilt:
-CmdLineUI cannot transfer to Android because it depends on Scanner and System.out. Instead, we will create an AndroidUI implementation that uses Activities/Fragments and buttons instead of terminal input/output. Since the Controller only communicates through the UI interface, it should work with AndroidUI without needing major changes.
-
-### 4. Build system changes:
-Android Studio uses Gradle, not Maven. Our XML parser dependency (xpp3) will need to be moved from the pom.xml file into build.gradle.
-
-### 5. Networking requirements:
-Android does not allow network calls on the main thread. Any feed-fetching logic (ex: FeedFetcher.fetchAll()) must run in a background thread (ExecutorService or similar), then update the UI afterward.
-
-### 6. Internet permissions:
-We must add internet permissions in AndroidManifest.xml, otherwise feeds will fail to load.
-
-## Use Cases for Phase #3
+## Use Cases for Phase #3 (Sequence Diagrams Already Done)
 ### 1. View Profile
+The Profile feature gives users a place to see their progress and activity.
+- It will display points, most-used tags, and article engagement stats (read/liked counts).
+- This use case comes first because Settings depend on having User/Profile data available. On Android, Profile will be its own Fragment accessible from the bottom navigation bar.
 
-The Profile feature gives users a place to see their progress and activity. It will display points, most-used tags, and article engagement stats (read/liked counts). This use case comes first because EcoBoard and Settings depend on having User/Profile data available. On Android, Profile will be its own Fragment accessible from the bottom navigation bar.
+### 2. View Dashboard
 
-Needs: User class (username, points, activity history)
-Profile class (calculates stats from user data)
-Profile screen in the UI (Fragment on Android)
-Controller methods to retrieve and send profile data to the UI
-### 2. EcoBoard (Leaderboard + Points)
+EcoDashboard is necessary to display overall environmental statistics in readable charts.
+- There will be the dashboard tab in the UI that the User begins in. It is necessary to figure out the visual elements in Android Studio because it is primarily graphics.
 
-EcoBoard is the main “game-like” feature of EcoScoop. Users earn points for reading, liking, and saving articles, which determines their level and leaderboard rank. This comes second because it depends on the User/Profile structure from the Profile use case. On Android, EcoBoard will be a separate tab with a scrollable leaderboard list.
-
-Needs: Point system tied to user actions (read, like, save)
-Leaderboard class to rank users by points
-Level thresholds based on point totals
-EcoBoard screen in the UI
 ### 3. Configure Settings
 
-Settings allows users to customize their display name, bio, and news preferences (local vs global). On the command line, this is a menu; on Android, it becomes a dedicated settings screen. This is listed third since it depends on the User/Profile system being established. Settings must persist between sessions, meaning Android will use SharedPreferences for small settings and Room (or another database approach) for larger stored data.
+Settings allows users to change their name, bio, and news preferences (local vs global).
+- On the command line, this is a menu; on Android, it becomes a settings screen located in Profile tab.
+- This is third since it depends on the User/Profile system being established. Settings must save between sessions, meaning Android will use SharedPreferences for small settings and a database approach for larger stored data.
+Our goals: 
+- Implement our remaining use cases (View Profile, EcoBoard, Configure Settings) and transfer the project from IntelliJ's command-line to Android Studio. 
+- We will build new features directly in Android so we don't have to implement them both in the command line first and converting later to Android. Our existing classes are Java and can be moved into Android with little to no changes.
+- The biggest update will be replacing CmdLineUI with a real Android interface (buttons, screens, navigation).
 
-Needs: Settings stored in User or a separate Settings class
-Controller methods for loadSettings() and saveSettings()
-Settings screen in the UI
-Persistent storage so preferences remain after closing the app
+### 1. What carries over:
+- Our backend logic of all of our classes except the CmdLineUI can be copied directly into Android Studio when we input the package for Empty Views Activity. The Controller also carries over since it only interacts with the UI through the UI interface.
+
+### 2. What must be rebuilt:
+- We will create an AndroidUI implementation that uses Fragments and buttons instead of terminal input/output. 
+- Since the Controller only communicates through the UI interface, it should work with AndroidUI without needing major changes. We will have to figure out all the graphics, text-wrapping, etc.
+
+### 4. Build system changes:
+- Since Android Studio uses Gradle, our XML parser dependency (xpp3) will need to be moved from the pom.xml file into build.gradle.
+
+### 5. Feed and updating requirements:
+- Android does not allow network calls on the main thread. Any feed-fetching logic must run in a background thread (ExecutorService or similar), then update the UI afterward. 
+- We must add internet permissions in AndroidManifest.xml, otherwise feeds will fail to load.
+

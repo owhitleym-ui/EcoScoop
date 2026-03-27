@@ -25,6 +25,11 @@ public interface UI {
         // Folder Methods
         void onSaveToFolder(int articleId, String folderName);
 
+        // React Methods
+        void onLikeArticle(int id);
+        void onDislikeArticle(int id);
+        void onCommentArticle(int id, String comment);
+
         /** Returns the total number of articles currently loaded. */
         int getArticleCount();
 

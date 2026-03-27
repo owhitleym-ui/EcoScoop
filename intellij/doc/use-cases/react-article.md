@@ -83,41 +83,37 @@ hide footbox
 title React Article (Sequence)
 
 actor User
-participant ": System UI" as UI
+participant ": CmdLineUI" as UI
 participant ": Controller" as Controller
-participant ": RecommendationEngine" as Rec
+participant "a : Article" as Article
 
+note over UI : Shown automatically after\nthe user exits an article
 
-UI -> User : display reaction 
-    alt new comment
-        User -> UI : submit comment
-        UI -> Controller : addComment(articleId, input)
-        Controller --> UI : display comment\nadd to user history
+UI -> User : display react prompt\n(skip / like / dislike / comment)
 
-    else edit or delete existing comment
-        User -> UI : edit / delete comment
-        UI -> Controller : editComment(commentId, input)\nor deleteComment(commentId)
-        Controller --> UI : update comment display
+alt like
+    User -> UI : enter 1
+    UI -> Controller : onLikeArticle(articleId)
+    Controller -> Article : addLike()
+    UI --> User : "Liked! (N likes)"
 
-    else upvote or downvote comment
-        User -> UI : react to comment
-        UI -> Controller : reactToComment(commentId, type)
-        Controller --> UI : update comment stats
+else dislike
+    User -> UI : enter 2
+    UI -> Controller : onDislikeArticle(articleId)
+    Controller -> Article : addDislike()
+    UI --> User : "Disliked! (N dislikes)"
 
+else comment
+    User -> UI : enter 3
+    UI -> User : prompt for comment text
+    User -> UI : enter comment
+    UI -> Controller : onCommentArticle(articleId, comment)
+    Controller -> Article : addComment(comment)
+    UI --> User : "Comment added."
 
-else like article
-    User -> UI : click like
-    ref over UI, Controller
-        Save Article
-    end ref
-    Controller -> Rec : moreLikeThis(articleId)
-    Rec --> UI : update recommendations
-
-else dislike article
-    User -> UI : click dislike
-    UI -> Controller : dislikeArticle(articleId)
-    Controller -> Rec : lessLikeThis(articleId)
-    Rec --> UI : update recommendations
+else skip
+    User -> UI : enter 0
+    UI --> User : return to article list
 
 end
 

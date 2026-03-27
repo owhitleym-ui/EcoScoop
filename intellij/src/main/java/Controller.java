@@ -95,4 +95,23 @@ public class Controller implements UI.Listener{
         retriever.saveToFolder(articleId, folderName);
     }
 
+    // Listener - React Methods
+    @Override
+    public void onLikeArticle(int id) {
+        Article article = retriever.getArticle(id);
+        if (article != null) article.addLike();
+    }
+
+    @Override
+    public void onDislikeArticle(int id) {
+        Article article = retriever.getArticle(id);
+        if (article != null) article.addDislike();
+    }
+
+    @Override
+    public void onCommentArticle(int id, String comment) {
+        Article article = retriever.getArticle(id);
+        if (article != null) article.addComment(comment);
+    }
+
 }
