@@ -4,9 +4,12 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        ArticleRetriever retriever = new ArticleRetriever();
+        ArrayList<Article> articles = retriever.articleList;
 
-        ArticleRetriever articleRetriever = new ArticleRetriever();
-        articleRetriever.articleList.get(0);
-        System.out.println(articleRetriever.articleList.get(0).getId());
+        for (Article article : articles) {
+            System.out.println(article.getSummary());
+            System.out.println("---------------------------------------------------");
+        }
     }
 }
