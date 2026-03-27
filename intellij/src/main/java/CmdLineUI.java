@@ -69,7 +69,7 @@ public class CmdLineUI implements UI{
 
         }
 
-        runMainMenu();
+        return;
 
 
     }
@@ -100,7 +100,7 @@ public class CmdLineUI implements UI{
             }
         }
 
-        listener.onViewArticleTab();
+        return;
 
     }
 

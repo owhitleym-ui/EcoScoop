@@ -2,7 +2,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Article {
-    private int  id;
+    private int id;
     private String title;
     private String description;
     private ArrayList<Author> authors;
@@ -51,7 +51,7 @@ public class Article {
     }
 
     public String getSummary(){
-        return "ID:" + "id -- " + title + "\n" + authors + "\n \n" + wordWrap(description, 80) + "\n \n" + source.getWebsiteName() + " -- " + source.getPublishDate() + "\n" + tagList;
+        return "ID: " + id + " " + title + "\n" + authors + "\n \n" + wordWrap(description, 80) + "\n \n" + source.getWebsiteName() + " -- " + source.getPublishDate() + "\n" + tagList;
     }
     public String getContent() {
         String cleaned = content.replaceAll("&nbsp;", " ")

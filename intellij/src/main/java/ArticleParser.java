@@ -30,7 +30,7 @@ public class ArticleParser {
     private String currentDescription;
     private String currentPubDate;
 
-    private int idCounter = 1;
+    private static int idCounter = 0;
 
     private final XmlPullParser xpp;
 
@@ -163,12 +163,7 @@ public class ArticleParser {
             tags.add(new Tag(category));
         }
 
-        return new Article(
-                idCounter,
-                currentTitle,
-                currentDescription,
-                authors,
-                tags,
+        return new Article(idCounter, currentTitle, currentDescription, authors, tags,
                 new Source(website, currentUrl, currentPubDate),
                 String.join(" ", content)
         );
