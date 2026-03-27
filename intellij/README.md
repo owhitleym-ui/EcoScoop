@@ -7,20 +7,21 @@ An engaging and dynamic News Hub Application that aggregates environmental news 
 - **Live RSS fetching** from Earth911, Grist, and Carbon Brief
 - **Browse & read** articles with word-wrapped full-text display
 - **Search** by keyword, tag, or author with relevance-ranked results
+- **Folder Management** to store folders for next uses
 
 ## Limitations
 
 - All data is only stored per session and cannot be remembered
 - The three RSS sources are hardcoded and cannot be changed.
 - Text-base leaves less interactable uses
+- Cannot access folders due to no user profile implementation
 - Search uses simple substring matching
-- No input validation — entering a non-integer at a menu prompt will crash the program.
 
 ## How to Run
 
 ### Prerequisites
 
-- Java 11+
+- Java 21+
 - `xmlpull` and an implementation like `kxml2` on the classpath
 - Internet connection (feeds are fetched live on startup)
 
