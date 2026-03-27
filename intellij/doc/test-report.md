@@ -161,14 +161,23 @@ Saved to folder 'Iran'.
 
 **Tested:** Choosing not to save an article after reading it.
 
-**Input:** After reading an article, enter `0` to return. When prompted with the save question, enter `0` (No).
+**Input:** After reading an article, at the article menu choose `2` for Save. When prompted with the save question, enter `0` (No).
 
 **Expected output:** The app skips the save and returns directly to the article list.
 
 **Actual output:**
 
 ```
-[paste terminal output here]
+Available Actions:
+ 0. Return to Article List
+ 1. React
+ 2. Save
+ Response: 2
+
+Save this article to a folder?
+ 0. No
+ 1. Yes
+ Response: 0
 ```
 
 **Result:** __Pass__ / Fail
@@ -416,18 +425,21 @@ React to this article?
 Liked! (1 likes)
 ```
 
+**Result:** __Pass__ / Fail
+
 ### Dislike
 **Tested:** Disliking the article
 
-**Input:** From the reaction menu, enter 1 to like.
+**Input:** From the reaction menu, enter 2 to dislike.
 
 **Expected Output:** `Disliked! (1 dislikes)`
 
+**Actual output:**
 ```
 Available Actions:
- 0. Return to Article List 
- 1. React 
- 2. Save 
+ 0. Return to Article List
+ 1. React
+ 2. Save
  Response: 1
 
 React to this article?
@@ -436,7 +448,10 @@ React to this article?
  2. Dislike
  3. Leave a comment
  Response: 2
+Disliked! (1 dislikes)
 ```
+
+**Result:** __Pass__ / Fail
 
 ### Comment
 **Tested:** Commenting on the article
@@ -447,9 +462,9 @@ React to this article?
 
 ```
 Available Actions:
- 0. Return to Article List 
- 1. React 
- 2. Save 
+ 0. Return to Article List
+ 1. React
+ 2. Save
  Response: 1
 
 React to this article?
@@ -461,6 +476,8 @@ React to this article?
 Enter your comment: Hello!
 Comment added.
 ```
+
+**Result:** __Pass__ / Fail
 
 ### Showing Comments and Likes from Above Test
 __Output__:
@@ -474,3 +491,159 @@ Grist https://grist.org/language/climate-federal-research-grants-national-scienc
 ```
 
 All reactions show up!
+
+---
+
+## Test 14 — Search by Tag
+
+**Tested:** Searching for articles using a tag.
+
+**Input:** From the Article Tab, enter `2` for Search Articles. Choose `2` for Tag. Enter a tag that exists in at least one article, e.g. `energy`.
+
+**Expected output:** A list of articles whose tags match the search term is displayed.
+
+**Actual output:**
+
+```
+Search Type:
+ 0. Return
+ 1. Keyword
+ 2. Tag
+ 3. Author
+ Response: 2
+Enter search query: energy
+
+--- Search Results (12 found) ---
+
+ID: 1 Iran was already running out of water. Then came the 'war on infrastructure.'
+[Frida Garza]
+
+Drought, a legacy of overpumping, and now military strikes are driving the
+country's fragile water and food systems to the brink.
+
+Grist -- Thu, 26 Mar 2026 08:45:00 +0000
+[Energy, Food and Agriculture, International]
+--------------------------------------------------
+```
+
+**Result:** __Pass__ / Fail
+
+---
+
+## Test 15 — Search by Author
+
+**Tested:** Searching for articles by author name.
+
+**Input:** From the Article Tab, enter `2` for Search Articles. Choose `3` for Author. Enter part of an author's name, e.g. `bittle`.
+
+**Expected output:** Only articles written by that author appear in the results.
+
+**Actual output:**
+
+```
+Search Type:
+ 0. Return
+ 1. Keyword
+ 2. Tag
+ 3. Author
+ Response: 3
+Enter search query: bittle
+
+--- Search Results (2 found) ---
+
+ID: 6 Trump's $1B payoff to stop offshore wind is even stranger than it sounds
+[Jake Bittle, Rebecca Egan McCarthy]
+
+The government is paying TotalEnergies to halt a wind farm it isn't building, in
+exchange for fossil fuel investments it's already making.
+
+Grist -- Wed, 25 Mar 2026 08:00:00 +0000
+[Energy, Politics]
+--------------------------------------------------
+ID: 9 This $400B Biden climate program is surviving the Trump administration
+[Jake Bittle]
+
+Trump's energy secretary says he's canceled billions of dollars in clean energy
+loans. The Biden official who made those loans says the number is "fake."
+
+Grist -- Mon, 23 Mar 2026 08:45:00 +0000
+[Energy, Politics]
+--------------------------------------------------
+```
+
+**Result:** __Pass__ / Fail
+
+---
+
+## Test 16 — Sort Search Results by Date
+
+**Tested:** Sorting search results by publish date after a keyword search.
+
+**Input:** After a keyword search returns results, at the sort menu choose `2` for Date.
+
+**Expected output:** The same articles are re-displayed sorted from newest to oldest by publish date.
+
+**Actual output:**
+
+```
+Sort by:
+ 0. Skip
+ 1. Relevance
+ 2. Date
+ 3. Rating
+ 4. Trending
+ Response: 2
+
+--- Search Results (15 found) ---
+
+ID: 1 Iran was already running out of water. Then came the 'war on infrastructure.'
+[Frida Garza]
+
+Drought, a legacy of overpumping, and now military strikes are driving the
+country's fragile water and food systems to the brink.
+
+Grist -- Thu, 26 Mar 2026 08:45:00 +0000
+[Energy, Food and Agriculture, International]
+--------------------------------------------------
+ID: 23 Factcheck: Nine false or misleading myths about North Sea oil and gas
+[Carbon Brief Staff]
+
+The Iran war has triggered another fossil-fuel energy crisis, with surging
+global prices and increasing...
+
+Carbon Brief -- Wed, 25 Mar 2026 16:10:07 +0000
+[Energy, Factchecks, UK policy]
+--------------------------------------------------
+```
+
+**Result:** __Pass__ / Fail
+
+---
+
+## Test 17 — React with Invalid Input
+
+**Tested:** Entering an invalid option at the react menu.
+
+**Input:** From the react prompt, enter `9` (not a valid option).
+
+**Expected output:** The app prints "Invalid option, please try again." and shows the react menu again.
+
+**Actual output:**
+
+```
+React to this article?
+ 0. Skip
+ 1. Like
+ 2. Dislike
+ 3. Leave a comment
+ Response: 9
+Invalid option, please try again.
+React to this article?
+ 0. Skip
+ 1. Like
+ 2. Dislike
+ 3. Leave a comment
+ Response: 0
+```
+
+**Result:** __Pass__ / Fail

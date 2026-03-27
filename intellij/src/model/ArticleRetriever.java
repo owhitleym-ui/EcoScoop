@@ -2,10 +2,16 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * Handles article lookup, search, sorting, and folder management.
+ * Loads all articles from the database on construction and acts as the main data access point for the Controller.
+ */
 public class ArticleRetriever {
-    public HashMap<Integer, Article> databaseMap;
-    public ArrayList<Article> articleList;
+    public Map<Integer, Article> databaseMap;
+    public List<Article> articleList;
     private FolderManager folderManager;
 
     // Search type constants
@@ -19,6 +25,7 @@ public class ArticleRetriever {
     public final String SORT_RATING    = "rating";
     public final String SORT_TRENDING  = "trending";
 
+    /** Loads articles from all RSS feeds and sets up the folder manager. */
     public ArticleRetriever() throws Exception {
         ArticleDatabase artData = new ArticleDatabase();
         this.databaseMap = artData.getDatabase();
@@ -26,7 +33,7 @@ public class ArticleRetriever {
         this.folderManager = new FolderManager(this);
     }
 
-    // --- model.Folder Methods ---
+    // --- Folder Methods ---
 
     /** Creates a new empty folder. */
     public Folder createFolder(String name) {
@@ -49,17 +56,23 @@ public class ArticleRetriever {
     }
 
     /** Returns all user-created folders. */
-    public ArrayList<Folder> getFolders() {
+    public List<Folder> getFolders() {
         return folderManager.getFolders();
     }
 
-    /** Returns an model.Article from the Database */
-
+    /** Returns the article with the given ID, or null if not found. */
     public Article getArticle(int id) {
         return databaseMap.get(id);
     }
 
-    public ArrayList<Article> searchArticles(String query, String searchType) {
+    /**
+     * Searches all loaded articles by the given query and search type.
+     *
+     * @param query      the search string entered by the user
+     * @param searchType one of "keyword", "tag", or "author"
+     * @return list of matching articles, sorted by relevance for keyword searches
+     */
+    public List<Article> searchArticles(String query, String searchType) {
         if (query == null || query.trim().isEmpty()) {
             return new ArrayList<>();
         }
@@ -77,7 +90,8 @@ public class ArticleRetriever {
         }
     }
 
-    private ArrayList<Article> searchByKeyword(String query) {
+    /** Returns articles whose title, description, or content contain any of the query keywords, sorted by hit count. */
+    private List<Article> searchByKeyword(String query) {
         ArrayList<Article> results = new ArrayList<>();
         String[] keywords = query.split("\\s+");
 
@@ -108,7 +122,8 @@ public class ArticleRetriever {
         return results;
     }
 
-    private ArrayList<Article> searchByTag(String query) {
+    /** Returns articles that have at least one tag containing the query string. */
+    private List<Article> searchByTag(String query) {
         ArrayList<Article> results = new ArrayList<>();
 
         for (Article article : articleList) {
@@ -122,7 +137,8 @@ public class ArticleRetriever {
         return results;
     }
 
-    private ArrayList<Article> searchByAuthor(String query) {
+    /** Returns articles written by an author whose name contains the query string. */
+    private List<Article> searchByAuthor(String query) {
         ArrayList<Article> results = new ArrayList<>();
 
         for (Article article : articleList) {
@@ -136,8 +152,15 @@ public class ArticleRetriever {
         return results;
     }
 
-    public ArrayList<Article> sortArticles(ArrayList<Article> articles, String criteria) {
-        ArrayList<Article> sorted = new ArrayList<>(articles);
+    /**
+     * Returns a sorted copy of the given article list.
+     *
+     * @param articles the list to sort
+     * @param criteria one of "date", "rating", "trending", or "relevance"
+     * @return a new sorted list (rating, trending, and relevance not yet implemented)
+     */
+    public List<Article> sortArticles(List<Article> articles, String criteria) {
+        List<Article> sorted = new ArrayList<>(articles);
 
         switch (criteria.toLowerCase()) {
             case SORT_DATE:
@@ -161,6 +184,7 @@ public class ArticleRetriever {
         return sorted;
     }
 
+    /** Counts how many of the given keywords appear in the article's title, description, or content. */
     private int countKeywordHits(Article article, String[] keywords) {
         String title       = article.getTitle().toLowerCase();
         String description = article.getDescription().toLowerCase();

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a user-created folder for saving articles.
@@ -65,7 +66,7 @@ public class Folder {
     }
 
     /** Returns the articles currently saved in this folder. */
-    public ArrayList<Article> open() {
+    public List<Article> open() {
         ArrayList<Article> contents = new ArrayList<>();
 
         for (int id : articleIds) {

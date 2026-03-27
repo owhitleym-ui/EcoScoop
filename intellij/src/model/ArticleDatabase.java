@@ -4,6 +4,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,8 +12,8 @@ import java.util.Map;
  * getDatabase() triggers the network fetch and returns all articles mapped by ID.
  */
 public class ArticleDatabase {
-    public final HashMap<Integer, Article> database = new HashMap<>();
-    public ArrayList<Article> articles;
+    public final Map<Integer, Article> database = new HashMap<>();
+    public List<Article> articles;
     ArticleParser app;
 
     /** Sets up the XML parser used to process feed data. */
@@ -21,11 +22,11 @@ public class ArticleDatabase {
         }
 
     /**
-     * Fetches articles from all configured RSS feeds and returns them as a map of ID to model.Article.
+     * Fetches articles from all configured RSS feeds and returns them as a map of ID to Article.
      *
      * @throws Exception if a feed fails to load or parse
      */
-    public HashMap<Integer, Article> getDatabase() throws Exception{
+    public Map<Integer, Article> getDatabase() throws Exception{
         Map<String, String> feeds = new LinkedHashMap<>();
         feeds.put("Grist", "https://grist.org/feed/");
         feeds.put("Carbon Brief", "https://www.carbonbrief.org/feed/");
@@ -41,10 +42,4 @@ public class ArticleDatabase {
         return this.database;
     }
 
-    /** Adds a list of articles into the database map by their IDs. */
-    public void saveArticles(ArrayList<Article>  articles){
-        for (Article a : articles) {
-            database.put(a.getId(), a);
-        }
-    }
 }

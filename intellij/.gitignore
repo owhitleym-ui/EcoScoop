@@ -30,3 +30,7 @@ bin/
 
 ### IntelliJ ###
 .idea/
+
+### Target ###
+target/
+*.class

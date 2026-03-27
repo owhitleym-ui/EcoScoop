@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a news article retrieved from an RSS feed.
@@ -10,14 +11,14 @@ public class Article {
     private int id;
     private String title;
     private String description;
-    private ArrayList<Author> authors;
+    private List<Author> authors;
     private Source source;
     private String content;
-    private ArrayList<Tag> tagList;
+    private List<Tag> tagList;
     private String publishDate;
     private int likes;
     private int dislikes;
-    private ArrayList<String> comments;
+    private List<String> comments;
 
     /**
      * Creates an article with all fields.
@@ -30,7 +31,7 @@ public class Article {
      * @param source      the source website and URL
      * @param content     full article body text
      */
-    public Article(int id, String title, String description, ArrayList<Author> authors, ArrayList<Tag> tagList, Source source, String content) {
+    public Article(int id, String title, String description, List<Author> authors, List<Tag> tagList, Source source, String content) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -84,7 +85,7 @@ public class Article {
     }
 
     /**
-     * Returns a short one-screen summary with ID, title, authors, description, source, and tags.
+     * Returns a one-screen summary with ID, title, authors, description, source, and tags.
      */
     public String getSummary(){
         return "ID: " + id + " " + title + "\n" + authors + "\n \n" + wordWrap(description, 80) + "\n \n" + source.getWebsiteName() + " -- " + source.getPublishDate() + "\n" + tagList;
@@ -124,30 +125,16 @@ public class Article {
     }
 
     /** Returns all comments left on this article. */
-    public ArrayList<String> getComments() {
+    public List<String> getComments() {
         return comments;
     }
 
-
-
     /**
-     * Returns true if the article's title, description, authors, or tags contain
-     * the given query string (case-insensitive).
-     *
-     * @param query the search string, already lowercased by the caller
+     * Wraps text at a certain lineWidth
+     * @param text
+     * @param lineWidth
+     * @return
      */
-    public boolean matchesSearch(String query) {
-        if (title != null && title.toLowerCase().contains(query)) return true;
-        if (description != null && description.toLowerCase().contains(query)) return true;
-        for (Author a : authors) {
-            if (a.getName() != null && a.getName().toLowerCase().contains(query)) return true;
-        }
-        for (Tag t : tagList) {
-            if (t.getName() != null && t.getName().toLowerCase().contains(query)) return true;
-        }
-        return false;
-    }
-
     private String wordWrap(String text, int lineWidth) {
         StringBuilder result = new StringBuilder();
         String[] words = text.split(" ");
@@ -188,11 +175,11 @@ public class Article {
         return description;
     }
 
-    public ArrayList<Author> getAuthors(){
+    public List<Author> getAuthors(){
         return authors;
     }
 
-    public ArrayList<Tag> getTagList(){
+    public List<Tag> getTagList(){
         return tagList;
     }
 

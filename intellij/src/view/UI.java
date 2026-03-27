@@ -2,12 +2,12 @@ package view;
 
 import model.Article;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Interface that all EcoScoop view.UI implementations must follow.
- * The Listener sub-interface is implemented by the controller.Controller to handle user actions.
- * Each run method represents a screen or prompt the view.UI needs to be able to display.
+ * Interface that all EcoScoop UI implementations must follow.
+ * The Listener sub-interface is implemented by the Controller to handle user actions.
+ * Each run method represents a screen or prompt the UI needs to be able to display.
  */
 public interface UI {
 
@@ -28,8 +28,8 @@ public interface UI {
 
         // Article Search Methods
         void onSearchArticles();
-        ArrayList<Article> onSearchQuery(String query, String type);
-        ArrayList<Article> onSortResults(ArrayList<Article> results, String criteria);
+        List<Article> onSearchQuery(String query, String type);
+        List<Article> onSortResults(List<Article> results, String criteria);
 
         // model.Folder Methods
         void onSaveToFolder(int articleId, String folderName);
@@ -58,13 +58,13 @@ public interface UI {
     // model.Article Display Methods
     void runDisplayArticle(Article article);
     void runChooseArticle();
-    void runDisplayArticleList(ArrayList<Article> articles);
+    void runDisplayArticleList(List<Article> articles);
 
     // model.Article Search Methods
     void runSearchArticles();
     void runSearchInput();
-    void runDisplaySearchResults(ArrayList<Article> results);
-    void runSortOptions(ArrayList<Article> results);
+    void runDisplaySearchResults(List<Article> results);
+    void runSortOptions(List<Article> results);
 
 
 

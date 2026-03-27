@@ -6,24 +6,25 @@ import view.CmdLineUI;
 import view.UI;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main controller for EcoScoop.
- * Sits between the view.UI and the data layer — the view.UI calls listener methods
- * on the controller.Controller, and the controller.Controller calls run methods back on the view.UI.
+ * Sits between the UI and the data layer — the UI calls listener methods
+ * on the Controller, and the Controller calls run methods back on the UI.
  */
 public class Controller implements UI.Listener{
 
     //Private Fields
     private UI ui;
     private final ArticleRetriever retriever = new ArticleRetriever();
-    private final ArrayList<Article> articleList = retriever.articleList;
+    private final List<Article> articleList = retriever.articleList;
     private Article currentArticle = new Article();
 
     /**
-     * Creates the controller and registers it as the view.UI's listener.
+     * Creates the controller and registers it as the UI's listener.
      *
-     * @param ui the view.UI implementation to use
+     * @param ui the UI implementation to use
      * @throws Exception if loading the article feeds fails
      */
     private Controller(final UI ui) throws Exception {
@@ -43,7 +44,7 @@ public class Controller implements UI.Listener{
         this.ui.runMainMenu();
     }
 
-    //Listener -  model.Article Display Methods
+    // Listener - Article Display Methods
 
     /**
      * Gets the current article the user has selected and calls for displaying
@@ -64,6 +65,7 @@ public class Controller implements UI.Listener{
         return articleList.size();
     }
 
+    @Override
     public void onDisplayArticle(Article article){
         this.ui.runDisplayArticle(article);
     }
@@ -73,6 +75,7 @@ public class Controller implements UI.Listener{
         this.ui.runChooseArticle();
     }
 
+    @Override
     public void onViewArticleTab(){
         this.ui.runArticleTab();
     }
@@ -82,23 +85,23 @@ public class Controller implements UI.Listener{
         this.ui.runDisplayArticleList(articleList);
     }
 
-    // Listener - model.Article Search Methods
+    // Listener - Article Search Methods
     @Override
     public void onSearchArticles() {
         this.ui.runSearchArticles();
     }
 
     @Override
-    public ArrayList<Article> onSearchQuery(String query, String type) {
+    public List<Article> onSearchQuery(String query, String type) {
         return retriever.searchArticles(query, type);
     }
 
     @Override
-    public ArrayList<Article> onSortResults(ArrayList<Article> results, String criteria) {
+    public List<Article> onSortResults(List<Article> results, String criteria) {
         return retriever.sortArticles(results, criteria);
     }
 
-    // Listener - model.Folder Methods
+    // Listener - Folder Methods
     @Override
     public void onSaveToFolder(int articleId, String folderName) {
         retriever.saveToFolder(articleId, folderName);

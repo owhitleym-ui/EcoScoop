@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages all user-created folders.
@@ -80,7 +81,7 @@ public class FolderManager {
     /**
      * Returns the list of all folders.
      */
-    public ArrayList<Folder> getFolders() {
+    public List<Folder> getFolders() {
         return folders;
     }
 }

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -27,7 +28,7 @@ public class FeedFetcher {
      * @param feeds a map of site name to RSS feed URL
      * @return all successfully parsed articles from every feed
      */
-    public ArrayList<Article> fetchAll(Map<String, String> feeds) {
+    public List<Article> fetchAll(Map<String, String> feeds) {
         ArrayList<Article> allArticles = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : feeds.entrySet()) {
@@ -40,7 +41,7 @@ public class FeedFetcher {
                 ArticleParser parser = new ArticleParser();
                 // Pass empty args array so the parser reads from the string
                 parser.parse(new String[0], xml, siteName);
-                ArrayList<Article> parsed = parser.loadArticles();
+                List<Article> parsed = parser.loadArticles();
                 System.out.println("  → " + parsed.size() + " articles from " + siteName);
                 allArticles.addAll(parsed);
             } catch (Exception e) {

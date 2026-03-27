@@ -4,13 +4,14 @@ import model.Article;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Command-line implementation of the EcoScoop view.UI.
+ * Command-line implementation of the EcoScoop UI.
  * Uses numbered menus printed to the terminal and reads responses with a Scanner.
- * To switch to a different platform (e.g. Android), create a new class that implements view.UI.
+ * To switch to a different platform (e.g. Android), create a new class that implements UI.
  */
 public class CmdLineUI implements UI {
     private final Scanner iscanner = new Scanner(System.in);
@@ -191,7 +192,7 @@ public class CmdLineUI implements UI {
     }
 
     @Override
-    public void runDisplayArticleList(ArrayList<Article> articles) {
+    public void runDisplayArticleList(List<Article> articles) {
         for (Article article : articles) {
             this.ostream.println(article.getSummary());
             this.ostream.println("--------------------------------------------------");
@@ -214,7 +215,7 @@ public class CmdLineUI implements UI {
             default: type = "keyword"; break;
         }
 
-        ArrayList<Article> results = listener.onSearchQuery(query, type);
+        List<Article> results = listener.onSearchQuery(query, type);
         if (results.isEmpty()) {
             this.ostream.println("\nNo articles found.\n");
         } else {
@@ -250,7 +251,7 @@ public class CmdLineUI implements UI {
             this.ostream.print("Enter search query: ");
             String query = this.iscanner.nextLine();
 
-            ArrayList<Article> results = listener.onSearchQuery(query, type);
+            List<Article> results = listener.onSearchQuery(query, type);
             if (results.isEmpty()) {
                 this.ostream.println("\nNo articles found.\n");
             } else {
@@ -261,7 +262,7 @@ public class CmdLineUI implements UI {
     }
 
     @Override
-    public void runDisplaySearchResults(ArrayList<Article> results) {
+    public void runDisplaySearchResults(List<Article> results) {
         this.ostream.println("\n--- Search Results (" + results.size() + " found) ---\n");
         for (Article article : results) {
             this.ostream.println(article.getSummary());
@@ -270,7 +271,7 @@ public class CmdLineUI implements UI {
     }
 
     @Override
-    public void runSortOptions(ArrayList<Article> results) {
+    public void runSortOptions(List<Article> results) {
         this.ostream.print("Sort by:\n 0. Skip\n 1. Relevance\n 2. Date\n 3. Rating\n 4. Trending\n Response: ");
         int sortChoice = readInt();
 
@@ -284,7 +285,7 @@ public class CmdLineUI implements UI {
             default: criteria = "relevance"; break;
         }
 
-        ArrayList<Article> sorted = listener.onSortResults(results, criteria);
+        List<Article> sorted = listener.onSortResults(results, criteria);
         runDisplaySearchResults(sorted);
     }
 }

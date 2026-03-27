@@ -8,9 +8,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Parses RSS XML content into model.Article objects using an XML pull parser.
+ * Parses RSS XML content into Article objects using an XML pull parser.
  * Handles standard RSS fields like title, link, description, pubDate,
  * dc:creator for authors, category for tags, and content:encoded for body text.
  */
@@ -149,6 +150,7 @@ public class ArticleParser {
         }
     }
 
+
     private void handleEndTag() {
         String tagName = xpp.getName();
         String namespace = xpp.getNamespace();
@@ -167,6 +169,10 @@ public class ArticleParser {
         }
     }
 
+    /**
+     * Builds our article object
+     * @return an article with unique ID
+     */
     private Article buildArticle() {
         idCounter++;
 
@@ -210,6 +216,9 @@ public class ArticleParser {
         );
     }
 
+    /**
+     * Resets the buffers to be used on the next article parsed.
+     */
     private void resetBuffers() {
         currentTitle = "";
         currentUrl = "";
@@ -222,7 +231,7 @@ public class ArticleParser {
     }
 
     /** Returns the list of articles built during the last parse call. */
-    public ArrayList<Article> loadArticles() {
+    public List<Article> loadArticles() {
         return articleList;
     }
 }
