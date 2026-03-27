@@ -156,11 +156,6 @@ class model.Folder {
   + removeArticle(id : int)
   + open() : List<model.Article>
 }
-
-class Main {
-  + main(args : String[])
-}
-
 ' Front-End Associations
 view.CmdLineUI ..|> view.UI : implements
 controller.Controller ..|> UIListener : implements
@@ -187,10 +182,5 @@ model.ArticleRetriever "1" *-- "1" model.FolderManager : owns
 model.FolderManager "1" *-- "0..*" model.Folder : manages
 model.Folder "0..*" --> "1" model.ArticleRetriever : looks up articles
 
-' Test Harness
-Main ..> model.ArticleRetriever : uses
-
 @enduml
 ```
-class-diagram.md
-Displaying class-diagram.md.
