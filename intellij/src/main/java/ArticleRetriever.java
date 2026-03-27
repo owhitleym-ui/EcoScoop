@@ -11,15 +11,15 @@ public class ArticleRetriever {
     public ArrayList<Article> articleList;
 
     // Search type constants
-    public static final String SEARCH_KEYWORD = "keyword";
-    public static final String SEARCH_TAG     = "tag";
-    public static final String SEARCH_AUTHOR  = "author";
+    public final String SEARCH_KEYWORD = "keyword";
+    public final String SEARCH_TAG     = "tag";
+    public final String SEARCH_AUTHOR  = "author";
 
     // Sort criteria constants
-    public static final String SORT_RELEVANCE = "relevance";
-    public static final String SORT_DATE      = "date";
-    public static final String SORT_RATING    = "rating";
-    public static final String SORT_TRENDING  = "trending";
+    public final String SORT_RELEVANCE = "relevance";
+    public final String SORT_DATE      = "date";
+    public final String SORT_RATING    = "rating";
+    public final String SORT_TRENDING  = "trending";
 
     public ArticleRetriever() throws Exception {
         ArticleDatabase artData = new ArticleDatabase();
