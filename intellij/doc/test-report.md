@@ -2,7 +2,8 @@
 
 ## Overview
 
-This report describes the system tests performed on the EcoScoop prototype (Phase 2). All tests were run using the command-line interface by launching the app with `mvn exec:java -Dexec.mainClass="controller.Controller"`. No unit tests were written for this iteration. Each test describes the inputs given, the expected output, and whether the actual output matched.
+This report has the systems tests performed on EcoScoop (Phase 2)
+This report describes the system tests performed on the EcoScoop prototype (Phase 2). All tests were run using the command-line interface by launching through the Controller. Instead of jUnit tests, all tests were done in system tests with transcripts and proofs as proofs. 
 
 ---
 
@@ -25,7 +26,7 @@ Fetching: https://www.carbonbrief.org/feed/
 
 Available Actions:
  0. Exit Program
- 1. model.Article Tab
+ 1. Article Tab
  Response: 1
 ```
 
@@ -33,18 +34,18 @@ Available Actions:
 
 ---
 
-## Test 2 — Navigate to model.Article Tab
+## Test 2 — Navigate to Article Tab
 
-**Tested:** Choosing option 1 from the main menu to enter the model.Article Tab.
+**Tested:** Choosing option 1 from the main menu to enter the Article Tab.
 
 **Input:** At the main menu, enter `1`.
 
-**Expected output:** The console clears and displays the model.Article Tab header followed by a list of article summaries, each showing an ID, title, author, description snippet, source name, publish date, and tags. The available actions menu is shown below the list.
+**Expected output:** The console clears and displays the Article Tab header then printing a list of article summaries, each showing an ID, title, author, description snippet, source name, publish date, and tags. The available actions menu is shown below the list.
 
 **Actual output:**
 
 ```
-~~~~~~ model.Article Tab ~~~~~~
+~~~~~~ Article Tab ~~~~~~
 
 ID: 1 Iran was already running out of water. Then came the ‘war on infrastructure.’
 [Frida Garza]
@@ -70,11 +71,11 @@ Carbon Brief -- Wed, 25 Mar 2026 16:10:07 +0000
 
 ---
 
-## Test 3 — Read an model.Article
+## Test 3 — Read an Article
 
 **Tested:** Choosing an article by ID and reading its full content.
 
-**Input:** From the model.Article Tab, enter `1` to choose an article. When prompted for an ID, enter the ID of any article shown in the list (e.g. `1`).
+**Input:** From the Article Tab, enter `1` to choose an article. When prompted for an ID, enter the ID of any article shown in the list (e.g. `1`).
 
 **Expected output:** The console clears and displays the full article including title, author, body text word-wrapped at 80 characters (cut for shortness), source info, tags, and a like/dislike count of 0. A menu with option 0 to return is shown. 
 
@@ -83,7 +84,7 @@ Carbon Brief -- Wed, 25 Mar 2026 16:10:07 +0000
 ```
 Available Actions:
  0. Return to Main Menu
- 1. Choose model.Article
+ 1. Choose Article
  2. Search Articles
  Response: 1
 
@@ -122,14 +123,14 @@ Grist https://grist.org/food-and-agriculture/iran-was-already-running-out-of-wat
  Likes: 0 | Dislikes: 0
 
 Available Actions:
- 0. Return to model.Article List
+ 0. Return to Article List
 ```
 
 **Result:** __Pass__ / Fail
 
 ---
 
-## Test 4 — Save an model.Article to a model.Folder
+## Test 4 — Save an Article to a Folder
 
 **Tested:** Saving an article to a folder after reading it.
 
@@ -141,7 +142,7 @@ Available Actions:
 
 ```
 Available Actions:
- 0. Return to model.Article List
+ 0. Return to Article List
  Response: 0
 
 Save this article to a folder?
@@ -156,7 +157,7 @@ Saved to folder 'Iran'.
 
 ---
 
-## Test 5 — Decline to Save an model.Article
+## Test 5 — Decline to Save an Article
 
 **Tested:** Choosing not to save an article after reading it.
 
@@ -178,7 +179,7 @@ Saved to folder 'Iran'.
 
 **Tested:** Searching for articles using a keyword.
 
-**Input:** From the model.Article Tab, enter `2` for Search Articles. Choose `1` for Keyword. Enter a search term that should appear in at least one article, e.g. `climate`.
+**Input:** From the Article Tab, enter `2` for Search Articles. Choose `1` for Keyword. Enter a search term that should appear in at least one article, e.g. `climate`.
 
 **Expected output:** A list of matching articles is displayed with a count of results found. Articles that contain the keyword in their title, description, author, or tags appear in the results.
 
@@ -188,8 +189,8 @@ Saved to folder 'Iran'.
 Search Type:
  0. Return
  1. Keyword
- 2. model.Tag
- 3. model.Author
+ 2. Tag
+ 3. Author
  Response: 1
 Enter search query: Trump
 
@@ -251,7 +252,7 @@ Grist -- Mon, 23 Mar 2026 08:45:00 +0000
 
 **Tested:** Searching for a term that does not appear in any article.
 
-**Input:** From the model.Article Tab, enter 2 for Search Articles. Choose 1 for Keyword. Enter a nonsense term, e.g. `zzzzzzz`.
+**Input:** From the Article Tab, enter 2 for Search Articles. Choose 1 for Keyword. Enter a nonsense term, e.g. `zzzzzzz`.
 
 **Expected output:** The app prints `No articles found.` and returns to the search menu without crashing.
 
@@ -261,8 +262,8 @@ Grist -- Mon, 23 Mar 2026 08:45:00 +0000
 Search Type:
  0. Return
  1. Keyword
- 2. model.Tag
- 3. model.Author
+ 2. Tag
+ 3. Author
  Response: 1
 Enter search query: fjekwfhwef
 
@@ -286,12 +287,12 @@ No articles found.
 ```
 Available Actions:
  0. Exit Program
- 1. model.Article Tab
+ 1. Article Tab
  Response: 9
 Invalid option, please try again.
 Available Actions:
  0. Exit Program
- 1. model.Article Tab
+ 1. Article Tab
 ```
 
 **Result:** __Pass__ / Fail
@@ -311,24 +312,24 @@ Available Actions:
 ```
 Available Actions:
  0. Exit Program
- 1. model.Article Tab
+ 1. Article Tab
  Response: abc
 Invalid input. Please enter a number.
 Invalid option, please try again.
 Available Actions:
  0. Exit Program
- 1. model.Article Tab
+ 1. Article Tab
 ```
 
 **Result:** __Pass__ / Fail
 
 ---
 
-## Test 10 — Invalid model.Article ID
+## Test 10 — Invalid Article ID
 
 **Tested:** Entering an article ID that does not exist.
 
-**Input:** From the model.Article Tab, enter 1 to choose an article. When prompted for an ID, enter a number that is not in the list, e.g. 9999.
+**Input:** From the Article Tab, enter 1 to choose an article. When prompted for an ID, enter a number that is not in the list, e.g. 9999.
 
 **Expected output:** The app does not crash. It either skips silently or shows an error, and returns to the ID prompt.
 
@@ -337,23 +338,23 @@ Available Actions:
 ```
 Available Actions:
  0. Return to Main Menu
- 1. Choose model.Article
+ 1. Choose Article
  2. Search Articles
  Response: 1
 
 Enter ID (0 to go back): 4567
-model.Article ID not found. Please enter an ID between 1 and 30.
+Article ID not found. Please enter an ID between 1 and 30.
 ```
 
 **Result:** __Pass__ / Fail
 
 ---
 
-## Test 11 — Return to Main Menu from model.Article Tab
+## Test 11 — Return to Main Menu from Article Tab
 
-**Tested:** Navigating back to the main menu from the model.Article Tab.
+**Tested:** Navigating back to the main menu from the Article Tab.
 
-**Input:** From the model.Article Tab, enter 0.
+**Input:** From the Article Tab, enter 0.
 
 **Expected output:** The app returns to the main menu and displays it again.
 
@@ -362,12 +363,12 @@ model.Article ID not found. Please enter an ID between 1 and 30.
 ```
 Available Actions:
  0. Return to Main Menu
- 1. Choose model.Article
+ 1. Choose Article
  2. Search Articles
  Response: 0
 Available Actions:
  0. Exit Program
- 1. model.Article Tab
+ 1. Article Tab
 ```
 
 **Result:** __Pass__ / Fail
@@ -387,7 +388,7 @@ Available Actions:
 ```
 Available Actions:
  0. Exit Program
- 1. model.Article Tab
+ 1. Article Tab
  Response: 0
 ~~~~~~ Thank you for visiting EcoSCOOP! ~~~~~~
 
@@ -399,7 +400,9 @@ Available Actions:
 
 ### Like
 **Tested:** Liking an article
+
 **Input:** From the reaction menu, enter 1 to like.
+
 **Expected Output:** `Liked! (1 likes)`
 
 **Actual output:**
@@ -422,7 +425,7 @@ Liked! (1 likes)
 
 ```
 Available Actions:
- 0. Return to model.Article List 
+ 0. Return to Article List 
  1. React 
  2. Save 
  Response: 1
@@ -444,7 +447,7 @@ React to this article?
 
 ```
 Available Actions:
- 0. Return to model.Article List 
+ 0. Return to Article List 
  1. React 
  2. Save 
  Response: 1

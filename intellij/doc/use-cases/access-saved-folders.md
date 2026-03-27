@@ -78,54 +78,54 @@ stop
 skin rose
 hide footbox
 
-title Access Saved Folders (Sequence)
+title Sequence Diagram - Access Saved Folders
 
 actor User
-participant ": ScreenUI" as view.UI
-participant ": model.Folder\nname, contents[]" as model.Folder
-participant ": model.ArticleRetriever" as model.ArticleRetriever
+participant ": ScreenUI" as UI
+participant ": Folder\nname, contents[]" as Folder
+participant ": ArticleRetriever" as ArticleRetriever
 
-User -> view.UI : click folder
-view.UI -> model.Folder : open()
+User -> UI : click folder
+UI -> Folder : open()
 
 alt name = "History"
-    model.Folder -> model.ArticleRetriever : fetchHistory()
-    model.ArticleRetriever --> model.Folder : articles (newest→oldest)
-    model.Folder --> view.UI : display contents
+    Folder -> ArticleRetriever : fetchHistory()
+    ArticleRetriever --> Folder : articles (newest→oldest)
+    Folder --> UI : display contents
 else other folder
-    model.Folder --> view.UI : return contents[]
+    Folder --> UI : return contents[]
 end
 
-view.UI --> User : show folder contents
+UI --> User : show folder contents
 
 opt user confirms folder choice
 
 ' Rename
-User -> view.UI : rename folder
-view.UI -> model.Folder : edit(newName)
-view.UI --> User : show updated name
+User -> UI : rename folder
+UI -> Folder : edit(newName)
+UI --> User : show updated name
 
 ' Add article
-User -> view.UI : add article to folder
-view.UI -> model.Folder : addArticle(article)
-model.Folder --> view.UI : updated contents[]
+User -> UI : add article to folder
+UI -> Folder : addArticle(article)
+Folder --> UI : updated contents[]
 
 ' Remove article
-User -> view.UI : remove article
-view.UI -> model.Folder : removeArticle(id)
-model.Folder --> view.UI : updated contents[]
+User -> UI : remove article
+UI -> Folder : removeArticle(id)
+Folder --> UI : updated contents[]
 
 ' Delete folder
-    User -> view.UI : delete folder
-    view.UI -> model.Folder : delete()
-    model.Folder --> view.UI : folder removed
-    view.UI --> User : return to folder list
+    User -> UI : delete folder
+    UI -> Folder : delete()
+    Folder --> UI : folder removed
+    UI --> User : return to folder list
 
-User -> view.UI : open article
-view.UI -> model.ArticleRetriever : executeAccessArticle(id)
-model.ArticleRetriever --> model.Folder : update history log
-model.ArticleRetriever --> view.UI : render article
-view.UI --> User : article displayed
+User -> UI : open article
+UI -> ArticleRetriever : executeAccessArticle(id)
+ArticleRetriever --> Folder : update history log
+ArticleRetriever --> UI : render article
+UI --> User : article displayed
 
 end
 
