@@ -39,18 +39,6 @@ public class Article {
         this.dislikes = 0;
     }
 
-    /**
-     * Creates an article without an id or content (legacy constructor).
-     */
-    public Article(String title, String url, String description, ArrayList<Tag> tagList, ArrayList<Author> authors, Source source) {
-        this.title = title;
-        this.description = description;
-        this.authors = authors;
-        this.source = source;
-        this.tagList = tagList;
-        this.likes = 0;
-        this.dislikes = 0;
-    }
 
     /**
      * Creates a blank default article with empty fields.
@@ -110,19 +98,7 @@ public class Article {
         this.dislikes++;
     }
 
-    /**
-     * Returns the number of likes this article has received.
-     */
-    public int getLikes() {
-        return likes;
-    }
 
-    /**
-     * Returns the number of dislikes this article has received.
-     */
-    public int getDislikes() {
-        return dislikes;
-    }
 
     /**
      * Returns true if the article's title, description, authors, or tags contain
@@ -172,5 +148,39 @@ public class Article {
      */
     public int getId() {
         return id;
+    }
+
+    public String getTitle(){
+        return title;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public ArrayList<Author> getAuthors(){
+        return authors;
+    }
+
+    public ArrayList<Tag> getTagList(){
+        return tagList;
+    }
+
+    public Source getSource(){
+        return source;
+    }
+
+    /**
+     * Returns the number of likes this article has received.
+     */
+    public int getLikes() {
+        return likes;
+    }
+
+    /**
+     * Returns the number of dislikes this article has received.
+     */
+    public int getDislikes() {
+        return dislikes;
     }
 }
