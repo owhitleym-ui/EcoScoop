@@ -81,3 +81,77 @@ repeat while (Switch tab?) is (yes) not (no)
 stop
 @enduml
 ```
+
+## 6. Sequence Diagram
+```plantuml
+@startuml
+skin rose
+hide footbox
+title View Dashboard (Sequence)
+
+actor User
+participant ": System UI" as UI
+participant ": Controller" as Controller
+participant ": Dashboard" as Dashboard
+participant ": ESS" as ESS
+participant ": Diagram" as Diagram
+
+User -> UI : click dashboard tab
+UI -> Controller : loadDashboard()
+Controller -> ESS : fetchEnvironmentalStats()
+ESS --> Controller : return raw stats
+Controller -> Dashboard : processStats(rawStats)
+Dashboard --> Controller : return processed stats
+Controller -> Diagram : generateVisuals(stats)
+Diagram --> Controller : return visuals
+Controller --> UI : display dashboard overview
+
+alt view fossil fuels
+    User -> UI : click fossil fuels
+    UI -> Controller : loadDetail(fossilFuels)
+    Controller -> Diagram : getDetailedVisual(fossilFuels)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show fossil fuel stats
+
+else view energy usage
+    User -> UI : click energy usage
+    UI -> Controller : loadDetail(energy)
+    Controller -> Diagram : getDetailedVisual(energy)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show energy usage stats
+
+else view air emissions
+    User -> UI : click air emissions
+    UI -> Controller : loadDetail(airEmissions)
+    Controller -> Diagram : getDetailedVisual(airEmissions)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show air emissions stats
+
+else view waste data
+    User -> UI : click waste
+    UI -> Controller : loadDetail(waste)
+    Controller -> Diagram : getDetailedVisual(waste)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show waste stats
+
+else view water data
+    User -> UI : click water
+    UI -> Controller : loadDetail(water)
+    Controller -> Diagram : getDetailedVisual(water)
+    Diagram --> Controller : return expanded visual
+    Controller --> UI : show water stats
+end
+User -> UI : switch to article view
+
+ref over UI, Controller
+    Search Article
+end ref
+
+User -> UI : switch to profile view
+
+ref over UI, Controller
+    View Profile
+end ref
+
+@enduml
+```

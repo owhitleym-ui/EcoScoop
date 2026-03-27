@@ -54,3 +54,36 @@ repeat while(Go back to Profile?) is (yes)
 stop
 @enduml
 ```
+
+## 6. Sequence Diagram
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Configure Settings (Sequence)
+
+actor User
+participant ": System UI" as UI
+participant ": Controller" as Controller
+participant ": Profile" as Profile
+
+User -> UI : click settings
+UI -> Controller : loadSettings()
+Controller -> Profile : getProfileData()
+Profile --> Controller : return profile data
+Controller --> UI : display settings
+
+User -> UI : modify settings
+UI -> Controller : saveSettings(settingsData)
+Controller -> Profile : update(settingsData)
+Profile --> Controller : confirmed
+Controller --> UI : refresh display
+
+User -> UI : go back to profile
+UI -> Controller : loadProfile()
+Controller -> Profile : getProfileData()
+Profile --> Controller : return profile data
+Controller --> UI : display profile
+
+@enduml
+```

@@ -73,3 +73,63 @@ endswitch
 stop
 @enduml
 ```
+## 6. Sequence Diagram
+```plantuml
+@startuml
+skin rose
+hide footbox
+title View Profile (Sequence)
+
+actor User
+participant ": System UI" as UI
+participant ": Controller" as Controller
+participant ": Tag" as Tag
+participant ": Profile" as Profile
+participant ": ArticleRetriever" as Retriever
+
+User -> UI : click profile
+UI -> Controller : displayProfile()
+Controller -> Profile : getStats()
+Profile --> Controller : return user stats
+Controller --> UI : show user stats
+
+opt show achievements
+User -> UI : click achievements
+UI -> Controller : displayAchievementScreen()
+Controller -> Profile : getAchievements()
+Profile --> Controller : return achievements
+Controller --> UI : show user achievement
+
+else show level
+User -> UI : click level
+UI -> Controller : displayLevel()
+Controller -> Profile : getLevel()
+Profile --> Controller : return user's levels
+Controller --> UI : show level stats
+
+else show tags
+User -> UI : click tags
+UI -> Controller : displayTags()
+Controller -> Retriever : getArticleTags()
+Retriever --> Controller : return tags
+Controller --> UI : show tags of liked articles
+
+alt add tag
+User -> UI : click add tag
+UI -> Controller : addTag()
+Controller -> Tag : addTag()
+Tag --> Controller : updates tags
+Controller --> UI : shows updated tags
+
+else remove tag
+User -> UI : click remove tag
+UI -> Controller : addTag()
+Controller -> Tag : removeTag()
+Tag --> Controller : updates tags
+Controller --> UI : shows updated tags
+end alt
+
+
+end opt
+@enduml
+```
