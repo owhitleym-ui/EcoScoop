@@ -91,4 +91,24 @@ public class Article {
         return id;
     }
 
+    public String getTitle(){
+        return title;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public ArrayList<Author> getAuthors(){
+        return authors;
+    }
+
+    public ArrayList<Tag> getTagList(){
+        return tagList;
+    }
+
+    public Source getSource(){
+        return source;
+    }
+
 }
