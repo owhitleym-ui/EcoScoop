@@ -3,9 +3,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.util.ArrayList;
 
 public class Controller implements UI.Listener{
+
+    //Private Fields
     private UI ui;
     private ArticleRetriever retriever = new ArticleRetriever();
-    private ArrayList<Article> articles = retriever.articleList;
+    private ArrayList<Article> articleList = retriever.articleList;
     private Article currentArticle = new Article();
 
     private Controller(final UI ui) throws XmlPullParserException {
@@ -19,27 +21,37 @@ public class Controller implements UI.Listener{
         controller.run();
     }
 
+    // Main Run Method
     private void run(){
         this.ui.runMainMenu();
     }
 
-    //Listener Override Methods
+    //Listener -  Methods
+
     @Override
-    public void onChooseArticle(int id) {
-        this.currentArticle = retriever.articleList.get(id);
-        this.ui.runClickArticle(currentArticle);
+    public void onGetArticle(int id){
+        currentArticle = retriever.getArticle(id);
+        onDisplayArticle(currentArticle);
     }
 
     @Override
-    public void onCancel() {
-        this.currentArticle = null;
-        this.ui.runCancel();
+    public void onDisplayArticle(Article article){
+        this.ui.runDisplayArticle(article);
+    }
+    @Override
+    public void onChooseArticle() {
+        this.ui.runChooseArticle();
+    }
 
+
+
+    public void onViewArticleTab(){
+        this.ui.runArticleTab();
     }
 
     @Override
-    public void onDisplayArticleList(ArrayList<Article> articles) {
-
+    public void onDisplayArticleList() {
+        this.ui.runDisplayArticleList(articleList);
     }
 
 }
