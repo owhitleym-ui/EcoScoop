@@ -99,23 +99,29 @@ class User {
   - savedArticles : List<List<Article>>
 }
 
+class FolderManager {
+  - folders : List<Folder>
+  - retriever : ArticleRetriever
+
+  + FolderManager(retriever : ArticleRetriever)
+  + createFolder(name : String) : Folder
+  + deleteFolder(name : String) : boolean
+  + getFolder(name : String) : Folder
+  + saveToFolder(articleId : int, folderName : String) : void
+  + getFolders() : List<Folder>
+}
+
 class Folder {
   - name : String
   - articleIds : List<Integer>
   - retriever : ArticleRetriever
-  
+
   + Folder(name : String, retriever : ArticleRetriever)
-  + rename(newName : String)
-  + addArticle(id : int)
-  + removeArticle(id : int)
-  + open() : contents : List<Article>
-  
-  
-  ' TODO : Extra Methods
-  '+ addArticle(article : Article) : void
-  '+ removeArticle(id : int) : void
-  '+ edit(newName : String) : void
-  '+ delete() : void
+  + getFolderName() : String
+  + rename(newName : String) : void
+  + addArticle(id : int) : void
+  + removeArticle(id : int) : void
+  + open() : List<Article>
 }
 
 class ArticleTag {
@@ -151,7 +157,8 @@ Controller ..> UIListener
 'Back-End Associations
 Controller "1" -- "1" ArticleRetriever
 ArticleRetriever "1" --> "1" ArticleDatabase : gets articles
-ArticleRetriever --> Folder : contains
+ArticleRetriever "1" --> "1" FolderManager : manages folders via
+FolderManager "1" --> "0..*" Folder : manages
 ArticleParser --> ArticleDatabase : provides articles
 FeedFetcher --> ArticleParser : provides feeds
 FeedFetcher <-- ArticleDatabase : uses

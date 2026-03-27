@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+/**
+ * Interface that all EcoScoop UI implementations must follow.
+ * The Listener sub-interface is implemented by the Controller to handle user actions.
+ * Each run method represents a screen or prompt the UI needs to be able to display.
+ */
 public interface UI {
 
     interface Listener {
@@ -16,6 +21,12 @@ public interface UI {
         void onSearchArticles();
         ArrayList<Article> onSearchQuery(String query, String type);
         ArrayList<Article> onSortResults(ArrayList<Article> results, String criteria);
+
+        // Folder Methods
+        void onSaveToFolder(int articleId, String folderName);
+
+        /** Returns the total number of articles currently loaded. */
+        int getArticleCount();
 
 
 

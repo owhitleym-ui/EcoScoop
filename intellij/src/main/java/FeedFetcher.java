@@ -8,6 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
+/**
+ * Downloads RSS feeds over HTTP and parses them into Article objects.
+ * If one feed fails, it logs the error and moves on so the others still load.
+ */
 public class FeedFetcher {
 
     private static final int CONNECT_TIMEOUT_MS = 8_000;
@@ -16,6 +20,12 @@ public class FeedFetcher {
     private static final String USER_AGENT =
             "Mozilla/5.0 (compatible; RSSReader/1.0)";
 
+    /**
+     * Fetches and parses all feeds in the given map.
+     *
+     * @param feeds a map of site name to RSS feed URL
+     * @return all successfully parsed articles from every feed
+     */
     public ArrayList<Article> fetchAll(Map<String, String> feeds) {
         ArrayList<Article> allArticles = new ArrayList<>();
 

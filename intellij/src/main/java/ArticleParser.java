@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
+/**
+ * Parses RSS XML content into Article objects using an XML pull parser.
+ * Handles standard RSS fields like title, link, description, pubDate,
+ * dc:creator for authors, category for tags, and content:encoded for body text.
+ */
 public class ArticleParser {
 
     private final ArrayList<Article> articleList = new ArrayList<>();
@@ -42,6 +47,14 @@ public class ArticleParser {
         this.xpp = factory.newPullParser();
     }
 
+    /**
+     * Parses RSS content either from a string or from files.
+     * Pass an empty args array to parse from the content string directly.
+     *
+     * @param args        file paths to parse, or empty to use the content string
+     * @param content     raw RSS XML string (used when args is empty)
+     * @param fileWebsite the name of the source website, attached to each article
+     */
     public void parse(String[] args, String content, String fileWebsite)
             throws XmlPullParserException, IOException {
 
@@ -167,6 +180,12 @@ public class ArticleParser {
 
         // Strip HTML tags and extra whitespace from description so it displays cleanly
         String cleanDesc = currentDescription
+                .replace("&#8217;", "'")
+                .replace("&#8216;", "'")
+                .replace("&#8220;", "\"")
+                .replace("&#8221;", "\"")
+                .replace("&#8211;", "-")
+                .replace("&#8212;", "--")
                 .replaceAll("<[^>]+>", " ")
                 .replaceAll("&[a-zA-Z]+;", " ")
                 .replaceAll("\\s+", " ")
@@ -175,7 +194,15 @@ public class ArticleParser {
         // If no body content was parsed (feed has no content:encoded), fall back to description
         String body = content.isEmpty() ? cleanDesc : String.join(" ", content);
 
-        return new Article(idCounter, currentTitle, cleanDesc, authors, tags,
+        String cleanTitle = currentTitle
+                .replace("&#8217;", "'")
+                .replace("&#8216;", "'")
+                .replace("&#8220;", "\"")
+                .replace("&#8221;", "\"")
+                .replace("&#8211;", "-")
+                .replace("&#8212;", "--");
+
+        return new Article(idCounter, cleanTitle, cleanDesc, authors, tags,
                 new Source(website, currentUrl, currentPubDate),
                 body
         );
@@ -192,6 +219,7 @@ public class ArticleParser {
         content.clear();
     }
 
+    /** Returns the list of articles built during the last parse call. */
     public ArrayList<Article> loadArticles() {
         return articleList;
     }

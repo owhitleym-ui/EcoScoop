@@ -2,6 +2,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.util.ArrayList;
 
+/**
+ * The main controller for EcoScoop.
+ * Sits between the UI and the data layer — the UI calls listener methods
+ * on the Controller, and the Controller calls run methods back on the UI.
+ */
 public class Controller implements UI.Listener{
 
     //Private Fields
@@ -10,11 +15,18 @@ public class Controller implements UI.Listener{
     private final ArrayList<Article> articleList = retriever.articleList;
     private Article currentArticle = new Article();
 
+    /**
+     * Creates the controller and registers it as the UI's listener.
+     *
+     * @param ui the UI implementation to use
+     * @throws Exception if loading the article feeds fails
+     */
     private Controller(final UI ui) throws Exception {
         this.ui = ui;
         this.ui.setListener(this);
     }
 
+    /** Starts the application. */
     public static void main(String[] args) throws Exception {
         final UI ui = new CmdLineUI();
         final Controller controller = new Controller(ui);
@@ -31,7 +43,15 @@ public class Controller implements UI.Listener{
     @Override
     public void onGetArticle(int id){
         currentArticle = retriever.getArticle(id);
+        if (currentArticle == null) {
+            return;
+        }
         onDisplayArticle(currentArticle);
+    }
+
+    @Override
+    public int getArticleCount() {
+        return articleList.size();
     }
 
     @Override
@@ -67,6 +87,12 @@ public class Controller implements UI.Listener{
     @Override
     public ArrayList<Article> onSortResults(ArrayList<Article> results, String criteria) {
         return retriever.sortArticles(results, criteria);
+    }
+
+    // Listener - Folder Methods
+    @Override
+    public void onSaveToFolder(int articleId, String folderName) {
+        retriever.saveToFolder(articleId, folderName);
     }
 
 }
