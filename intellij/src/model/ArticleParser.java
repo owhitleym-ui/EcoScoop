@@ -199,8 +199,19 @@ public class ArticleParser {
                 .replaceAll("\\s+", " ")
                 .trim();
 
-        // If no body content was parsed (feed has no content:encoded), fall back to description
-        String body = content.isEmpty() ? cleanDesc : String.join(" ", content);
+        // Strip the same entities and HTML from the body content
+        String rawBody = content.isEmpty() ? cleanDesc : String.join(" ", content);
+        String body = rawBody
+                .replace("&#8217;", "'")
+                .replace("&#8216;", "'")
+                .replace("&#8220;", "\"")
+                .replace("&#8221;", "\"")
+                .replace("&#8211;", "-")
+                .replace("&#8212;", "--")
+                .replaceAll("<[^>]+>", " ")
+                .replaceAll("&[a-zA-Z]+;", " ")
+                .replaceAll("\\s+", " ")
+                .trim();
 
         String cleanTitle = currentTitle
                 .replace("&#8217;", "'")

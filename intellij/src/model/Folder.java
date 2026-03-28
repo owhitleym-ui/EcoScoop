@@ -37,7 +37,7 @@ public class Folder {
      */
     public void rename(String newName) {
         if (newName == null) {
-            throw new IllegalArgumentException("model.Folder name cannot be blank.");
+            throw new IllegalArgumentException("Folder name cannot be blank.");
         }
         this.name = newName;
     }
@@ -49,7 +49,7 @@ public class Folder {
      */
     public void addArticle(int id) {
         if (retriever.getArticle(id) == null) {
-            throw new IllegalArgumentException("model.Article ID not found in database.");
+            throw new IllegalArgumentException("Article ID not found in database.");
         }
         if (!articleIds.contains(id)) {
             articleIds.add(id);

@@ -30,6 +30,7 @@ public class ArticleDatabase {
         Map<String, String> feeds = new LinkedHashMap<>();
         feeds.put("Grist", "https://grist.org/feed/");
         feeds.put("Carbon Brief", "https://www.carbonbrief.org/feed/");
+        feeds.put("Earth911", "https://www.earth911.com/feed/");
 
 
         FeedFetcher fetcher = new FeedFetcher();

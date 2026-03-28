@@ -27,7 +27,7 @@
 - Software must be written using Java.
 
 ## External interfaces
-- Website articles must be accessed from a 3rd-party database, specifically RSS Feeds for easy pulling
+- Website articles must be accessed from a 3rd-party database, specifically RSS Feeds for easy pulling from Grist, Carbon Brief, and Earth911.
 - The system should securely handle communication with external data sources. 
 - External API failures should not crash the application. 
 

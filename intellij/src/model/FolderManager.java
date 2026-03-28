@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Manages all user-created folders.
  * Handles creating, deleting, and finding folders so that
- * model.Folder objects themselves don't need to know about the collection they live in.
+ * Folder objects themselves don't need to know about the collection they live in.
  */
 public class FolderManager {
 
@@ -14,9 +14,9 @@ public class FolderManager {
     private final ArticleRetriever retriever;
 
     /**
-     * Creates a new model.FolderManager with no folders.
+     * Creates a new FolderManager with no folders.
      *
-     * @param retriever the model.ArticleRetriever used to validate article IDs when saving
+     * @param retriever the ArticleRetriever used to validate article IDs when saving
      */
     public FolderManager(ArticleRetriever retriever) {
         this.folders = new ArrayList<>();
@@ -27,7 +27,7 @@ public class FolderManager {
      * Creates a new empty folder and adds it to the collection.
      *
      * @param name the folder name
-     * @return the newly created model.Folder
+     * @return the newly created Folder
      */
     public Folder createFolder(String name) {
         Folder folder = new Folder(name, retriever);
