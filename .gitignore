@@ -1,6 +1,6 @@
 # Default ignored files
 /shelf/
-/workspace.xml
+/.idea/workspace.xml
 # Environment-dependent path to Maven home directory
 /mavenHomeManager.xml
 
@@ -35,7 +35,7 @@ bin/
 .DS_Store
 
 ### IntelliJ ###
-.idea/
+/.idea/
 
 ### Target ###
 target/
