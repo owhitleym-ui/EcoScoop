@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.ecoscoop;
+package edu.vassar.cmpu203.ecoscoop.view;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import edu.vassar.cmpu203.ecoscoop.R;
 
 
 public class MainActivity extends AppCompatActivity {

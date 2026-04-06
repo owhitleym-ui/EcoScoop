@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    buildFeatures { viewBinding = true }
     namespace = "edu.vassar.cmpu203.ecoscoop"
     compileSdk {
         version = release(36) {
