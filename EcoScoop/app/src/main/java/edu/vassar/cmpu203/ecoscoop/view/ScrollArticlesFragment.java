@@ -13,14 +13,16 @@ import edu.vassar.cmpu203.ecoscoop.databinding.FragmentAccessArticleBinding;
 import edu.vassar.cmpu203.ecoscoop.databinding.FragmentScrollArticlesBinding;
 
 class ScrollArticlesFragment extends Fragment {
-
     private FragmentScrollArticlesBinding binding;
 
-    // TODO: Rename and change types of parameters
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         this.binding = FragmentScrollArticlesBinding.inflate(inflater);
         return this.binding.getRoot();
+    }
+    public void onViewCreated(View view, Bundle savedInstanceState){
 
     }
+
+
 }
