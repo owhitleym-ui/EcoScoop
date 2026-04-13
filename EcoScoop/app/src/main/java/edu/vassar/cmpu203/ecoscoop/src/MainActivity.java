@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.ecoscoop.view;
+package edu.vassar.cmpu203.ecoscoop.src;
 
 import android.os.Bundle;
 

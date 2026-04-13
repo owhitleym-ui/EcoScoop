@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.ecoscoop.view;
+package edu.vassar.cmpu203.ecoscoop.src.view;
 
 import android.os.Bundle;
 
@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.vassar.cmpu203.ecoscoop.databinding.ExampleArticleBinding;
-import edu.vassar.cmpu203.ecoscoop.databinding.FragmentAccessArticleBinding;
 
 public class AccessArticleFragment extends Fragment implements AccessArticleUI {
     private ExampleArticleBinding binding;
