@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.ecoscoop.view;
+package edu.vassar.cmpu203.ecoscoop.src.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,10 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import edu.vassar.cmpu203.ecoscoop.databinding.FragmentAccessArticleBinding;
 import edu.vassar.cmpu203.ecoscoop.databinding.FragmentScrollArticlesBinding;
 
 class ScrollArticlesFragment extends Fragment {
