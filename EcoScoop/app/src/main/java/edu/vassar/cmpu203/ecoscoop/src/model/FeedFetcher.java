@@ -1,5 +1,7 @@
 package edu.vassar.cmpu203.ecoscoop.src.model;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,8 +48,7 @@ public class FeedFetcher {
                 allArticles.addAll(parsed);
             } catch (Exception e) {
                 // Log and continue so one bad feed doesn't stop the rest
-                System.err.println("  ✗ Failed to fetch/parse " + siteName
-                        + " (" + feedUrl + "): " + e.getMessage());
+                Log.e("FeedFetcher", "Failed to fetch/parse " + siteName + " (" + feedUrl + ")", e);
             }
         }
 
