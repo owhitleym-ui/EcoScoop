@@ -8,7 +8,6 @@ public interface ArticleFeedUI {
 
     interface Listener{
         //Navigation Methods
-        void onArticleTabClick();
         void onDashBoardClick();
         void onSearchClick();
         void onProfileClick();
