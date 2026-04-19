@@ -110,13 +110,17 @@ public class Article {
     }
 
     /**
-     * Returns the article body with no HTML entities and word-wrapped at 80 characters.
+     * Returns the article body with inline whitespace normalized and paragraph
+     * breaks preserved as exactly one blank line (\n\n).
+     * Android's TextView handles word wrapping within each paragraph naturally.
      */
     public String getContent() {
-        String cleaned = content.replaceAll("&nbsp;", " ")
-                .replaceAll("\\s+", " ")
+        return content
+                .replaceAll("&nbsp;", " ")
+                .replaceAll("[ \t]+", " ")       // collapse inline spaces/tabs only
+                .replaceAll(" *\\n *", "\n")     // strip spaces flanking newlines
+                .replaceAll("\\n{3,}", "\n\n")   // cap to one blank line max
                 .trim();
-        return wordWrap(cleaned, 80);
     }
 
     /**

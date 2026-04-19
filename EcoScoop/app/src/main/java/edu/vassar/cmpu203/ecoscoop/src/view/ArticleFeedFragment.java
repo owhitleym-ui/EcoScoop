@@ -21,6 +21,10 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.Author;
 import edu.vassar.cmpu203.ecoscoop.src.model.Tag;
 
+/**
+ * Shows the list of articles as scrollable cards.
+ * Passes user actions (card taps, nav buttons) to the controller.
+ */
 public class ArticleFeedFragment extends Fragment implements ArticleFeedUI {
 
     private FragmentArticleFeedBinding binding;
@@ -32,6 +36,7 @@ public class ArticleFeedFragment extends Fragment implements ArticleFeedUI {
         //Required Empty Public Constructor
     }
 
+    /** Inflates the article feed layout. */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -41,18 +46,33 @@ public class ArticleFeedFragment extends Fragment implements ArticleFeedUI {
         return this.binding.getRoot();
     }
 
+    /** Sets up the RecyclerView and wires the nav buttons. */
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
         this.binding.itemsRecView.setLayoutManager(new LinearLayoutManager((this.requireContext())));
         this.binding.itemsRecView.setAdapter(this.articleFeedAdapter);
 
-
+        // Wire bottom nav tabs
+        this.binding.articleFeedTab.setOnClickListener(v -> {
+            if (listener != null) listener.onArticleTabClick();
+        });
+        this.binding.dashboardTab.setOnClickListener(v -> {
+            if (listener != null) listener.onDashBoardClick();
+        });
+        this.binding.searchTab.setOnClickListener(v -> {
+            if (listener != null) listener.onSearchClick();
+        });
+        this.binding.profileTab.setOnClickListener(v -> {
+            if (listener != null) listener.onProfileClick();
+        });
     }
 
+    /** Sets the listener for user events. */
     @Override
     public void setListener(Listener listener) { this.listener = listener;}
 
+    /** Updates the feed with the given list of articles. */
     @Override
     public void runShowFeed(List<Article> articleList) {
         this.articleFeedAdapter.setArticles(articleList);
@@ -64,6 +84,7 @@ public class ArticleFeedFragment extends Fragment implements ArticleFeedUI {
 
     }
 
+    /** Adapter that binds a list of articles to article card views. */
     private class ArticleFeedAdapter extends RecyclerView.Adapter<ArticleFeedAdapter.ViewHolder> {
 
         private List<Article> articles = new ArrayList<>();
@@ -83,7 +104,7 @@ public class ArticleFeedFragment extends Fragment implements ArticleFeedUI {
             }
 
 
-            //Creates InfoFeedCard
+            /** Fills the card view with the article's title, description, author, source, and tag. */
             void setCardBinding(Article article){
 
                 //Sets Title

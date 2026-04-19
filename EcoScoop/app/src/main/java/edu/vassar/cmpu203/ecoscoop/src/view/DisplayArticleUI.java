@@ -2,26 +2,34 @@ package edu.vassar.cmpu203.ecoscoop.src.view;
 
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 
+/**
+ * Interface for the article detail screen.
+ * The controller handles user actions; the fragment displays the article.
+ */
 public interface DisplayArticleUI {
 
     interface Listener {
-        //Navigation Methods
+        // Navigation
+        /** Goes back to the previous screen. */
         void onReturnClick();
+        /** Goes to the article feed tab. */
         void onArticleTabClick();
+        /** Goes to the dashboard tab. */
         void onDashBoardClick();
+        /** Goes to the search tab. */
         void onSearchClick();
+        /** Goes to the profile tab. */
         void onProfileClick();
 
-
-        //Action Methods
+        /** Asks the controller to load the article with the given id. */
         void onRequestArticle(int id, DisplayArticleUI ui);
-        //void onLikeArticle(int id);
-        //void onDislikeArticle(int id);
-        //void onCommentArticle(int id, String comment);
+        /** Called when the user saves an article to a folder. */
         void onSaveClick(int id, String folderName);
     }
 
+    /** Sets the listener that handles user events. */
     void setListener(Listener listener);
+    /** Displays the given article on screen. */
     void runShowArticle(Article article);
 
 }

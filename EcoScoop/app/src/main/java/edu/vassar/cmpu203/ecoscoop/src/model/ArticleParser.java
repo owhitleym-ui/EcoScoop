@@ -140,9 +140,15 @@ public class ArticleParser {
                 content.add(text);
                 break;
             case "encoded":
-                String plainText = text.replaceAll("<[^>]+>", " ")
-                                       .replaceAll("\\s{2,}", " ")
-                                       .trim();
+                // Convert block-level HTML into whitespace before stripping all tags.
+                // <br> → single newline; </p> → paragraph break (\n\n).
+                // This preserves the document's paragraph structure in plain text.
+                String plainText = text
+                        .replaceAll("(?i)<br\\s*/?>", "\n")
+                        .replaceAll("(?i)</p\\s*>", "\n\n") // one blank line per paragraph
+                        .replaceAll("<[^>]+>", " ")
+                        .replaceAll("[ \t]+", " ")          // collapse inline spaces only
+                        .trim();
                 if (!plainText.isEmpty()) {
                     content.add(plainText);
                 }
@@ -199,8 +205,10 @@ public class ArticleParser {
                 .replaceAll("\\s+", " ")
                 .trim();
 
-        // Strip the same entities and HTML from the body content
-        String rawBody = content.isEmpty() ? cleanDesc : String.join(" ", content);
+        // Strip the same entities and HTML from the body content.
+        // Join multiple <p> chunks with a blank line so paragraph breaks survive.
+        // Use \n\n as separator — matches what the encoded handler produces for </p>.
+        String rawBody = content.isEmpty() ? cleanDesc : String.join("\n\n", content);
         String body = rawBody
                 .replace("&#8217;", "'")
                 .replace("&#8216;", "'")
@@ -210,7 +218,7 @@ public class ArticleParser {
                 .replace("&#8212;", "--")
                 .replaceAll("<[^>]+>", " ")
                 .replaceAll("&[a-zA-Z]+;", " ")
-                .replaceAll("\\s+", " ")
+                .replaceAll("[ \t]+", " ")   // collapse spaces/tabs only — keep \n\n
                 .trim();
 
         String cleanTitle = currentTitle

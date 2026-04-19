@@ -33,6 +33,19 @@ public class ArticleRetriever {
         this.folderManager = new FolderManager(this);
     }
 
+    /**
+     * Test-only constructor. Accepts pre-built data and bypasses all network calls.
+     * Package-private so only test classes in the same package can use it.
+     *
+     * @param database pre-populated article map (id → article)
+     * @param articles pre-populated article list
+     */
+    ArticleRetriever(Map<Integer, Article> database, List<Article> articles) {
+        this.databaseMap = database;
+        this.articleList = articles;
+        this.folderManager = new FolderManager(this);
+    }
+
     // --- Folder Methods ---
 
     /** Creates a new empty folder. */

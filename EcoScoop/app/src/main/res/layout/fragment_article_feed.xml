@@ -1,54 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-
-    <LinearLayout
+    <!-- Feed fills all space above the nav bar -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/itemsRecView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/itemsRecView"
-            android:layout_width="match_parent"
-            android:layout_height="852dp" />
+    <!-- Bottom nav bar — equal-width buttons via weight -->
+    <LinearLayout
+        android:id="@+id/buttonRow"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/buttonRow"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/articleFeedTab"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:text="Articles" />
 
-            <Button
-                android:id="@+id/articleFeedTab"
-                android:layout_width="102.5dp"
-                android:layout_height="match_parent"
-                android:text="Articles" />
+        <Button
+            android:id="@+id/dashboardTab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Dashboard" />
 
-            <Button
-                android:id="@+id/dashboardTab"
-                android:layout_width="102.5dp"
-                android:layout_height="match_parent"
-                android:text="Dashboard" />
+        <Button
+            android:id="@+id/searchTab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Search" />
 
-            <Button
-                android:id="@+id/searchTab"
-                android:layout_width="102.5dp"
-                android:layout_height="match_parent"
-                android:text="Search" />
-
-            <Button
-                android:id="@+id/profileTab"
-                android:layout_width="102.5dp"
-                android:layout_height="match_parent"
-                android:text="Profile" />
-
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/profileTab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Profile" />
 
     </LinearLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
