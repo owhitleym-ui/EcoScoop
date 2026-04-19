@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/topButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/returnButton"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="Return" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="Save" />
+
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/articleDisplayTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="7.5dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:lineSpacingMultiplier="1.1"
+                android:text="@string/example_title"
+                android:textSize="25sp" />
+
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <ImageView
+                android:id="@+id/img_header"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginHorizontal="7.5dp"
+                android:scaleType="centerCrop"
+                android:background="?attr/colorSurfaceVariant"
+                android:contentDescription="Article header image" />
+
+            <TextView
+                android:id="@+id/articleDisplayAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="7.5dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/example_author"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/articleDisplayDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="7.5dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="April 19, 2026"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/articleContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="7.5dp"
+                android:fontFamily="sans-serif-medium"
+                android:lineSpacingMultiplier="1.2"
+                android:text="@string/example_body"
+                android:textSize="17sp" />
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/buttonRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/articleFeedTab"
+            android:layout_width="102.5dp"
+            android:layout_height="50dp"
+            android:text="Articles" />
+
+        <Button
+            android:id="@+id/dashboardTab"
+            android:layout_width="102.5dp"
+            android:layout_height="match_parent"
+            android:text="Dashboard" />
+
+        <Button
+            android:id="@+id/searchTab"
+            android:layout_width="102.5dp"
+            android:layout_height="match_parent"
+
+            android:text="Search" />
+
+        <Button
+            android:id="@+id/profileTab"
+            android:layout_width="102.5dp"
+            android:layout_height="match_parent"
+            android:text="Profile" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
