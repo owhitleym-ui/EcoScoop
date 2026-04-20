@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "778141577432",
+    "project_id": "ecoscoop-58b4b",
+    "storage_bucket": "ecoscoop-58b4b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778141577432:android:53f7154622962915a367ad",
+        "android_client_info": {
+          "package_name": "edu.vassar.cmpu203.ecoscoop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdWf_2I7LVHeed3Ls0RYV0ZukHte8MMyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

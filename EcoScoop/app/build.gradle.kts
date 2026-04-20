@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-}
+    id("com.google.gms.google-services")
+    }
 
 android {
     buildFeatures { viewBinding = true }
@@ -49,5 +50,7 @@ dependencies {
     implementation(libs.xpp3)
     implementation(libs.cardview)
     implementation(libs.glide)
-    implementation(libs.sdk)
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
 }
