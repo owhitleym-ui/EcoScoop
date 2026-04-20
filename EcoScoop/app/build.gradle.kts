@@ -49,4 +49,5 @@ dependencies {
     implementation(libs.xpp3)
     implementation(libs.cardview)
     implementation(libs.glide)
+    implementation(libs.sdk)
 }

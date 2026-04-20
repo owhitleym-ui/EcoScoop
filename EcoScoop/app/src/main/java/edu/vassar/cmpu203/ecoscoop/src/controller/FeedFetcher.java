@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.ecoscoop.src.model;
+package edu.vassar.cmpu203.ecoscoop.src.controller;
 
 import android.util.Log;
 
@@ -10,6 +10,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import edu.vassar.cmpu203.ecoscoop.src.model.Article;
+import edu.vassar.cmpu203.ecoscoop.src.model.ArticleParser;
 
 
 /**

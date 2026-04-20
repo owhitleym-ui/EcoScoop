@@ -1,7 +1,12 @@
-package edu.vassar.cmpu203.ecoscoop.src.model;
+package edu.vassar.cmpu203.ecoscoop.src.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.vassar.cmpu203.ecoscoop.src.model.Article;
+import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
+import edu.vassar.cmpu203.ecoscoop.src.model.Author;
+import edu.vassar.cmpu203.ecoscoop.src.model.Tag;
 
 /**
  * Handles article lookup, search, and sorting.

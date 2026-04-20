@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
-import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRetriever;
+import edu.vassar.cmpu203.ecoscoop.src.controller.ArticleRetriever;
 import edu.vassar.cmpu203.ecoscoop.src.model.Author;
 import edu.vassar.cmpu203.ecoscoop.src.model.Source;
 import edu.vassar.cmpu203.ecoscoop.src.model.Tag;

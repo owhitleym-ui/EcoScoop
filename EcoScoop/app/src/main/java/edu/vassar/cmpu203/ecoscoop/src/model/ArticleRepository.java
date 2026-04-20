@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.vassar.cmpu203.ecoscoop.src.controller.FeedFetcher;
+
 /**
  * Fetches articles from all configured RSS feeds and implements ArticleDatabase.
  * This is the live data source — swap it out with another ArticleDatabase implementation

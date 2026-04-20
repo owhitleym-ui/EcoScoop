@@ -13,11 +13,11 @@ import edu.vassar.cmpu203.ecoscoop.R;
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRepository;
-import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRetriever;
 import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedUI;
+import edu.vassar.cmpu203.ecoscoop.src.view.DashboardFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.DashboardUI;
 import edu.vassar.cmpu203.ecoscoop.src.view.DisplayArticleFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.DisplayArticleUI;
@@ -45,28 +45,41 @@ public class ControllerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainUI = new MainUI(getSupportFragmentManager());
-        mainUI.showDashboard(R.id.fragment_container);
+        mainUI = new MainUI(this);
+        DashboardFragment dashboardFragment = new DashboardFragment();
+        dashboardFragment.setListener(this);
+        mainUI.displayFragment(dashboardFragment);
 
-        // Fetch articles on a background thread; update the feed when ready
+        // Fetch articles on a background thread; update the feed when ready ITS QUANTUM MECHANICS
         new Thread(() -> {
             try {
-                articleDatabase  = new ArticleRepository(); // fetches RSS in constructor
-                articleRetriever = new ArticleRetriever(articleDatabase);
-                folderManager    = new FolderManager(articleDatabase);
-                Log.d("ControllerActivity", "Loaded " + articleDatabase.getArticles().size() + " articles");
+                ArticleRepository newArticleRepository = new ArticleRepository(); // fetches RSS in
+                // constructor
+                ArticleRetriever newArticleRetriever = new ArticleRetriever(newArticleRepository);
+                FolderManager newFolderManager    = new FolderManager(newArticleRepository);
+                Log.d("ControllerActivity", "Loaded " + newArticleRepository.getArticles().size() + " articles");
 
                 runOnUiThread(() -> {
-                    Fragment current = getSupportFragmentManager()
-                            .findFragmentById(R.id.fragment_container);
-                    if (current instanceof ArticleFeedUI) {
-                        onShowFeed(articleDatabase.getArticles(), (ArticleFeedUI) current);
-                    }
+                    onLoadArticles(newArticleRepository, newArticleRetriever, newFolderManager);
                 });
             } catch (Exception e) {
                 Log.e("ControllerActivity", "Failed to load articles", e);
             }
         }).start();
+    }
+
+    private void onLoadArticles(ArticleRepository repo, ArticleRetriever ret, FolderManager f ) {
+        this.articleDatabase = repo;
+        this.articleRetriever = ret;
+        this.folderManager = f;
+
+        Log.d("FeedDebug", "Article Size:" + articleDatabase.getArticles().size());
+        ArticleFeedFragment newFeed = new ArticleFeedFragment();
+        newFeed.setListener(this);
+        mainUI.displayFragment(newFeed);
+
+        onShowFeed(repo.getArticles(), newFeed );
+
     }
 
     // -------------------------------------------------------------------------
@@ -76,9 +89,9 @@ public class ControllerActivity extends AppCompatActivity
     /** Replaces the container with a fresh ArticleFeedFragment and populates it. */
     private void showArticleFeed() {
         ArticleFeedFragment feedFragment = new ArticleFeedFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, feedFragment)
-                .commitNow();
+        feedFragment.setListener(this);
+        mainUI.displayFragment(feedFragment);
+
         feedFragment.setListener(this);
         if (articleDatabase != null) {
             onShowFeed(articleDatabase.getArticles(), feedFragment);
@@ -91,34 +104,33 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     public void onArticleTabClick() {
-        getSupportFragmentManager().popBackStack(null,
-                androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ArticleFeedFragment articleFeedFragment = new ArticleFeedFragment();
+        articleFeedFragment.setListener(this);
+        mainUI.displayFragment(articleFeedFragment);
+
         showArticleFeed();
     }
 
     @Override
     public void onDashBoardClick() {
-        getSupportFragmentManager().popBackStack(null,
-                androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        mainUI.showDashboard(R.id.fragment_container);
+        DashboardFragment dashboardFragment = new DashboardFragment();
+        dashboardFragment.setListener(this);
+        mainUI.displayFragment(dashboardFragment);
     }
 
     @Override
     public void onSearchClick() {
-        getSupportFragmentManager().popBackStack(null,
-                androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SearchArticleFragment())
-                .commitNow();
+        SearchArticleFragment searchArticleFragment = new SearchArticleFragment();
+        searchArticleFragment.setListener(this);
+       mainUI.displayFragment(searchArticleFragment);
+
     }
 
     @Override
     public void onProfileClick() {
-        getSupportFragmentManager().popBackStack(null,
-                androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ProfileFragment())
-                .commitNow();
+        ProfileFragment profileFragment = new ProfileFragment();
+        profileFragment.setListener(this);
+        mainUI.displayFragment(profileFragment);
     }
 
     // -------------------------------------------------------------------------
@@ -133,12 +145,10 @@ public class ControllerActivity extends AppCompatActivity
         args.putInt("article_id", id);
 
         DisplayArticleFragment detailFragment = new DisplayArticleFragment();
+        detailFragment.setListener(this);
         detailFragment.setArguments(args);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
-                .addToBackStack(null)
-                .commit();
+        mainUI.displayFragment(detailFragment);
     }
 
     @Override
