@@ -1,8 +1,10 @@
-package edu.vassar.cmpu203.ecoscoop.src.model;
+package edu.vassar.cmpu203.ecoscoop;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+
+import edu.vassar.cmpu203.ecoscoop.src.model.Author;
 
 /**
  * Unit tests for {@link Author}.

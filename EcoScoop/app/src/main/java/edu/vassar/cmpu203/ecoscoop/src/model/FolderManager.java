@@ -5,22 +5,21 @@ import java.util.List;
 
 /**
  * Manages all user-created folders.
- * Handles creating, deleting, and finding folders so that
- * Folder objects themselves don't need to know about the collection they live in.
+ * Standalone — not coupled to article retrieval or search.
  */
 public class FolderManager {
 
-    private final ArrayList<Folder> folders;
-    private final ArticleRetriever retriever;
+    private final List<Folder> folders;
+    private final ArticleDatabase database;
 
     /**
      * Creates a new FolderManager with no folders.
      *
-     * @param retriever the ArticleRetriever used to validate article IDs when saving
+     * @param database the article data source used to validate IDs when saving
      */
-    public FolderManager(ArticleRetriever retriever) {
+    public FolderManager(ArticleDatabase database) {
         this.folders = new ArrayList<>();
-        this.retriever = retriever;
+        this.database = database;
     }
 
     /**
@@ -30,13 +29,13 @@ public class FolderManager {
      * @return the newly created Folder
      */
     public Folder createFolder(String name) {
-        Folder folder = new Folder(name, retriever);
+        Folder folder = new Folder(name, database);
         folders.add(folder);
         return folder;
     }
 
     /**
-     * Deletes the folder with the given name from the collection.
+     * Deletes the folder with the given name.
      *
      * @param name the name of the folder to delete
      * @return true if a folder was found and removed, false if it didn't exist
@@ -78,9 +77,7 @@ public class FolderManager {
         folder.addArticle(articleId);
     }
 
-    /**
-     * Returns the list of all folders.
-     */
+    /** Returns the list of all folders. */
     public List<Folder> getFolders() {
         return folders;
     }

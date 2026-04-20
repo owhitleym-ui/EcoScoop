@@ -25,6 +25,12 @@ public interface DisplayArticleUI {
         void onRequestArticle(int id, DisplayArticleUI ui);
         /** Called when the user saves an article to a folder. */
         void onSaveClick(int id, String folderName);
+        /** Called when the user taps the Like button. */
+        void onLikeClick(int id);
+        /** Called when the user taps the Dislike button. */
+        void onDislikeClick(int id);
+        /** Called when the user posts a comment. */
+        void onCommentSubmit(int id, String comment);
     }
 
     /** Sets the listener that handles user events. */

@@ -84,12 +84,12 @@ public class SearchArticleFragment extends Fragment implements SearchArticleUI {
             return false;
         });
 
-        // Sort chips re-sort the current result set
+        // Sort chips — delegate to controller, which calls runShowResults
         binding.chipGroupSort.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty() || currentResults.isEmpty() || listener == null) return;
             String criteria = (checkedIds.get(0) == binding.chipSortDate.getId())
                     ? "date" : "relevance";
-            runShowResults(listener.onSortResults(currentResults, criteria));
+            listener.onSortResults(currentResults, criteria, this);
         });
 
         // Bottom nav
@@ -136,7 +136,7 @@ public class SearchArticleFragment extends Fragment implements SearchArticleUI {
         if (imm != null) imm.hideSoftInputFromWindow(binding.searchInput.getWindowToken(), 0);
 
         String type = getSelectedSearchType();
-        runShowResults(listener.onSearchQuery(query, type));
+        listener.onSearchQuery(query, type, this);
     }
 
     /** Returns the search type selected by the chip group: "tag", "author", or "keyword". */

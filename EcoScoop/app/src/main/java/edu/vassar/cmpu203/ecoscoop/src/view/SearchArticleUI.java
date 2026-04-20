@@ -11,11 +11,11 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 public interface SearchArticleUI {
 
     interface Listener {
-        /** Runs a search; type is "keyword", "tag", or "author". */
-        List<Article> onSearchQuery(String query, String type);
+        /** Runs a search and pushes results back to the given UI. */
+        void onSearchQuery(String query, String type, SearchArticleUI ui);
 
-        /** Sorts the current results by "date" or "relevance". */
-        List<Article> onSortResults(List<Article> results, String criteria);
+        /** Sorts the current results and pushes them back to the given UI. */
+        void onSortResults(List<Article> results, String criteria, SearchArticleUI ui);
 
         /** Opens the article detail view for the tapped card. */
         void onArticleClicked(int id);

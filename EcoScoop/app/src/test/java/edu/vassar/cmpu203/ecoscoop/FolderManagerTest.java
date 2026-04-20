@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.ecoscoop.src.model;
+package edu.vassar.cmpu203.ecoscoop;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +10,12 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+import edu.vassar.cmpu203.ecoscoop.src.model.Article;
+import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
+import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
+import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
+import edu.vassar.cmpu203.ecoscoop.src.model.Source;
+
 /**
  * Unit tests for the non-trivial behaviour of {@link FolderManager}.
  *
@@ -17,12 +23,12 @@ import static org.junit.Assert.*;
  * {@code deleteFolder()} true/false return values, {@code getFolder()} null
  * when missing, and {@code saveToFolder()} auto-creating folders on demand.
  *
- * Uses the package-private {@link ArticleRetriever} test constructor so no
- * network calls are made during the test run.
+ * Uses an anonymous {@link ArticleDatabase} implementation to inject test data
+ * without making any network calls.
  */
 public class FolderManagerTest {
 
-    private ArticleRetriever retriever;
+    private ArticleDatabase database;
     private FolderManager manager;
     private Article article;
 
@@ -30,7 +36,7 @@ public class FolderManagerTest {
     public void setUp() {
         article = new Article(1, "Title", "Desc",
                 new ArrayList<>(), new ArrayList<>(),
-                new Source("Grist", "https://grist.org", "2024-01-01"), "Body.");
+                new Source("Grist", "https://grist.org", "2024-01-01"), "Body.", "");
 
         Map<Integer, Article> db = new HashMap<>();
         db.put(1, article);
@@ -38,8 +44,12 @@ public class FolderManagerTest {
         List<Article> list = new ArrayList<>();
         list.add(article);
 
-        retriever = new ArticleRetriever(db, list);
-        manager = new FolderManager(retriever);
+        database = new ArticleDatabase() {
+            @Override public Map<Integer, Article> getDatabase() { return db; }
+            @Override public List<Article> getArticles() { return list; }
+        };
+
+        manager = new FolderManager(database);
     }
 
     // -------------------------------------------------------------------------
@@ -59,8 +69,7 @@ public class FolderManagerTest {
     }
 
     /**
-     * Verifies that creating multiple folders results in all of them being
-     * tracked by the manager.
+     * Verifies that creating multiple folders results in all of them being tracked.
      */
     @Test
     public void testCreateFolder_multipleFoldersAllTracked() {
@@ -111,7 +120,7 @@ public class FolderManagerTest {
 
     /**
      * Verifies {@code getFolder()} returns {@code null} when no folder has the
-     * given name, preventing callers from acting on a missing folder.
+     * given name.
      */
     @Test
     public void testGetFolder_missingNameReturnsNull() {
@@ -142,7 +151,7 @@ public class FolderManagerTest {
     public void testSaveToFolder_usesExistingFolderWhenPresent() {
         manager.createFolder("Existing");
         manager.saveToFolder(1, "Existing");
-        assertEquals(1, manager.getFolders().size()); // still only one folder
+        assertEquals(1, manager.getFolders().size());
         assertEquals(1, manager.getFolder("Existing").open().size());
     }
 }

@@ -17,11 +17,11 @@ import java.util.List;
  */
 public class ArticleParser {
 
-    private final ArrayList<Article> articleList = new ArrayList<>();
+    private final List<Article> articleList = new ArrayList<>();
 
-    private ArrayList<String> tagList = new ArrayList<>();
-    private ArrayList<String> authorList = new ArrayList<>();
-    private ArrayList<String> content = new ArrayList<>();
+    private List<String> tagList = new ArrayList<>();
+    private List<String> authorList = new ArrayList<>();
+    private List<String> content = new ArrayList<>();
 
     private String website;
 
@@ -37,6 +37,7 @@ public class ArticleParser {
     private String currentUrl;
     private String currentDescription;
     private String currentPubDate;
+    private String currentImageUrl;
 
     private static final String CONTENT_NS = "http://purl.org/rss/1.0/modules/content/";
 
@@ -96,6 +97,24 @@ public class ArticleParser {
     private void handleStartTag() {
         String tagName = xpp.getName();
         String namespace = xpp.getNamespace();
+
+        // Grab image URL from <media:content url="..."> before incrementing depth
+        if (MEDIA_NS.equals(namespace) && "content".equals(tagName) && insideItem) {
+            String url = xpp.getAttributeValue(null, "url");
+            if (url != null && !url.isEmpty() && currentImageUrl.isEmpty()) {
+                currentImageUrl = url;
+            }
+        }
+
+        // Grab image URL from <enclosure url="..." type="image/...">
+        if ("enclosure".equals(tagName) && insideItem) {
+            String type = xpp.getAttributeValue(null, "type");
+            String url  = xpp.getAttributeValue(null, "url");
+            if (type != null && type.startsWith("image") && url != null && currentImageUrl.isEmpty()) {
+                currentImageUrl = url;
+            }
+        }
+
         if (MEDIA_NS.equals(namespace)) {
             mediaDepth++;
         }
@@ -140,6 +159,13 @@ public class ArticleParser {
                 content.add(text);
                 break;
             case "encoded":
+                // Grab image URL from first <img src="..."> before stripping HTML
+                if (currentImageUrl.isEmpty()) {
+                    java.util.regex.Matcher imgMatcher = java.util.regex.Pattern
+                            .compile("(?i)<img[^>]+src=[\"']([^\"']+)[\"']")
+                            .matcher(text);
+                    if (imgMatcher.find()) currentImageUrl = imgMatcher.group(1);
+                }
                 // Convert block-level HTML into whitespace before stripping all tags.
                 // <br> → single newline; </p> → paragraph break (\n\n).
                 // This preserves the document's paragraph structure in plain text.
@@ -231,7 +257,7 @@ public class ArticleParser {
 
         return new Article(idCounter, cleanTitle, cleanDesc, authors, tags,
                 new Source(website, currentUrl, currentPubDate),
-                body
+                body, currentImageUrl
         );
     }
 
@@ -243,6 +269,7 @@ public class ArticleParser {
         currentUrl = "";
         currentDescription = "";
         currentPubDate = "";
+        currentImageUrl = "";
 
         tagList.clear();
         authorList.clear();

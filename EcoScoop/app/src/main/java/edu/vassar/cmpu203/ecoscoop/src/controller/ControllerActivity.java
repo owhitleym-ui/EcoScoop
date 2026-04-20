@@ -6,18 +6,24 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.vassar.cmpu203.ecoscoop.R;
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
+import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
+import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRepository;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRetriever;
+import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
+import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedUI;
-import edu.vassar.cmpu203.ecoscoop.src.view.DashboardFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.DashboardUI;
 import edu.vassar.cmpu203.ecoscoop.src.view.DisplayArticleFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.DisplayArticleUI;
 import edu.vassar.cmpu203.ecoscoop.src.view.MainUI;
+import edu.vassar.cmpu203.ecoscoop.src.view.ProfileFragment;
+import edu.vassar.cmpu203.ecoscoop.src.view.ProfileUI;
 import edu.vassar.cmpu203.ecoscoop.src.view.SearchArticleFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.SearchArticleUI;
 
@@ -25,35 +31,36 @@ public class ControllerActivity extends AppCompatActivity
         implements ArticleFeedUI.Listener,
                    DisplayArticleUI.Listener,
                    SearchArticleUI.Listener,
-                   DashboardUI.Listener {
+                   DashboardUI.Listener,
+                   ProfileUI.Listener {
 
-    private ArticleRetriever retriever;
-    private List<Article> articleList;
-    private Article currentArticle;
+    private ArticleDatabase  articleDatabase;   // RSS data source
+    private ArticleRetriever articleRetriever; // search and sort
+    private FolderManager   folderManager;     // saved folders (independent of retrieval)
+    private Article         currentArticle;    // article currently open in the detail view
     private MainUI mainUI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // clean shell — holds only fragment_container
+        setContentView(R.layout.activity_main);
 
-        // Show dashboard immediately as the launch screen
         mainUI = new MainUI(getSupportFragmentManager());
         mainUI.showDashboard(R.id.fragment_container);
 
-        // Load articles in the background; the feed will receive them when ready
+        // Fetch articles on a background thread; update the feed when ready
         new Thread(() -> {
             try {
-                retriever = new ArticleRetriever();
-                articleList = retriever.articleList;
-                Log.d("FeedDebug", "Article count: " + articleList.size());
+                articleDatabase  = new ArticleRepository(); // fetches RSS in constructor
+                articleRetriever = new ArticleRetriever(articleDatabase);
+                folderManager    = new FolderManager(articleDatabase);
+                Log.d("ControllerActivity", "Loaded " + articleDatabase.getArticles().size() + " articles");
 
-                // If the user already navigated to the feed, push data to it
                 runOnUiThread(() -> {
                     Fragment current = getSupportFragmentManager()
                             .findFragmentById(R.id.fragment_container);
                     if (current instanceof ArticleFeedUI) {
-                        onShowFeed(articleList, (ArticleFeedUI) current);
+                        onShowFeed(articleDatabase.getArticles(), (ArticleFeedUI) current);
                     }
                 });
             } catch (Exception e) {
@@ -63,7 +70,7 @@ public class ControllerActivity extends AppCompatActivity
     }
 
     // -------------------------------------------------------------------------
-    // Shared navigation helpers
+    // Navigation helpers
     // -------------------------------------------------------------------------
 
     /** Replaces the container with a fresh ArticleFeedFragment and populates it. */
@@ -73,13 +80,13 @@ public class ControllerActivity extends AppCompatActivity
                 .replace(R.id.fragment_container, feedFragment)
                 .commitNow();
         feedFragment.setListener(this);
-        if (articleList != null) {
-            onShowFeed(articleList, feedFragment);
+        if (articleDatabase != null) {
+            onShowFeed(articleDatabase.getArticles(), feedFragment);
         }
     }
 
     // -------------------------------------------------------------------------
-    // Navigation tab callbacks (shared across all fragment listeners)
+    // Shared nav tab callbacks
     // -------------------------------------------------------------------------
 
     @Override
@@ -107,7 +114,11 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     public void onProfileClick() {
-        // TODO: replace with ProfileFragment when built
+        getSupportFragmentManager().popBackStack(null,
+                androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new ProfileFragment())
+                .commitNow();
     }
 
     // -------------------------------------------------------------------------
@@ -116,10 +127,7 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     public void onArticleClicked(int id) {
-        Log.d("FeedDebug", "onArticleClicked id=" + id);
-
-        currentArticle = retriever != null ? retriever.getArticle(id) : null;
-        if (currentArticle == null) return;
+        if (articleRetriever == null || articleRetriever.getArticle(id) == null) return;
 
         Bundle args = new Bundle();
         args.putInt("article_id", id);
@@ -134,8 +142,8 @@ public class ControllerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onShowFeed(List<Article> articleList, ArticleFeedUI ui) {
-        ui.runShowFeed(articleList);
+    public void onShowFeed(List<Article> articles, ArticleFeedUI ui) {
+        ui.runShowFeed(articles);
     }
 
     // -------------------------------------------------------------------------
@@ -144,39 +152,69 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     public void onRequestArticle(int id, DisplayArticleUI ui) {
-        if (retriever != null) {
-            Article article = retriever.getArticle(id);
-            if (article != null) ui.runShowArticle(article);
+        if (articleRetriever != null) {
+            currentArticle = articleRetriever.getArticle(id);
+            if (currentArticle != null) ui.runShowArticle(currentArticle);
         }
     }
 
     @Override
     public void onReturnClick() {
+        currentArticle = null;
         getSupportFragmentManager().popBackStack();
     }
 
     @Override
     public void onSaveClick(int id, String folderName) {
-        if (retriever != null) retriever.saveToFolder(id, folderName);
-    }
-
-    // -------------------------------------------------------------------------
-    // SearchArticleUI.Listener
-    // onArticleTabClick, onDashBoardClick, onProfileClick already implemented above.
-    // onArticleClicked already implemented above.
-    // -------------------------------------------------------------------------
-
-    @Override
-    public List<Article> onSearchQuery(String query, String type) {
-        return retriever != null
-                ? retriever.searchArticles(query, type)
-                : List.of();
+        if (folderManager != null) folderManager.saveToFolder(id, folderName);
     }
 
     @Override
-    public List<Article> onSortResults(List<Article> results, String criteria) {
-        return retriever != null
-                ? retriever.sortArticles(results, criteria)
+    public void onLikeClick(int id) {
+        if (currentArticle != null) currentArticle.addLike();
+    }
+
+    @Override
+    public void onDislikeClick(int id) {
+        if (currentArticle != null) currentArticle.addDislike();
+    }
+
+    @Override
+    public void onCommentSubmit(int id, String comment) {
+        if (currentArticle != null) currentArticle.addComment(comment);
+    }
+
+    // -------------------------------------------------------------------------
+    // SearchArticleUI.Listener — controller pushes results back to the UI
+    // -------------------------------------------------------------------------
+
+    @Override
+    public void onSearchQuery(String query, String type, SearchArticleUI ui) {
+        List<Article> results = articleRetriever != null
+                ? articleRetriever.searchArticles(query, type)
+                : new ArrayList<>();
+        ui.runShowResults(results);
+    }
+
+    @Override
+    public void onSortResults(List<Article> results, String criteria, SearchArticleUI ui) {
+        List<Article> sorted = articleRetriever != null
+                ? articleRetriever.sortArticles(results, criteria)
                 : results;
+        ui.runShowResults(sorted);
+    }
+
+    // -------------------------------------------------------------------------
+    // ProfileUI.Listener
+    // -------------------------------------------------------------------------
+
+    @Override
+    public List<Article> onGetSavedArticles() {
+        if (folderManager == null) return new ArrayList<>();
+        List<Article> saved = new ArrayList<>();
+        for (Folder folder : folderManager.getFolders()) {
+            saved.addAll(folder.open());
+        }
+        return saved;
     }
 }

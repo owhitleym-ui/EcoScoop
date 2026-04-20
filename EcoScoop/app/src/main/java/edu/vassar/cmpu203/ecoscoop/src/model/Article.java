@@ -19,6 +19,8 @@ public class Article {
     private int likes;
     private int dislikes;
     private List<String> comments;
+    private String userReaction = "none"; // "none", "liked", or "disliked"
+    private String imageUrl;
 
     /**
      * Creates an article with all fields.
@@ -31,7 +33,7 @@ public class Article {
      * @param source      the source website and URL
      * @param content     full article body text
      */
-    public Article(int id, String title, String description, List<Author> authors, List<Tag> tagList, Source source, String content) {
+    public Article(int id, String title, String description, List<Author> authors, List<Tag> tagList, Source source, String content, String imageUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -39,6 +41,7 @@ public class Article {
         this.source = source;
         this.tagList = tagList;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.likes = 0;
         this.dislikes = 0;
         this.comments = new ArrayList<>();
@@ -56,17 +59,13 @@ public class Article {
         this.source = new Source("","","");
         this.tagList = new ArrayList<Tag>();
         this.content = "";
+        this.imageUrl = "";
         this.likes = 0;
         this.dislikes = 0;
         this.comments = new ArrayList<>();
     }
 
-    /**
-     *
-     *
-     * @return
-     */
-
+    /** Returns a full string representation of the article including reactions and comments. */
     @Override
     public String toString(){
        StringBuilder sb = new StringBuilder();
@@ -81,24 +80,6 @@ public class Article {
            }
        }
 
-        return sb.toString();
-    }
-
-    /**
-     * Returns a formatted string for displaying the full article with reactions.
-     */
-    public String printArticle(){
-        StringBuilder sb = new StringBuilder();
-        sb.append(title).append("\n").append(authors).append("\n \n")
-          .append(getContent()).append("\n \n")
-          .append(source).append("\n").append(tagList)
-          .append("\n Likes: ").append(likes).append(" | Dislikes: ").append(dislikes);
-        if (!comments.isEmpty()) {
-            sb.append("\n\n--- Comments ---");
-            for (int i = 0; i < comments.size(); i++) {
-                sb.append("\n ").append(i + 1).append(". ").append(comments.get(i));
-            }
-        }
         return sb.toString();
     }
 
@@ -124,18 +105,37 @@ public class Article {
     }
 
     /**
-     * Increments like count by one.
+     * Toggles the like reaction.
+     * If already liked, removes the like. If disliked, switches to liked.
      */
     public void addLike() {
-        this.likes++;
+        if ("liked".equals(userReaction)) {
+            likes--;
+            userReaction = "none";
+        } else {
+            if ("disliked".equals(userReaction)) dislikes--;
+            likes++;
+            userReaction = "liked";
+        }
     }
 
     /**
-     * Increments dislike count by one.
+     * Toggles the dislike reaction.
+     * If already disliked, removes the dislike. If liked, switches to disliked.
      */
     public void addDislike() {
-        this.dislikes++;
+        if ("disliked".equals(userReaction)) {
+            dislikes--;
+            userReaction = "none";
+        } else {
+            if ("liked".equals(userReaction)) likes--;
+            dislikes++;
+            userReaction = "disliked";
+        }
     }
+
+    /** Returns the current user reaction: "liked", "disliked", or "none". */
+    public String getUserReaction() { return userReaction; }
 
     /**
      * Adds a user comment to this article.
@@ -207,6 +207,11 @@ public class Article {
 
     public Source getSource(){
         return source;
+    }
+
+    /** Returns the article's header image URL, or empty string if none. */
+    public String getImageUrl() {
+        return imageUrl != null ? imageUrl : "";
     }
 
     /**

@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.ecoscoop.src.model;
+package edu.vassar.cmpu203.ecoscoop;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,6 +6,11 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.*;
+
+import edu.vassar.cmpu203.ecoscoop.src.model.Article;
+import edu.vassar.cmpu203.ecoscoop.src.model.ArticleParser;
+import edu.vassar.cmpu203.ecoscoop.src.model.Author;
+import edu.vassar.cmpu203.ecoscoop.src.model.Tag;
 
 /**
  * Unit tests for the non-trivial behaviour of {@link ArticleParser}.

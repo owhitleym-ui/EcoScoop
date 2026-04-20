@@ -5,23 +5,23 @@ import java.util.List;
 
 /**
  * Represents a user-created folder for saving articles.
- * Stores article IDs and uses an model.ArticleRetriever to look them up when the folder is opened.
+ * Stores article IDs and uses an ArticleDatabase to look them up when the folder is opened.
  */
 public class Folder {
 
     private String name;
-    private ArrayList<Integer> articleIds;
-    private ArticleRetriever retriever;
+    private List<Integer> articleIds;
+    private ArticleDatabase database;
 
     /**
      * Creates a new empty folder.
      *
-     * @param name      the folder name
-     * @param retriever used to look up articles when the folder is opened
+     * @param name     the folder name
+     * @param database used to look up articles when the folder is opened
      */
-    public Folder(String name, ArticleRetriever retriever) {
+    public Folder(String name, ArticleDatabase database) {
         this.name = name;
-        this.retriever = retriever;
+        this.database = database;
         this.articleIds = new ArrayList<>();
     }
 
@@ -48,7 +48,7 @@ public class Folder {
      * @param id the article ID to add
      */
     public void addArticle(int id) {
-        if (retriever.getArticle(id) == null) {
+        if (database.getDatabase().get(id) == null) {
             throw new IllegalArgumentException("Article ID not found in database.");
         }
         if (!articleIds.contains(id)) {
@@ -67,10 +67,10 @@ public class Folder {
 
     /** Returns the articles currently saved in this folder. */
     public List<Article> open() {
-        ArrayList<Article> contents = new ArrayList<>();
+        List<Article> contents = new ArrayList<>();
 
         for (int id : articleIds) {
-            Article a = retriever.getArticle(id);
+            Article a = database.getDatabase().get(id);
             if (a != null) {
                 contents.add(a);
             }

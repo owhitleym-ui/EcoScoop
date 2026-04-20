@@ -1,10 +1,14 @@
 package edu.vassar.cmpu203.ecoscoop.src.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,8 +27,8 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Author;
 public class DisplayArticleFragment extends Fragment implements DisplayArticleUI {
 
     private FragmentDisplayArticleBinding binding;
-
     private DisplayArticleUI.Listener listener;
+    private Article currentArticle;
 
     /** Grabs the controller as the listener when the fragment attaches to the activity. */
     @Override
@@ -49,13 +53,12 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         this.binding = FragmentDisplayArticleBinding.inflate(inflater, container, false);
-
         return this.binding.getRoot();
     }
 
     /** Reads the article id from arguments, requests the article, and wires all buttons. */
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         int articleId = getArguments() != null ? getArguments().getInt("article_id", -1) : -1;
@@ -64,14 +67,50 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
             listener.onRequestArticle(articleId, this);
         }
 
-        // Top bar
+        // Back button
         this.binding.returnButton.setOnClickListener(v -> {
             if (listener != null) listener.onReturnClick();
         });
+
+        // Save button — shows a popup asking for a folder name
         this.binding.saveButton.setOnClickListener(v -> {
-            if (articleId != -1 && listener != null) {
-                // TODO: show folder-picker dialog, then call listener.onSaveClick(articleId, folderName)
-            }
+            if (articleId == -1 || listener == null) return;
+            EditText input = new EditText(requireContext());
+            input.setHint("Folder name");
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Save to folder")
+                    .setView(input)
+                    .setPositiveButton("Save", (dialog, which) -> {
+                        String name = input.getText().toString().trim();
+                        if (!name.isEmpty()) listener.onSaveClick(articleId, name);
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+
+        // Like button — toggles and updates both reaction labels
+        this.binding.likeButton.setOnClickListener(v -> {
+            if (listener == null || currentArticle == null) return;
+            listener.onLikeClick(articleId);
+            updateReactionButtons();
+        });
+
+        // Dislike button — toggles and updates both reaction labels
+        this.binding.dislikeButton.setOnClickListener(v -> {
+            if (listener == null || currentArticle == null) return;
+            listener.onDislikeClick(articleId);
+            updateReactionButtons();
+        });
+
+        // Comment submit — adds the comment to the article and displays it
+        this.binding.submitCommentButton.setOnClickListener(v -> {
+            if (listener == null || currentArticle == null) return;
+            String text = binding.commentInput.getText() != null
+                    ? binding.commentInput.getText().toString().trim() : "";
+            if (text.isEmpty()) return;
+            listener.onCommentSubmit(articleId, text);
+            addCommentView(text);
+            binding.commentInput.setText("");
         });
 
         // Bottom nav tabs
@@ -91,21 +130,22 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
 
     /** Sets the listener for user events. */
     @Override
-    public void setListener(Listener listener) {this.listener = listener;}
+    public void setListener(Listener listener) { this.listener = listener; }
 
-    /** Shows the article on screen. */
+    /** Stores the article and shows it on screen. */
     @Override
     public void runShowArticle(Article article) {
+        this.currentArticle = article;
         setArticleBinding(article);
     }
 
-    /** Fills the layout views with the article's title, author, date, and content. */
-    private void setArticleBinding(Article article){
+    /** Fills the layout views with the article's data and loads any existing reactions. */
+    private void setArticleBinding(Article article) {
 
-        //Sets Title
+        // Title
         this.binding.articleDisplayTitle.setText(article.getTitle());
 
-        //Sets Authors
+        // Authors
         List<Author> authors = article.getAuthors();
         if (authors != null && !authors.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -119,11 +159,46 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
             this.binding.articleDisplayAuthor.setVisibility(View.INVISIBLE);
         }
 
-        //Sets Date
+        // Date
         this.binding.articleDisplayDate.setText(article.getSource().getPublishDate());
 
-        //Sets Content
+        // Reaction counts (reflect current toggle state)
+        updateReactionButtons();
+
+        // Content
         this.binding.articleContent.setText(article.getContent());
 
+        // Load any comments already on the article
+        this.binding.commentsContainer.removeAllViews();
+        for (String comment : article.getComments()) {
+            addCommentView(comment);
+        }
+    }
+
+    /** Updates like/dislike button text to reflect the current toggle state. */
+    private void updateReactionButtons() {
+        if (currentArticle == null) return;
+        String reaction = currentArticle.getUserReaction();
+        binding.likeButton.setText(
+                "liked".equals(reaction)
+                        ? "Liked: "    + currentArticle.getLikes()
+                        : "Likes: "    + currentArticle.getLikes());
+        binding.dislikeButton.setText(
+                "disliked".equals(reaction)
+                        ? "Disliked: " + currentArticle.getDislikes()
+                        : "Dislikes: " + currentArticle.getDislikes());
+    }
+
+    /** Adds a single comment as a TextView inside the comments container. */
+    private void addCommentView(String text) {
+        TextView tv = new TextView(requireContext());
+        tv.setText("• " + text);
+        tv.setTextSize(14f);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 6, 0, 6);
+        tv.setLayoutParams(params);
+        this.binding.commentsContainer.addView(tv);
     }
 }
