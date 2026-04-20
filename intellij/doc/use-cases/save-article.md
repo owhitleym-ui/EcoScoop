@@ -52,17 +52,8 @@ stop
 endif
 
 
-|System|
-if (Validate ID) then (yes)
 :Save Article to user's preferred location;
 :Update amount of saves on Article;
-stop
-
-else (no)
-:Do not save article;
-:Display Unable to Save Article;
-
-stop
 @enduml
 ```
 

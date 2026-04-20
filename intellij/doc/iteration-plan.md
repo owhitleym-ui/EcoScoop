@@ -43,3 +43,63 @@ Our goals:
 - Android does not allow network calls on the main thread. Any feed-fetching logic must run in a background thread (ExecutorService or similar), then update the view.UI afterward. 
 - We must add internet permissions in AndroidManifest.xml, otherwise feeds will fail to load.
 
+---
+
+# Phase #4 Iteration Plan (Final)
+
+## Prioritization Criteria
+
+**Risk** — how likely the feature is to break or be hard to implement (high risk = lots of unknowns or no existing code).
+
+**Coverage** — how much of the backend is already built and tested. High coverage means the model and logic are done, we just need the UI.
+
+**Criticality** — how important the feature is to the core experience of EcoScoop as an environmental news app.
+
+---
+
+## Use Cases for Phase #4
+
+__1. React Article__ — *Criticality: High | Risk: Low | Coverage: High*
+- The backend is already done: `addLike()`, `addDislike()`, and `addComment()` are implemented and tested on `Article`.
+- The only missing piece is the UI — like/dislike buttons and a comment input need to be wired into `DisplayArticleFragment` and connected to the controller.
+- This is high priority because it is a core engagement feature and the easiest to finish since the model is complete.
+
+__2. View Profile__ — *Criticality: Medium | Risk: High | Coverage: Low*
+- No `Profile` class exists yet. Will need to be built from scratch.
+- Should display basic stats (articles liked, comments left, saved folders count) pulled from existing article and folder data.
+- Lower priority than the above three because it depends on React and Save Article being finished first, and it requires the most new code.
+
+__3. Configure Settings__ — *Criticality: Low | Risk: High | Coverage: Low*
+- No settings persistence exists yet. Would require `SharedPreferences` for storing user preferences between sessions.
+- Lowest priority for this iteration since it depends on Profile being set up and adds a lot of new complexity for a feature that is not critical to the core news-reading experience.
+
+## Goals for Phase #4
+- Need to integrate article thumbnails/images for search feed and inside the article itself.
+- Complete the Save Article flow (folder picker dialog, controller wiring).
+- Build the Access Saved Folders screen so users can browse and reopen saved articles.
+- Add in folder deletion and editing abilities.
+- Add a basic View Profile screen that shows user activity stats.
+- Configure Settings is a stretch goal if time allows.
+- Set up structure and simple visuals for Eco Dashboard.
+- Add more visual interest: drawings for each tab and a logo for our app.
+
+## What Was Completed in Phase #4
+
+- **Article images** — the parser now extracts image URLs from `<media:content>` tags and `content:encoded` HTML. Images are loaded into card headers on the feed using the Glide library, which handles background threading and caching automatically.
+  - **Limitation:** images only appear on the article feed cards. The article detail screen does not yet show the header image. Some RSS feeds do not provide image URLs, so those cards show a blank placeholder.
+- **Like/Dislike toggling** — reactions now toggle on and off and are mutually exclusive (liking removes a dislike and vice versa), tracked via a `userReaction` field on each `Article`.
+- **Comments** — users can post comments on articles; they appear as a bulleted list below the article body.
+- **Save to Folder** — tapping Save opens a dialog for a folder name. The article is saved into that folder via `FolderManager`.
+- **Profile screen** — shows all saved articles across all folders. Displays an empty state message when nothing has been saved.
+- **Espresso UI tests** — added instrumented tests for navigation, article interactions (reactions, comments, saving), and search.
+- **Naming cleanup** — `ArticleDatabase` was extracted as an interface; the RSS fetcher was renamed `ArticleRepository` and the search/sort layer renamed `ArticleRetriever` to better reflect their roles.
+
+---
+
+## Future Work: Data Persistence
+
+Currently all user data — liked articles, comments, and saved folders — is stored in memory only and is lost when the app is closed. To fix this, the app needs a persistence layer.
+
+The most practical option for this project would be **Firebase Firestore**, a cloud database from Google that integrates easily with Android. In an MVC structure, the model layer (`ArticleRepository`, `FolderManager`, `Article`) would be responsible for reading and writing to Firestore — the controller and view would not need to change. Each user's saved folders, reactions, and comments would be stored as documents and synced automatically across sessions.
+
+

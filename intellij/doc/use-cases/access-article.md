@@ -49,7 +49,6 @@ if (React?) then (yes)
 endif
 
 |System|
-if (User authenticated?) then (yes)
 if (User wants to save article?) then (yes)
   :Execute __Save Article__;
 endif
@@ -61,7 +60,6 @@ endif
   |System|
   :Execute __Access Article__;
   endif
-endif
 
 |User|
 :Return to Article Hub;

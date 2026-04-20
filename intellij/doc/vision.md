@@ -20,7 +20,7 @@ Our News Hub application addresses customer needs that other products do not:
 
 ## 4. Stakeholder goals summary
 - **User**: Wants to have ease of access obtaining relevant articles about their specific interests on the environment, fact-based news, and a readable format.
-- **model.Author**: Requires attribution/credit for written articles and information relating to their article (i.e, comments, reactions, saved/share).
+- **Author**: Requires attribution/credit for written articles and information relating to their article (i.e, comments, reactions, saved/share).
 - **Websites**: Requires attribution/credit for published articles and information relating to the articles they have published (i.e., preferred tags, keywords, reactions, saves)
 
 
@@ -39,10 +39,10 @@ actor "Environmental Statistics System" <<system>> as envSystem
 ' list all use cases in package
 package EcoScoop{
  
-    usecase "Access model.Article" as accessArticle
-    usecase "Search for model.Article" as searchArticle
-    usecase "React to model.Article" as reactArticle
-    usecase "Save model.Article" as saveArticle
+    usecase "Access Article" as accessArticle
+    usecase "Search for Article" as searchArticle
+    usecase "React to Article" as reactArticle
+    usecase "Save Article" as saveArticle
     usecase "View Profile" as viewProfile
     usecase "Configure Settings" as changeSettings
     usecase "Access Saved Folders" as accessHistory
