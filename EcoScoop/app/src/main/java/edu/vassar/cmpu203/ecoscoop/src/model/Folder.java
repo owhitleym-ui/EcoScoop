@@ -25,6 +25,11 @@ public class Folder {
         this.articleIds = new ArrayList<>();
     }
 
+    public Folder() {
+        this.name = "";
+        this.database = null;
+    }
+
     /** Returns the folder's name. */
     public String getFolderName() {
         return name;
