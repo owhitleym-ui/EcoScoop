@@ -15,6 +15,7 @@ import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRepository;
 import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
+import edu.vassar.cmpu203.ecoscoop.src.persistence.PersistenceFacade;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedUI;
 import edu.vassar.cmpu203.ecoscoop.src.view.DashboardFragment;
@@ -36,8 +37,9 @@ public class ControllerActivity extends AppCompatActivity
 
     private ArticleDatabase  articleDatabase;   // RSS data source
     private ArticleRetriever articleRetriever; // search and sort
-    private FolderManager   folderManager;     // saved folders (independent of retrieval)
-    private Article         currentArticle;    // article currently open in the detail view
+    private FolderManager folderManager;     // saved folders (independent of retrieval)
+    private Article currentArticle;    // article currently open in the detail view
+    private PersistenceFacade pfacade;
     private MainUI mainUI;
 
     @Override
@@ -66,6 +68,8 @@ public class ControllerActivity extends AppCompatActivity
                 Log.e("ControllerActivity", "Failed to load articles", e);
             }
         }).start();
+
+
     }
 
     private void onLoadArticles(ArticleRepository repo, ArticleRetriever ret, FolderManager f ) {

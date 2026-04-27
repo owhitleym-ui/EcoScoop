@@ -1,5 +1,6 @@
 package edu.vassar.cmpu203.ecoscoop.src.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * Represents a user-created folder for saving articles.
  * Stores article IDs and uses an ArticleDatabase to look them up when the folder is opened.
  */
-public class Folder {
+public class Folder implements Serializable {
 
     private String name;
     private List<Integer> articleIds;

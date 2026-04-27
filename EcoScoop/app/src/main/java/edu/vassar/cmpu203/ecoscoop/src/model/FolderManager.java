@@ -1,5 +1,7 @@
 package edu.vassar.cmpu203.ecoscoop.src.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  * Manages all user-created folders.
  * Standalone — not coupled to article retrieval or search.
  */
-public class FolderManager {
+public class FolderManager implements Serializable {
 
     private final List<Folder> folders;
     private final ArticleDatabase database;

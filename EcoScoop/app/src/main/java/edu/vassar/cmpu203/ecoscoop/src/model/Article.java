@@ -1,5 +1,6 @@
 package edu.vassar.cmpu203.ecoscoop.src.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * Represents a news article retrieved from an RSS feed.
  * Stores the article's content, metadata, and user reactions (likes/dislikes).
  */
-public class Article {
+public class Article implements Serializable {
     private int id;
     private String title;
     private String description;
