@@ -1,8 +1,12 @@
 package edu.vassar.cmpu203.ecoscoop.src.model;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a user-created folder for saving articles.
@@ -84,4 +88,5 @@ public class Folder implements Serializable {
 
         return contents;
     }
+
 }

@@ -3,12 +3,14 @@ package edu.vassar.cmpu203.ecoscoop.src.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a news article retrieved from an RSS feed.
  * Stores the article's content, metadata, and user reactions (likes/dislikes).
  */
 public class Article implements Serializable {
+    private static final String TITLE = "title";
     private int id;
     private String title;
     private String description;
@@ -65,6 +67,7 @@ public class Article implements Serializable {
         this.dislikes = 0;
         this.comments = new ArrayList<>();
     }
+
 
     /** Returns a full string representation of the article including reactions and comments. */
     @Override
@@ -182,7 +185,13 @@ public class Article implements Serializable {
 
         return result.toString();
     }
+    /**
+    public static Article fromMap(Map<String, Object> map) {
+        final String title = (String)map.get(TITLE);
 
+        return new Article(TITLE);
+    }
+     */
     /**
      * Returns the unique article ID assigned during parsing.
      */

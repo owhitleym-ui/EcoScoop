@@ -3,6 +3,7 @@ package edu.vassar.cmpu203.ecoscoop.src.controller;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -44,10 +45,10 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.mainUI = new MainUI(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainUI = new MainUI(this);
         DashboardFragment dashboardFragment = new DashboardFragment();
         dashboardFragment.setListener(this);
         mainUI.displayFragment(dashboardFragment);
