@@ -74,7 +74,11 @@ public class ControllerActivity extends AppCompatActivity
     /** Loads updated Database into the Retriever and FolderManager */
     private void onLoadArticles(ArticleDatabase newDatabase){
         this.articleRetriever = new ArticleRetriever(newDatabase);
-        this.folderManager.updateRetreiver(articleRetriever);
+        if (folderManager != null){
+            this.folderManager.updateRetreiver(articleRetriever);
+        } else{
+            this.folderManager = new FolderManager(articleRetriever);
+        }
 
         Log.d("FeedDebug", "Article Size:" + articleRetriever.getDatabaseSize());
         ArticleFeedFragment newFeed = new ArticleFeedFragment();
