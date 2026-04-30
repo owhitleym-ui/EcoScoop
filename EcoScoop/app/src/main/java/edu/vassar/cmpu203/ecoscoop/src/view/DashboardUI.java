@@ -1,5 +1,7 @@
 package edu.vassar.cmpu203.ecoscoop.src.view;
 
+import edu.vassar.cmpu203.ecoscoop.src.controller.WeatherRetriever;
+
 /**
  * Interface for the dashboard screen.
  * Handles navigation from the landing page to other tabs.
@@ -17,4 +19,6 @@ public interface DashboardUI {
 
     /** Sets the listener that handles nav button clicks. */
     void setListener(Listener listener);
+
+    void onWeatherLoaded(WeatherRetriever retriever);
 }

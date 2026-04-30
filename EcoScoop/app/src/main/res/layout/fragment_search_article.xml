@@ -118,41 +118,84 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Bottom nav bar — equal-width buttons via weight -->
     <LinearLayout
         android:id="@+id/buttonRow"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal">
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:background="#A8D5B5">
 
         <Button
             android:id="@+id/articleFeedTab"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Articles" />
+            android:text="Articles"
+            android:textColor="#FFFFFF"
+            android:drawableTop="@drawable/ic_tab_articles"
+            android:drawableTint="#FFFFFF"
+            android:textSize="9sp"
+            android:drawablePadding="2dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:backgroundTint="@null"
+            android:ellipsize="none"
+            android:maxLines="1"
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
         <Button
             android:id="@+id/dashboardTab"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Dashboard" />
+            android:text="Dashboard"
+            android:textColor="#FFFFFF"
+            android:drawableTop="@drawable/ic_tab_dashboard"
+            android:drawableTint="#FFFFFF"
+            android:textSize="9sp"
+            android:drawablePadding="2dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:backgroundTint="@null"
+            android:ellipsize="none"
+            android:maxLines="1"
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
         <Button
             android:id="@+id/searchTab"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Search" />
+            android:text="Search"
+            android:textColor="#FFFFFF"
+            android:drawableTop="@drawable/ic_tab_search"
+            android:drawableTint="#FFFFFF"
+            android:textSize="9sp"
+            android:drawablePadding="2dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:backgroundTint="@null"
+            android:ellipsize="none"
+            android:maxLines="1"
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
         <Button
             android:id="@+id/profileTab"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Profile" />
-
+            android:text="Profile"
+            android:textColor="#FFFFFF"
+            android:drawableTop="@drawable/ic_tab_profile"
+            android:drawableTint="#FFFFFF"
+            android:textSize="9sp"
+            android:drawablePadding="2dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:backgroundTint="@null"
+            android:ellipsize="none"
+            android:maxLines="1"
+            style="@style/Widget.AppCompat.Button.Borderless" />
     </LinearLayout>
 
 </LinearLayout>

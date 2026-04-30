@@ -6,7 +6,6 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <!-- Scrollable content area -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -18,7 +17,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- App name -->
+            <!-- Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,73 +32,151 @@
                 android:text="Your environmental news hub"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorSecondary"
-                android:layout_marginBottom="32dp" />
+                android:layout_marginBottom="24dp" />
 
-            <!-- Placeholder section: Sources -->
+            <!-- Weather Section -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="News Sources"
+                android:text="Local Weather"
                 android:textSize="18sp"
                 android:fontFamily="sans-serif-medium"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="16dp" />
 
-            <TextView
+            <!-- Top row: Temperature | Condition -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="• Grist"
-                android:textSize="15sp"
-                android:layout_marginBottom="4dp" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
 
-            <TextView
+                <LinearLayout
+                    android:id="@+id/cardTemperature"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/card_background"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌡 Temperature"
+                        android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"/>
+                    <TextView
+                        android:id="@+id/textCurrentTemp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--°C"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardWind"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/card_background"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💨 Wind"
+                        android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"/>
+                    <TextView
+                        android:id="@+id/textCurrentWind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- km/h"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Center image -->
+            <ImageView
+                android:id="@+id/weatherImage"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="8dp"
+                android:src="@android:drawable/ic_menu_compass"
+                android:contentDescription="Weather illustration" />
+
+            <!-- Bottom row: Precipitation | Humidity -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="• Carbon Brief"
-                android:textSize="15sp"
-                android:layout_marginBottom="4dp" />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="• Earth911"
-                android:textSize="15sp"
-                android:layout_marginBottom="32dp" />
+                <LinearLayout
+                    android:id="@+id/cardPrecipitation"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/card_background"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌧 Precipitation"
+                        android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"/>
+                    <TextView
+                        android:id="@+id/textPrecipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- mm"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"/>
+                </LinearLayout>
 
-            <!-- Placeholder section: About -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="About"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-medium"
-                android:layout_marginBottom="8dp" />
+                <LinearLayout
+                    android:id="@+id/cardHumidity"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/card_background"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💧 Humidity"
+                        android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"/>
+                    <TextView
+                        android:id="@+id/textHumidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- %"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"/>
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="EcoScoop aggregates the latest environmental and climate news from trusted sources. Browse the article feed, search by keyword, tag, or author, and save articles to your personal folders."
-                android:textSize="15sp"
-                android:lineSpacingMultiplier="1.4"
-                android:layout_marginBottom="32dp" />
+            </LinearLayout>
 
-            <!-- Placeholder section: Stats (future feature) -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Coming Soon"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-medium"
-                android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="• Trending articles\n• Reading history\n• Saved folder management\n• Personalized recommendations"
-                android:textSize="15sp"
-                android:lineSpacingMultiplier="1.4" />
+            <!-- Rest of existing content... -->
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
     <!-- Bottom nav bar — equal-width buttons via weight -->

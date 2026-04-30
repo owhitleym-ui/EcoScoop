@@ -1,9 +1,15 @@
 package edu.vassar.cmpu203.ecoscoop.src.controller;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +19,7 @@ import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRepository;
 import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
+import edu.vassar.cmpu203.ecoscoop.src.model.WeatherRepository;
 import edu.vassar.cmpu203.ecoscoop.src.persistence.PersistenceFacade;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedUI;
@@ -33,11 +40,17 @@ public class ControllerActivity extends AppCompatActivity
                    DashboardUI.Listener,
                    ProfileUI.Listener {
 
+    private WeatherRetriever weatherRetriever;
     private ArticleRetriever articleRetriever;
     private FolderManager folderManager;
     private Article currArticle;
     //private PersistenceFacade persistenceFacade;
     private MainUI mainUI;
+
+    //Get Location
+    private FusedLocationProviderClient locationClient;
+    private double lat;
+    private double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -50,7 +63,39 @@ public class ControllerActivity extends AppCompatActivity
         mainUI.displayFragment(dashboardFragment);
 
         onUpdateDatabase();
+        requestLocation();
+        onUpdateWeather(lat, lon);
 
+    }
+
+    /** Request Location of the User */
+    private void requestLocation() {
+        // Check permission first
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    100);
+            return;
+        }
+
+        locationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                this.lat = location.getLatitude();
+                this.lon = location.getLongitude();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100 && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            requestLocation(); // permission granted, try again
+        }
     }
 
     /** Fetch and Updates Database on a background thread; update the feed when ready */
@@ -86,6 +131,29 @@ public class ControllerActivity extends AppCompatActivity
         mainUI.displayFragment(newFeed);
 
         onShowFeed(articleRetriever.returnDatabase(), newFeed);
+
+    }
+
+    /** Fetches and updates weather database on a background thread; updates the view when ready */
+    private void onUpdateWeather(double lat, double lon) {
+        new Thread(() -> {
+            try {
+                WeatherRepository repo = new WeatherRepository(new EcoDataFetcher());
+                repo.refresh(lat, lon);
+                WeatherRetriever retriever = new WeatherRetriever(repo);
+
+                runOnUiThread(() -> onLoadWeather(retriever));
+            } catch (Exception e) {
+                Log.e("FeedDebug", "Failed to load weather", e);
+            }
+        }).start();
+    }
+
+    private void onLoadWeather(WeatherRetriever retriever) {
+        DashboardFragment dashboardFragment = new DashboardFragment();
+        dashboardFragment.setListener(this);
+        dashboardFragment.onWeatherLoaded(retriever);
+        mainUI.displayFragment(dashboardFragment);
 
     }
 
