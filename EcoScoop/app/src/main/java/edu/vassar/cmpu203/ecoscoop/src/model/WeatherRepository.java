@@ -1,4 +1,5 @@
 package edu.vassar.cmpu203.ecoscoop.src.model;
 
-public class WeatherRepository {
+public class WeatherRepository implements WeatherDatabase{
+
 }

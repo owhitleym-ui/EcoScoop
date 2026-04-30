@@ -103,10 +103,9 @@ public class ControllerActivity extends AppCompatActivity
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Shared nav tab callbacks
-    // -------------------------------------------------------------------------
-
+    /**
+     * Shared Navigation Tab Clicks
+     */
     @Override
     public void onArticleTabClick() {
         ArticleFeedFragment articleFeedFragment = new ArticleFeedFragment();
@@ -138,9 +137,9 @@ public class ControllerActivity extends AppCompatActivity
         mainUI.displayFragment(profileFragment);
     }
 
-    // -------------------------------------------------------------------------
-    // ArticleFeedUI.Listener
-    // -------------------------------------------------------------------------
+    /**
+     * ArticleUI.Listener Implementations
+     */
 
     @Override
     public void onArticleClicked(int id) {
@@ -161,9 +160,9 @@ public class ControllerActivity extends AppCompatActivity
         ui.runShowFeed(articles);
     }
 
-    // -------------------------------------------------------------------------
-    // DisplayArticleUI.Listener
-    // -------------------------------------------------------------------------
+    /**
+     * DisplayArticleUI.Listener Implementations
+     */
 
     @Override
     public void onRequestArticle(int id, DisplayArticleUI ui) {
@@ -200,7 +199,7 @@ public class ControllerActivity extends AppCompatActivity
     }
 
     // -------------------------------------------------------------------------
-    // SearchArticleUI.Listener — controller pushes results back to the UI
+    // SearchArticleUI.Listener
     // -------------------------------------------------------------------------
 
     @Override
