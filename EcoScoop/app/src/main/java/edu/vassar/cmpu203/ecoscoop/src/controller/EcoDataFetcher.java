@@ -21,6 +21,7 @@ import java.nio.ByteOrder;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.Objects;
 
 import edu.vassar.cmpu203.ecoscoop.src.model.WeatherData;
 
@@ -43,9 +44,6 @@ public class EcoDataFetcher {
         return parse(response);
     }
 
-    // -------------------------------------------------------------------------
-    // HTTP
-    // -------------------------------------------------------------------------
     private byte[] fetchBytes(double lat, double lon) throws Exception {
         @SuppressLint("DefaultLocale") String url = String.format(
                 "%s?latitude=%.5f&longitude=%.5f" +
@@ -70,40 +68,37 @@ public class EcoDataFetcher {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // FlatBuffer decode — skips the 4-byte size prefix
-    // -------------------------------------------------------------------------
     private WeatherApiResponse decode(byte[] raw) {
         ByteBuffer bb = ByteBuffer.wrap(raw, 4, raw.length - 4)
                 .order(ByteOrder.LITTLE_ENDIAN);
         return WeatherApiResponse.getRootAsWeatherApiResponse(bb);
     }
 
-    // -------------------------------------------------------------------------
-    // Parse everything out into WeatherData
-    // -------------------------------------------------------------------------
     private WeatherData parse(WeatherApiResponse r) {
 
         // --- Current ---
         VariablesWithTime current = r.current();
-        float currentTemp        = new VariablesSearch(current).variable(Variable.temperature).altitude(2).first().value();
-        float currentWind        = new VariablesSearch(current).variable(Variable.wind_speed).altitude(10).first().value();
-        float currentWeatherCode = new VariablesSearch(current).variable(Variable.weather_code).first().value();
+        float currentTemp        = Objects.requireNonNull(new VariablesSearch(current).variable(Variable.temperature).altitude(2).first()).value();
+        float currentWind        = Objects.requireNonNull(new VariablesSearch(current).variable(Variable.wind_speed).altitude(10).first()).value();
+        float currentWeatherCode = Objects.requireNonNull(new VariablesSearch(current).variable(Variable.weather_code).first()).value();
+        assert current != null;
         long  currentTime        = current.time();
 
         // --- Hourly ---
         VariablesWithTime hourly = r.hourly();
-        float[] hourlyTemp       = toFloatArray(new VariablesSearch(hourly).variable(Variable.temperature).altitude(2).first());
-        float[] hourlyHumidity   = toFloatArray(new VariablesSearch(hourly).variable(Variable.relative_humidity).altitude(2).first());
-        float[] hourlyWind       = toFloatArray(new VariablesSearch(hourly).variable(Variable.wind_speed).altitude(10).first());
+        float[] hourlyTemp       = toFloatArray(Objects.requireNonNull(new VariablesSearch(hourly).variable(Variable.temperature).altitude(2).first()));
+        float[] hourlyHumidity   = toFloatArray(Objects.requireNonNull(new VariablesSearch(hourly).variable(Variable.relative_humidity).altitude(2).first()));
+        float[] hourlyWind       = toFloatArray(Objects.requireNonNull(new VariablesSearch(hourly).variable(Variable.wind_speed).altitude(10).first()));
+        assert hourly != null;
         long[]  hourlyTimes      = buildTimestamps(hourly);
 
         // --- Daily ---
         VariablesWithTime daily  = r.daily();
-        float[] dailyTempMax     = toFloatArray(new VariablesSearch(daily).variable(Variable.temperature).altitude(2).aggregation(Aggregation.maximum).first());
-        float[] dailyTempMin     = toFloatArray(new VariablesSearch(daily).variable(Variable.temperature).altitude(2).aggregation(Aggregation.minimum).first());
-        float[] dailyPrecip      = toFloatArray(new VariablesSearch(daily).variable(Variable.precipitation).aggregation(Aggregation.sum).first());
-        float[] dailyWindMax     = toFloatArray(new VariablesSearch(daily).variable(Variable.wind_speed).altitude(10).aggregation(Aggregation.maximum).first());
+        float[] dailyTempMax     = toFloatArray(Objects.requireNonNull(new VariablesSearch(daily).variable(Variable.temperature).altitude(2).aggregation(Aggregation.maximum).first()));
+        float[] dailyTempMin     = toFloatArray(Objects.requireNonNull(new VariablesSearch(daily).variable(Variable.temperature).altitude(2).aggregation(Aggregation.minimum).first()));
+        float[] dailyPrecip      = toFloatArray(Objects.requireNonNull(new VariablesSearch(daily).variable(Variable.precipitation).aggregation(Aggregation.sum).first()));
+        float[] dailyWindMax     = toFloatArray(Objects.requireNonNull(new VariablesSearch(daily).variable(Variable.wind_speed).altitude(10).aggregation(Aggregation.maximum).first()));
+        assert daily != null;
         long[]  dailyTimes       = buildTimestamps(daily);
 
         return new WeatherData(
@@ -128,8 +123,7 @@ public class EcoDataFetcher {
 
     /** Builds a unix timestamp for each step in a VariablesWithTime bucket */
     private long[] buildTimestamps(VariablesWithTime vwt) {
-        // number of steps = length of any variable in this bucket
-        // use interval + start to compute each timestamp
+
         int count = (int) ((vwt.timeEnd() - vwt.time()) / vwt.interval());
         long[] times = new long[count];
         for (int i = 0; i < count; i++) {
