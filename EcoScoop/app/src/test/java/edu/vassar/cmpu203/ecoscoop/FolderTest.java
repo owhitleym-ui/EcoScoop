@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+import edu.vassar.cmpu203.ecoscoop.src.controller.ArticleRetriever;
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
 import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
@@ -21,12 +22,12 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Source;
  * Focuses on: {@code addArticle()} duplicate prevention and invalid-ID rejection,
  * {@code removeArticle()}, {@code open()} contents, and {@code rename()} null guard.
  *
- * Uses an anonymous {@link ArticleDatabase} implementation to inject test data
+ * Uses an anonymous {@link ArticleRetriver} implementation to inject test data
  * without making any network calls.
  */
 public class FolderTest {
 
-    private ArticleDatabase database;
+    private ArticleRetriever articleRetriever;
     private Folder folder;
     private Article article1;
     private Article article2;
@@ -48,12 +49,14 @@ public class FolderTest {
         list.add(article1);
         list.add(article2);
 
-        database = new ArticleDatabase() {
+        ArticleDatabase database = new ArticleDatabase() {
             @Override public Map<Integer, Article> getDatabase() { return db; }
             @Override public List<Article> getArticles() { return list; }
         };
 
-        folder = new Folder("Favourites", database);
+        articleRetriever = new ArticleRetriever(database);
+
+        folder = new Folder("Favourites", articleRetriever);
     }
 
     // -------------------------------------------------------------------------

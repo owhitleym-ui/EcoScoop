@@ -32,6 +32,12 @@ public class ArticleRetriever {
         this.database = database;
     }
 
+    /** Returns List of Articles in Database */
+    public List<Article> returnDatabase() {return database.getArticles();}
+
+    /** Returns Database Size  */
+    public int getDatabaseSize() {return database.getArticles().size();}
+
     /** Returns the article with the given ID, or null if not found. */
     public Article getArticle(int id) {
         return database.getDatabase().get(id);

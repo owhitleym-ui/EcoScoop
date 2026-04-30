@@ -8,31 +8,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.vassar.cmpu203.ecoscoop.src.controller.ArticleRetriever;
+
 /**
  * Represents a user-created folder for saving articles.
- * Stores article IDs and uses an ArticleDatabase to look them up when the folder is opened.
+ * Stores article IDs and uses an ArticleRetriever to look them up when the folder is opened.
  */
 public class Folder implements Serializable {
 
     private String name;
     private List<Integer> articleIds;
-    private ArticleDatabase database;
+    private ArticleRetriever articleRetriever;
 
     /**
      * Creates a new empty folder.
      *
      * @param name     the folder name
-     * @param database used to look up articles when the folder is opened
+     * @param articleRetriever used to look up articles when the folder is opened
      */
-    public Folder(String name, ArticleDatabase database) {
+    public Folder(String name, ArticleRetriever articleRetriever) {
         this.name = name;
-        this.database = database;
+        this.articleRetriever = articleRetriever;
         this.articleIds = new ArrayList<>();
     }
 
     public Folder() {
         this.name = "";
-        this.database = null;
     }
 
     /** Returns the folder's name. */
@@ -58,7 +59,7 @@ public class Folder implements Serializable {
      * @param id the article ID to add
      */
     public void addArticle(int id) {
-        if (database.getDatabase().get(id) == null) {
+        if (articleRetriever.getArticle(id) == null) {
             throw new IllegalArgumentException("Article ID not found in database.");
         }
         if (!articleIds.contains(id)) {
@@ -80,7 +81,7 @@ public class Folder implements Serializable {
         List<Article> contents = new ArrayList<>();
 
         for (int id : articleIds) {
-            Article a = database.getDatabase().get(id);
+            Article a = articleRetriever.getArticle(id);
             if (a != null) {
                 contents.add(a);
             }

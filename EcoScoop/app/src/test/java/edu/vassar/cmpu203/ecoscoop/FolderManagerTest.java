@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+import edu.vassar.cmpu203.ecoscoop.src.controller.ArticleRetriever;
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
 import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
@@ -23,12 +24,12 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Source;
  * {@code deleteFolder()} true/false return values, {@code getFolder()} null
  * when missing, and {@code saveToFolder()} auto-creating folders on demand.
  *
- * Uses an anonymous {@link ArticleDatabase} implementation to inject test data
+ * Uses an anonymous {@link ArticleRetriever} implementation to inject test data
  * without making any network calls.
  */
 public class FolderManagerTest {
 
-    private ArticleDatabase database;
+    private ArticleRetriever articleRetriever;
     private FolderManager manager;
     private Article article;
 
@@ -44,12 +45,14 @@ public class FolderManagerTest {
         List<Article> list = new ArrayList<>();
         list.add(article);
 
-        database = new ArticleDatabase() {
+        ArticleDatabase database = new ArticleDatabase() {
             @Override public Map<Integer, Article> getDatabase() { return db; }
             @Override public List<Article> getArticles() { return list; }
         };
 
-        manager = new FolderManager(database);
+        articleRetriever = new ArticleRetriever(database);
+
+        manager = new FolderManager(articleRetriever);
     }
 
     // -------------------------------------------------------------------------

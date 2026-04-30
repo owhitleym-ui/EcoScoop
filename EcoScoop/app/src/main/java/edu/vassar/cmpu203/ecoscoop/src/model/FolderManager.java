@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.vassar.cmpu203.ecoscoop.src.controller.ArticleRetriever;
+
 /**
  * Manages all user-created folders.
  * Standalone — not coupled to article retrieval or search.
@@ -12,16 +14,16 @@ import java.util.List;
 public class FolderManager implements Serializable {
 
     private final List<Folder> folders;
-    private final ArticleDatabase database;
+    private ArticleRetriever articleRetriever;
 
     /**
      * Creates a new FolderManager with no folders.
      *
-     * @param database the article data source used to validate IDs when saving
+     * @param articleRetriever the article data source used to validate IDs when saving
      */
-    public FolderManager(ArticleDatabase database) {
+    public FolderManager(ArticleRetriever articleRetriever) {
         this.folders = new ArrayList<>();
-        this.database = database;
+        this.articleRetriever = articleRetriever;
     }
 
     /**
@@ -31,7 +33,7 @@ public class FolderManager implements Serializable {
      * @return the newly created Folder
      */
     public Folder createFolder(String name) {
-        Folder folder = new Folder(name, database);
+        Folder folder = new Folder(name, articleRetriever);
         folders.add(folder);
         return folder;
     }
@@ -82,5 +84,10 @@ public class FolderManager implements Serializable {
     /** Returns the list of all folders. */
     public List<Folder> getFolders() {
         return folders;
+    }
+
+    /** Updates Article Retriever if Article Retriever is updated */
+    public void updateRetreiver(ArticleRetriever newArticleRetriever){
+        this.articleRetriever = newArticleRetriever;
     }
 }

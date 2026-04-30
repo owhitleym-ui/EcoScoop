@@ -3,14 +3,11 @@ package edu.vassar.cmpu203.ecoscoop.src.controller;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.vassar.cmpu203.ecoscoop.R;
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleRepository;
@@ -36,123 +33,139 @@ public class ControllerActivity extends AppCompatActivity
                    DashboardUI.Listener,
                    ProfileUI.Listener {
 
-    private ArticleDatabase  articleDatabase;   // RSS data source
-    private ArticleRetriever articleRetriever; // search and sort
-    private FolderManager folderManager;     // saved folders (independent of retrieval)
-    private Article currentArticle;    // article currently open in the detail view
-    private PersistenceFacade pfacade;
+    private ArticleRetriever articleRetriever;
+    private FolderManager folderManager;
+    private Article currArticle;
+    //private PersistenceFacade persistenceFacade;
     private MainUI mainUI;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         this.mainUI = new MainUI(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(mainUI.getRootView());
 
         DashboardFragment dashboardFragment = new DashboardFragment();
         dashboardFragment.setListener(this);
         mainUI.displayFragment(dashboardFragment);
 
-        // Fetch articles on a background thread; update the feed when ready ITS QUANTUM MECHANICS
-        new Thread(() -> {
+        onUpdateDatabase();
+
+    }
+
+    /** Fetch and Updates Database on a background thread; update the feed when ready */
+    private void onUpdateDatabase(){
+        new Thread( () ->{
             try {
-                ArticleRepository newArticleRepository = new ArticleRepository(); // fetches RSS in
-                // constructor
-                ArticleRetriever newArticleRetriever = new ArticleRetriever(newArticleRepository);
-                FolderManager newFolderManager    = new FolderManager(newArticleRepository);
-                Log.d("ControllerActivity", "Loaded " + newArticleRepository.getArticles().size() + " articles");
+                ArticleDatabase newDatabase = new ArticleRepository();
+
+                Log.d("ControllerActivity", "Loaded " + newDatabase.getDatabase().size() + " articles");
 
                 runOnUiThread(() -> {
-                    onLoadArticles(newArticleRepository, newArticleRetriever, newFolderManager);
+                    onLoadArticles(newDatabase);
                 });
             } catch (Exception e) {
                 Log.e("ControllerActivity", "Failed to load articles", e);
             }
-        }).start();
-
-
+        }
+        ).start();
     }
 
-    private void onLoadArticles(ArticleRepository repo, ArticleRetriever ret, FolderManager f ) {
-        this.articleDatabase = repo;
-        this.articleRetriever = ret;
-        this.folderManager = f;
+    /** Loads updated Database into the Retriever and FolderManager */
+    private void onLoadArticles(ArticleDatabase newDatabase){
+        this.articleRetriever = new ArticleRetriever(newDatabase);
+        this.folderManager.updateRetreiver(articleRetriever);
 
-        Log.d("FeedDebug", "Article Size:" + articleDatabase.getArticles().size());
+        Log.d("FeedDebug", "Article Size:" + articleRetriever.getDatabaseSize());
         ArticleFeedFragment newFeed = new ArticleFeedFragment();
         newFeed.setListener(this);
         mainUI.displayFragment(newFeed);
 
-        onShowFeed(repo.getArticles(), newFeed );
+        onShowFeed(articleRetriever.returnDatabase(), newFeed);
 
     }
 
-    // -------------------------------------------------------------------------
-    // Navigation helpers
-    // -------------------------------------------------------------------------
 
-    /** Replaces the container with a fresh ArticleFeedFragment and populates it. */
-    private void showArticleFeed() {
+    /**
+     * Navigation Helpers - For Documentation and Ease of Reading
+     */
+
+    private void showArticleFeedTab(){
         ArticleFeedFragment feedFragment = new ArticleFeedFragment();
         feedFragment.setListener(this);
         mainUI.displayFragment(feedFragment);
 
-        feedFragment.setListener(this);
-        if (articleDatabase != null) {
-            onShowFeed(articleDatabase.getArticles(), feedFragment);
+        if(articleRetriever.getDatabaseSize() != 0){
+            onShowFeed(articleRetriever.returnDatabase(), feedFragment);
         }
     }
 
-    /**
-     * Shared Navigation Tab Clicks
-     */
-    @Override
-    public void onArticleTabClick() {
-        ArticleFeedFragment articleFeedFragment = new ArticleFeedFragment();
-        articleFeedFragment.setListener(this);
-        mainUI.displayFragment(articleFeedFragment);
-
-        showArticleFeed();
-    }
-
-    @Override
-    public void onDashBoardClick() {
+    private void showDashBoardTab(){
         DashboardFragment dashboardFragment = new DashboardFragment();
         dashboardFragment.setListener(this);
-        mainUI.displayFragment(dashboardFragment);
+        if(mainUI != null){
+            mainUI.displayFragment(dashboardFragment);
+        }
     }
 
-    @Override
-    public void onSearchClick() {
+    private void showSearchTab(){
         SearchArticleFragment searchArticleFragment = new SearchArticleFragment();
         searchArticleFragment.setListener(this);
-       mainUI.displayFragment(searchArticleFragment);
-
+        if(mainUI != null){
+            mainUI.displayFragment(searchArticleFragment);
+        }
     }
 
-    @Override
-    public void onProfileClick() {
+    private void showProfileTab(){
         ProfileFragment profileFragment = new ProfileFragment();
         profileFragment.setListener(this);
-        mainUI.displayFragment(profileFragment);
+        if(mainUI != null){
+            mainUI.displayFragment(profileFragment);
+        }
     }
 
+
     /**
-     * ArticleUI.Listener Implementations
+     * Navigation Tab Implementation
      */
 
     @Override
-    public void onArticleClicked(int id) {
-        if (articleRetriever == null || articleRetriever.getArticle(id) == null) return;
+    public void onArticleTabClick(){
+        showArticleFeedTab();
+    }
+
+    @Override
+    public void onDashBoardClick(){
+        showDashBoardTab();
+    }
+
+    @Override
+    public void onSearchClick(){
+        showSearchTab();
+    }
+
+    @Override
+    public void onProfileClick(){
+        showProfileTab();
+    }
+
+
+    /**
+     * ArticleFeedUI.Listener Implementations
+     */
+
+    @Override
+    public void onArticleClicked(int id){
+        if (articleRetriever.getArticle(id) == null) return;
 
         Bundle args = new Bundle();
         args.putInt("article_id", id);
 
-        DisplayArticleFragment detailFragment = new DisplayArticleFragment();
-        detailFragment.setListener(this);
-        detailFragment.setArguments(args);
+        DisplayArticleFragment displayArticleFragment = new DisplayArticleFragment();
+        displayArticleFragment.setListener(this);
+        displayArticleFragment.setArguments(args);
 
-        mainUI.displayFragment(detailFragment);
+        mainUI.displayFragment(displayArticleFragment);
     }
 
     @Override
@@ -166,41 +179,41 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     public void onRequestArticle(int id, DisplayArticleUI ui) {
-        if (articleRetriever != null) {
-            currentArticle = articleRetriever.getArticle(id);
-            if (currentArticle != null) ui.runShowArticle(currentArticle);
+        if (articleRetriever != null && articleRetriever.getArticle(id) != null){
+            currArticle = articleRetriever.getArticle(id);
+            ui.runShowArticle(currArticle);
         }
     }
 
     @Override
-    public void onReturnClick() {
-        currentArticle = null;
-        getSupportFragmentManager().popBackStack();
+    public void onReturnClick(){
+        currArticle = null;
+        onArticleTabClick();
     }
 
     @Override
-    public void onSaveClick(int id, String folderName) {
+    public void onSaveClick(int id, String folderName){
         if (folderManager != null) folderManager.saveToFolder(id, folderName);
     }
 
     @Override
     public void onLikeClick(int id) {
-        if (currentArticle != null) currentArticle.addLike();
+        if (currArticle != null) currArticle.addLike();
     }
 
     @Override
     public void onDislikeClick(int id) {
-        if (currentArticle != null) currentArticle.addDislike();
+        if (currArticle != null) currArticle.addDislike();
     }
 
     @Override
     public void onCommentSubmit(int id, String comment) {
-        if (currentArticle != null) currentArticle.addComment(comment);
+        if (currArticle != null) currArticle.addComment(comment);
     }
 
-    // -------------------------------------------------------------------------
-    // SearchArticleUI.Listener
-    // -------------------------------------------------------------------------
+    /**
+     * SearchArticleUI.Listener Implementations
+     */
 
     @Override
     public void onSearchQuery(String query, String type, SearchArticleUI ui) {
@@ -218,9 +231,9 @@ public class ControllerActivity extends AppCompatActivity
         ui.runShowResults(sorted);
     }
 
-    // -------------------------------------------------------------------------
-    // ProfileUI.Listener
-    // -------------------------------------------------------------------------
+    /**
+     * ProfileUI.Listener Implementations
+     */
 
     @Override
     public List<Article> onGetSavedArticles() {
@@ -231,4 +244,8 @@ public class ControllerActivity extends AppCompatActivity
         }
         return saved;
     }
+
+
+
+
 }
