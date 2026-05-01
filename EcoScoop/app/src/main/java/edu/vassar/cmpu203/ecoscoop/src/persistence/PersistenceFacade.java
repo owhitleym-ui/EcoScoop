@@ -1,32 +1,68 @@
 package edu.vassar.cmpu203.ecoscoop.src.persistence;
 
 import androidx.annotation.NonNull;
-import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
+
+import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
+import edu.vassar.cmpu203.ecoscoop.src.model.User;
 
 public interface PersistenceFacade {
 
-    void loadFolder(@NonNull Listener listener);
-
-    interface Listener {
+    interface DataListener<T> {
+        /**
+         * Called when the requested data is successfully received.
+         * @param data the data that was received from the persistence subsystem.
+         */
+        void onDataReceived(@NonNull T data);
 
         /**
-         * Called when the receiver has been fully loaded/received.
-         *
-         * @param folder the ledger that was just received
+         * Called when the requested data isn't found in the underlying persistence subsystem.
          */
-        void onLedgerReceived(@NonNull Folder folder);
+        void onNoDataFound();
     }
 
     /**
-     * Issues a ledger save operation.
-     * @param folder the ledger to be saved.
+     * Interface that classes interested in being notified of binary (i.e., true vs false) events
+     * from the persistence layer should implement.
      */
-    void saveFolder(@NonNull Folder folder);
+    interface BinaryResultListener {
+        /**
+         * Called when the answer to the issued query is positive.
+         */
+        void onYesResult();
+        /**
+         * Called when the answer to the issued query is negative.
+         */
+        void onNoResult();
+    }
 
     /**
-     * Issues a ledger retrieval operation.
-     * @return the retrieved ledger.
+     * Saves the folder manager (and all folders within it) to the underlying persistence subsystem.
+     *
+     * @param folderManager the folder manager to be saved.
      */
-    @NonNull
-    Folder loadFolder();
+    void saveFolderManager(@NonNull final FolderManager folderManager);
+
+    /**
+     * Issues a folder manager retrieval operation.
+     *
+     * @param listener the observer to be notified of query result.
+     */
+    void loadFolderManager(@NonNull final DataListener<FolderManager> listener);
+
+    /**
+     * Creates an entry for the specified user if one does not already exist.
+     *
+     * @param user the user to create.
+     * @param listener the observer to be notified of query result. onYesResult() is called if a
+     *                 new user was created. onNoResult() is called if the username already exists.
+     */
+    void createUserIfNotExists(@NonNull User user, @NonNull BinaryResultListener listener);
+
+    /**
+     * Retrieves the user with the specified username.
+     *
+     * @param username the username of the user to retrieve.
+     * @param listener the observer to be notified of query result.
+     */
+    void loadUser(@NonNull String username, @NonNull DataListener<User> listener);
 }

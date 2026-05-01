@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">EcoScoop</string>
+    <string name="registration_success_msg">Account created! You can now sign in.</string>
+    <string name="invalid_credentials_msg">Invalid username or password.</string>
+    <string name="user_already_exists_msg">That username is already taken.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="example_title"> Iran was already running out of water. Then came the ‘war on

@@ -18,7 +18,7 @@ public class Folder implements Serializable {
 
     private String name;
     private List<Integer> articleIds;
-    private ArticleRetriever articleRetriever;
+    private transient ArticleRetriever articleRetriever;
 
     /**
      * Creates a new empty folder.
@@ -34,6 +34,32 @@ public class Folder implements Serializable {
 
     public Folder() {
         this.name = "";
+        this.articleIds = new ArrayList<>();
+    }
+
+    public void setArticleRetriever(ArticleRetriever retriever) {
+        this.articleRetriever = retriever;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("articleIds", new ArrayList<>(articleIds));
+        return map;
+    }
+
+    public static Folder fromMap(Map<String, Object> map) {
+        Folder folder = new Folder();
+        folder.name = (String) map.getOrDefault("name", "");
+        Object ids = map.get("articleIds");
+        if (ids instanceof List) {
+            for (Object id : (List<?>) ids) {
+                if (id instanceof Long) {
+                    folder.articleIds.add(((Long) id).intValue());
+                }
+            }
+        }
+        return folder;
     }
 
     /** Returns the folder's name. */

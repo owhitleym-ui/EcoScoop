@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.EcoScoop" parent="Base.Theme.EcoScoop" />
+    <style name="Theme.EcoScoop.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/transparent_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.EcoScoop</item>
+    </style>
 </resources>

@@ -14,7 +14,7 @@ import edu.vassar.cmpu203.ecoscoop.src.controller.ArticleRetriever;
 public class FolderManager implements Serializable {
 
     private final List<Folder> folders;
-    private ArticleRetriever articleRetriever;
+    private transient ArticleRetriever articleRetriever;
 
     /**
      * Creates a new FolderManager with no folders.
@@ -86,8 +86,20 @@ public class FolderManager implements Serializable {
         return folders;
     }
 
-    /** Updates Article Retriever if Article Retriever is updated */
-    public void updateRetreiver(ArticleRetriever newArticleRetriever){
+    /** Updates the retriever and propagates it to all existing folders. */
+    public void updateRetriever(ArticleRetriever newArticleRetriever) {
         this.articleRetriever = newArticleRetriever;
+        for (Folder f : folders) {
+            f.setArticleRetriever(newArticleRetriever);
+        }
+    }
+
+    /** Replaces the current folder list with folders loaded from persistence. */
+    public void restoreFolders(List<Folder> loaded) {
+        folders.clear();
+        for (Folder f : loaded) {
+            f.setArticleRetriever(articleRetriever);
+            folders.add(f);
+        }
     }
 }

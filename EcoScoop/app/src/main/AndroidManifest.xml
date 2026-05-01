@@ -17,7 +17,9 @@
         android:theme="@style/Theme.EcoScoop">
         <activity
             android:name=".src.controller.ControllerActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.EcoScoop.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
