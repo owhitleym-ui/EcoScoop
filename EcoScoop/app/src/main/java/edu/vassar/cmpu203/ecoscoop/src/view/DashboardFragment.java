@@ -1,5 +1,6 @@
 package edu.vassar.cmpu203.ecoscoop.src.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,9 +9,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import edu.vassar.cmpu203.ecoscoop.databinding.FragmentDashboardBinding;
+import edu.vassar.cmpu203.ecoscoop.src.controller.WeatherRetriever;
 
 /**
  * Dashboard — the app's landing screen.
@@ -22,6 +25,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
 
     private FragmentDashboardBinding binding;
     private DashboardUI.Listener listener;
+    private WeatherRetriever pendingRetriever;
 
     /** Grabs the controller as the listener when the fragment attaches to the activity. */
     @Override
@@ -67,6 +71,52 @@ public class DashboardFragment extends Fragment implements DashboardUI {
         binding.profileTab.setOnClickListener(v -> {
             if (listener != null) listener.onProfileClick();
         });
+
+        if (pendingRetriever != null) {
+            onWeatherLoaded(pendingRetriever);
+            pendingRetriever = null;
+        }
+    }
+
+    /** Receives the retriever from the controller and binds it to the weather cards. */
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onWeatherLoaded(WeatherRetriever retriever) {
+        if (binding == null) {
+            pendingRetriever = retriever;
+            return;
+        }
+        binding.textCurrentTemp.setText(retriever.getCurrentTemp() + "°C");
+        binding.textCurrentWind.setText(retriever.getCurrentWind() + " km/h");
+        binding.textPrecipitation.setText(retriever.getDailyPrecip()[0] + " mm");
+        binding.textHumidity.setText(retriever.getHourlyHumidity()[0] + "%");
+
+        binding.cardTemperature.setOnClickListener(v ->
+                showPopup("Temperature Forecast",
+                        "High: " + retriever.getDailyTempMax()[0] + "°C\n" +
+                                "Low:  " + retriever.getDailyTempMin()[0] + "°C"));
+
+        binding.cardWind.setOnClickListener(v ->
+                showPopup("Wind Detail",
+                        "Current: "   + retriever.getCurrentWind()    + " km/h\n" +
+                                "Max today: " + retriever.getDailyWindMax()[0] + " km/h"));
+
+        binding.cardPrecipitation.setOnClickListener(v ->
+                showPopup("Precipitation",
+                        "Today: "    + retriever.getDailyPrecip()[0] + " mm\n" +
+                                "Tomorrow: " + retriever.getDailyPrecip()[1] + " mm"));
+
+        binding.cardHumidity.setOnClickListener(v ->
+                showPopup("Humidity",
+                        "Current: " + retriever.getHourlyHumidity()[0] + "%"));
+    }
+
+    private void showPopup(String title, String message) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Close", null)
+                .show();
     }
 
     /** Sets the listener for nav button events. */

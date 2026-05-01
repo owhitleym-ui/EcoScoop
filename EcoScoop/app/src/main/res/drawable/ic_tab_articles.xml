@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Page outline -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M4,3 C4,2.45 4.45,2 5,2 L19,2 C19.55,2 20,2.45 20,3 L20,21 C20,21.55 19.55,22 19,22 L5,22 C4.45,22 4,21.55 4,21 Z
+                          M6,4 L6,20 L18,20 L18,4 Z" />
+
+    <!-- Title line -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M7,7 L17,7 C17.55,7 18,7.45 18,8 C18,8.55 17.55,9 17,9 L7,9 C6.45,9 6,8.55 6,8 C6,7.45 6.45,7 7,7 Z" />
+
+    <!-- Text lines -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M7,11 L17,11 C17.55,11 18,11.45 18,12 C18,12.55 17.55,13 17,13 L7,13 C6.45,13 6,12.55 6,12 C6,11.45 6.45,11 7,11 Z" />
+
+    <path
+        android:fillColor="#000000"
+        android:pathData="M7,15 L14,15 C14.55,15 15,15.45 15,16 C15,16.55 14.55,17 14,17 L7,17 C6.45,17 6,16.55 6,16 C6,15.45 6.45,15 7,15 Z" />
+
+</vector>

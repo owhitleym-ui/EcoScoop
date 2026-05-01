@@ -1,5 +1,5 @@
 [versions]
-agp = "9.1.0"
+agp = "9.1.1"
 cardview = "1.0.0"
 flatbuffersJava = "25.2.10"
 junit = "4.13.2"
