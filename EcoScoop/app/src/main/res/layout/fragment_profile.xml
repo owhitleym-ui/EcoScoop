@@ -8,6 +8,7 @@
 
     <!-- Header -->
     <LinearLayout
+        android:background="#F5F0E8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -37,6 +38,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="24dp"
         android:paddingBottom="8dp"
+        android:background="#F5F0E8"
         android:text="Saved Articles"
         android:textSize="18sp"
         android:fontFamily="sans-serif-medium" />
@@ -46,7 +48,8 @@
         android:id="@+id/savedArticlesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="#F5F0E8"/>
 
     <!-- Empty state label — shown when no articles saved -->
     <TextView
@@ -65,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:orientation="horizontal"
-        android:background="#A8D5B5">
+        android:background="#3B8F40">
 
         <Button
             android:id="@+id/articleFeedTab"
