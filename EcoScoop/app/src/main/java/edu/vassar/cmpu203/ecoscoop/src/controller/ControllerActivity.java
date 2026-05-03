@@ -57,6 +57,7 @@ public class ControllerActivity extends AppCompatActivity
     private User curUser;
 
     State curState = State.AUTH;
+    State prevState = State.FEED;
 
     private MainUI mainUI;
 
@@ -264,6 +265,11 @@ public class ControllerActivity extends AppCompatActivity
 
     private void displayProfileFragment() {
         ProfileFragment profileFragment = new ProfileFragment();
+        if (curUser != null) {
+            Bundle args = new Bundle();
+            args.putString("username", curUser.getUsername());
+            profileFragment.setArguments(args);
+        }
         profileFragment.setListener(this);
         if (mainUI != null) mainUI.displayFragment(profileFragment);
     }
@@ -309,6 +315,7 @@ public class ControllerActivity extends AppCompatActivity
             public void onDataReceived(@NonNull User user) {
                 if (user.validatePassword(password)) {
                     curUser = user;
+                    pfacade.setCurrentUser(user.getUsername());
                     // If articles already loaded go straight to feed, otherwise dashboard while loading
                     if (articleRetriever != null) {
                         showArticleFeedTab();
@@ -334,6 +341,7 @@ public class ControllerActivity extends AppCompatActivity
     public void onArticleClicked(int id) {
         if (articleRetriever.getArticle(id) == null) return;
 
+        this.prevState = this.curState;
         this.curState = State.DISPLAY_ARTICLE;
 
         Bundle args = new Bundle();
@@ -367,7 +375,11 @@ public class ControllerActivity extends AppCompatActivity
     @Override
     public void onReturnClick() {
         curArticle = null;
-        onArticleTabClick();
+        switch (prevState) {
+            case PROFILE: showProfileTab(); break;
+            case SEARCH:  showSearchTab();  break;
+            default:      showArticleFeedTab(); break;
+        }
     }
 
     @Override
@@ -391,6 +403,10 @@ public class ControllerActivity extends AppCompatActivity
     @Override
     public void onCommentSubmit(int id, String comment) {
         if (curArticle != null) curArticle.addComment(comment);
+        if (curUser != null) {
+            curUser.addComment(comment);
+            pfacade.saveUser(curUser);
+        }
     }
 
 
@@ -420,12 +436,21 @@ public class ControllerActivity extends AppCompatActivity
      */
 
     @Override
-    public List<Article> onGetSavedArticles() {
+    public List<Folder> onGetFolders() {
         if (folderManager == null) return new ArrayList<>();
-        List<Article> saved = new ArrayList<>();
-        for (Folder folder : folderManager.getFolders()) {
-            saved.addAll(folder.open());
-        }
-        return saved;
+        return folderManager.getFolders();
+    }
+
+    @Override
+    public List<Article> onGetFolderContents(String folderName) {
+        if (folderManager == null) return new ArrayList<>();
+        Folder folder = folderManager.getFolder(folderName);
+        return folder != null ? folder.open() : new ArrayList<>();
+    }
+
+    @Override
+    public List<String> onGetUserComments() {
+        if (curUser == null) return new ArrayList<>();
+        return new ArrayList<>(curUser.getComments());
     }
 }

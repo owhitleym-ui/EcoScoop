@@ -10,9 +10,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -67,10 +70,15 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
             listener.onRequestArticle(articleId, this);
         }
 
-        // Back button
-        this.binding.returnButton.setOnClickListener(v -> {
-            if (listener != null) listener.onReturnClick();
-        });
+        // System back button navigates back to whichever tab the user came from
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if (listener != null) listener.onReturnClick();
+                    }
+                });
 
         // Save button — shows a popup asking for a folder name
         this.binding.saveButton.setOnClickListener(v -> {
@@ -141,6 +149,18 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
 
     /** Fills the layout views with the article's data and loads any existing reactions. */
     private void setArticleBinding(Article article) {
+
+        // Header image
+        String imgUrl = article.getImageUrl();
+        if (imgUrl != null && !imgUrl.isEmpty()) {
+            this.binding.imgHeader.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(imgUrl)
+                    .centerCrop()
+                    .into(this.binding.imgHeader);
+        } else {
+            this.binding.imgHeader.setVisibility(View.GONE);
+        }
 
         // Title
         this.binding.articleDisplayTitle.setText(article.getTitle());

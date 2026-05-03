@@ -3,7 +3,10 @@ package edu.vassar.cmpu203.ecoscoop.src.model;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,9 +16,11 @@ public class User implements Serializable {
 
     private static final String USERNAME = "username";
     private static final String AUTHKEY = "authkey";
+    private static final String COMMENTS = "comments";
 
     private String username;
     private AuthKey authKey;
+    private List<String> userComments = new ArrayList<>();
 
     /**
      * Creates an empty user.
@@ -41,6 +46,10 @@ public class User implements Serializable {
      */
     public String getUsername() { return this.username; }
 
+    public void addComment(String comment) { userComments.add(comment); }
+
+    public List<String> getComments() { return Collections.unmodifiableList(userComments); }
+
     /**
      * Checks whether the argument password matches against the stored key.
      *
@@ -61,6 +70,7 @@ public class User implements Serializable {
         Map<String, Object> map = new HashMap<>();
         map.put(USERNAME, this.username);
         map.put(AUTHKEY, this.authKey.toMap());
+        map.put(COMMENTS, new ArrayList<>(userComments));
         return map;
     }
 
@@ -75,6 +85,12 @@ public class User implements Serializable {
         User user = new User();
         user.username = (String) map.get(USERNAME);
         user.authKey = AuthKey.fromMap((Map<String, Object>) map.get(AUTHKEY));
+        Object commentsObj = map.get(COMMENTS);
+        if (commentsObj instanceof List) {
+            for (Object c : (List<?>) commentsObj) {
+                if (c instanceof String) user.userComments.add((String) c);
+            }
+        }
         return user;
     }
 }

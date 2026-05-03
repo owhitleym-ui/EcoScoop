@@ -6,19 +6,12 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-    <!-- Top bar: Return (left) and Save (right) -->
+    <!-- Top bar: Save (right) — back is handled by the system back button -->
     <LinearLayout
         android:id="@+id/topButtonBar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/returnButton"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="← Back" />
 
         <Space
             android:layout_width="0dp"

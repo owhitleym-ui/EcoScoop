@@ -3,66 +3,184 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="#F5F0E8"
     android:orientation="vertical">
 
-    <!-- Header -->
+    <!-- FOLDER LIST SCREEN (default) -->
     <LinearLayout
-        android:background="#F5F0E8"
+        android:id="@+id/folderListScreen"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="24dp"
-        android:paddingBottom="12dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Profile"
-            android:textSize="32sp"
-            android:fontFamily="sans-serif-medium" />
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="12dp">
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textSize="32sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:id="@+id/usernameLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Your saved articles"
-            android:textSize="14sp"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="8dp"
+                    android:text="My Folders"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/foldersRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <TextView
+                    android:id="@+id/emptyFoldersLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="32dp"
+                    android:text="No folders yet.\nSave articles to create folders."
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+
+                <!-- User comments section -->
+                <LinearLayout
+                    android:id="@+id/commentsSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="?android:attr/listDivider" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="24dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="8dp"
+                        android:text="Your Comments"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <LinearLayout
+                        android:id="@+id/commentsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="24dp"
+                        android:paddingBottom="16dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
-    <!-- Section label -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:paddingBottom="8dp"
-        android:background="#F5F0E8"
-        android:text="Saved Articles"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-medium" />
-
-    <!-- Saved articles list -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/savedArticlesRecyclerView"
+    <!-- FOLDER CONTENTS SCREEN (shown when a folder is opened) -->
+    <LinearLayout
+        android:id="@+id/folderContentsScreen"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#F5F0E8"/>
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <!-- Empty state label — shown when no articles saved -->
-    <TextView
-        android:id="@+id/emptyLabel"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="No saved articles yet.\nTap Save on any article to add one."
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="15sp"
-        android:visibility="gone" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:gravity="center_vertical">
 
+            <Button
+                android:id="@+id/backToFoldersButton"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Folders"
+                android:textColor="#3B8F40" />
+
+            <TextView
+                android:id="@+id/openFolderLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:paddingStart="8dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/savedArticlesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/emptyLabel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="No saved articles yet.\nTap Save on any article to add one."
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Bottom nav bar -->
     <LinearLayout
         android:id="@+id/buttonRow"
         android:layout_width="match_parent"
@@ -141,6 +259,7 @@
             android:ellipsize="none"
             android:maxLines="1"
             style="@style/Widget.AppCompat.Button.Borderless" />
+
     </LinearLayout>
 
 </LinearLayout>

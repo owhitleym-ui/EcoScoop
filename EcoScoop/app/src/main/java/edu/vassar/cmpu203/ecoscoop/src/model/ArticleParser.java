@@ -218,6 +218,14 @@ public class ArticleParser {
             tags.add(new Tag(category));
         }
 
+        // If no image found yet, try extracting one from <description> HTML
+        if (currentImageUrl.isEmpty() && !currentDescription.isEmpty()) {
+            java.util.regex.Matcher m = java.util.regex.Pattern
+                    .compile("(?i)<img[^>]+src=[\"']([^\"']+)[\"']")
+                    .matcher(currentDescription);
+            if (m.find()) currentImageUrl = m.group(1);
+        }
+
         // Strip HTML tags and extra whitespace from description so it displays cleanly
         String cleanDesc = currentDescription
                 .replace("&#8217;", "'")

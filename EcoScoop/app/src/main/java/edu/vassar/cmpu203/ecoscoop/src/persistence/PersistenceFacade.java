@@ -65,4 +65,10 @@ public interface PersistenceFacade {
      * @param listener the observer to be notified of query result.
      */
     void loadUser(@NonNull String username, @NonNull DataListener<User> listener);
+
+    /** Sets the currently authenticated user so folder operations are scoped correctly. */
+    default void setCurrentUser(@NonNull String username) {}
+
+    /** Persists the current user's data (including comments) to the backend. */
+    default void saveUser(@NonNull User user) {}
 }

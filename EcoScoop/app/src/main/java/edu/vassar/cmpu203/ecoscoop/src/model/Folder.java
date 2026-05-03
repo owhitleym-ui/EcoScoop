@@ -104,16 +104,18 @@ public class Folder implements Serializable {
 
     /** Returns the articles currently saved in this folder. */
     public List<Article> open() {
+        if (articleRetriever == null) return new ArrayList<>();
         List<Article> contents = new ArrayList<>();
-
         for (int id : articleIds) {
             Article a = articleRetriever.getArticle(id);
-            if (a != null) {
-                contents.add(a);
-            }
+            if (a != null) contents.add(a);
         }
-
         return contents;
+    }
+
+    /** Returns the number of articles in this folder without full retrieval. */
+    public int size() {
+        return articleIds.size();
     }
 
 }

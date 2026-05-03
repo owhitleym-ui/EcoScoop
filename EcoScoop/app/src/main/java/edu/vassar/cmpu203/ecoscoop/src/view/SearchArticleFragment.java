@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,6 +170,16 @@ public class SearchArticleFragment extends Fragment implements SearchArticleUI {
 
             /** Fills the card view with the article's info and sets the tap listener. */
             void bind(Article article) {
+                String imgUrl = article.getImageUrl();
+                if (imgUrl != null && !imgUrl.isEmpty()) {
+                    Glide.with(cardBinding.getRoot().getContext())
+                            .load(imgUrl)
+                            .centerCrop()
+                            .into(cardBinding.imgHeader);
+                } else {
+                    cardBinding.imgHeader.setImageDrawable(null);
+                }
+
                 cardBinding.cardTitle.setText(article.getTitle());
 
                 String desc = article.getDescription();
