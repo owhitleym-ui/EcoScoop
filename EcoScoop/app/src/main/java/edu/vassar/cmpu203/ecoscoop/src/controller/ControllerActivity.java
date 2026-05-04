@@ -108,7 +108,6 @@ public class ControllerActivity extends AppCompatActivity
 
         onUpdateDatabase(); // start loading articles in background while user authenticates
         requestLocation();
-        onUpdateWeather(lat, lon);
         onAuth();
     }
 
@@ -140,6 +139,9 @@ public class ControllerActivity extends AppCompatActivity
             if (location != null) {
                 this.lat = location.getLatitude();
                 this.lon = location.getLongitude();
+
+                Log.d("FeedDebug", "(Lat, Lon)" + this.lat + this.lon);
+                onUpdateWeather(this.lat, this.lon);
             }
         });
     }
