@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import edu.vassar.cmpu203.ecoscoop.databinding.FragmentDashboardBinding;
-import edu.vassar.cmpu203.ecoscoop.src.controller.WeatherRetriever;
+import edu.vassar.cmpu203.ecoscoop.src.controller.EcoDataRetriever;
 
 /**
  * Dashboard — the app's landing screen.
@@ -25,7 +25,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
 
     private FragmentDashboardBinding binding;
     private DashboardUI.Listener listener;
-    private WeatherRetriever pendingRetriever;
+    private EcoDataRetriever pendingRetriever;
 
     /** Grabs the controller as the listener when the fragment attaches to the activity. */
     @Override
@@ -81,7 +81,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
     /** Receives the retriever from the controller and binds it to the weather cards. */
     @SuppressLint("SetTextI18n")
     @Override
-    public void onWeatherLoaded(WeatherRetriever retriever) {
+    public void onWeatherLoaded(EcoDataRetriever retriever) {
         if (binding == null) {
             pendingRetriever = retriever;
             return;

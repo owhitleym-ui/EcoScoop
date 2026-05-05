@@ -23,7 +23,7 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
 import edu.vassar.cmpu203.ecoscoop.src.model.User;
 import edu.vassar.cmpu203.ecoscoop.src.persistence.FirestoreFacade;
-import edu.vassar.cmpu203.ecoscoop.src.model.WeatherRepository;
+import edu.vassar.cmpu203.ecoscoop.src.model.EcoRepository;
 import edu.vassar.cmpu203.ecoscoop.src.persistence.PersistenceFacade;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedFragment;
 import edu.vassar.cmpu203.ecoscoop.src.view.ArticleFeedUI;
@@ -50,7 +50,7 @@ public class ControllerActivity extends AppCompatActivity
     private static final String STATE = "state";
     private static final String CUR_ARTICLE_ID = "curArticleId";
     private PersistenceFacade pfacade;
-    private WeatherRetriever weatherRetriever;
+    private EcoDataRetriever ecoDataRetriever;
     private ArticleRetriever articleRetriever;
     private FolderManager folderManager;
     private Article curArticle;
@@ -141,7 +141,7 @@ public class ControllerActivity extends AppCompatActivity
                 this.lon = location.getLongitude();
 
                 Log.d("FeedDebug", "(Lat, Lon)" + this.lat + this.lon);
-                onUpdateWeather(this.lat, this.lon);
+                onUpdateEcoData(this.lat, this.lon);
             }
         });
     }
@@ -185,22 +185,22 @@ public class ControllerActivity extends AppCompatActivity
     }
 
     /** Fetches and updates weather database on a background thread; updates the view when ready */
-    private void onUpdateWeather(double lat, double lon) {
+    private void onUpdateEcoData(double lat, double lon) {
         new Thread(() -> {
             try {
-                WeatherRepository repo = new WeatherRepository(new EcoDataFetcher());
+                EcoRepository repo = new EcoRepository(new EcoDataFetcher());
                 repo.refresh(lat, lon);
-                WeatherRetriever retriever = new WeatherRetriever(repo);
+                EcoDataRetriever retriever = new EcoDataRetriever(repo);
 
-                runOnUiThread(() -> onLoadWeather(retriever));
+                runOnUiThread(() -> onLoadEcoData(retriever));
             } catch (Exception e) {
                 Log.e("FeedDebug", "Failed to load weather", e);
             }
         }).start();
     }
 
-    private void onLoadWeather(WeatherRetriever retriever) {
-        this.weatherRetriever = retriever;
+    private void onLoadEcoData(EcoDataRetriever retriever) {
+        this.ecoDataRetriever = retriever;
 
         // Only navigate to dashboard if the user has already signed in
         if (curState == State.DASHBOARD) {
@@ -227,7 +227,7 @@ public class ControllerActivity extends AppCompatActivity
         this.curState = State.DASHBOARD;
         DashboardFragment dashboardFragment = new DashboardFragment();
         dashboardFragment.setListener(this);
-        if (weatherRetriever != null) dashboardFragment.onWeatherLoaded(weatherRetriever);
+        if (ecoDataRetriever != null) dashboardFragment.onWeatherLoaded(ecoDataRetriever);
         if (mainUI != null) mainUI.displayFragment(dashboardFragment);
     }
 
