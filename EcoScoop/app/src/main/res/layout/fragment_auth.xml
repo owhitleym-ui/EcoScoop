@@ -6,23 +6,13 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="32dp"
-    android:background="#F5F0E8">
+    android:background="@color/white">
 
     <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/transparent_logo"
+        android:layout_width="316dp"
+        android:layout_height="89dp"
         android:contentDescription="EcoScoop logo"
-        android:layout_marginBottom="24dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EcoScoop"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#2E6B32"
-        android:layout_marginBottom="32dp" />
+        android:src="@drawable/logo_text" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

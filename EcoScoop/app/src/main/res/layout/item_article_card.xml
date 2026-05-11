@@ -9,7 +9,7 @@
     android:layout_marginVertical="6dp"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="#F5F0E8"
+    app:cardBackgroundColor="@color/white"
     app:rippleColor="?attr/colorControlHighlight"
     app:strokeWidth="0dp">
 

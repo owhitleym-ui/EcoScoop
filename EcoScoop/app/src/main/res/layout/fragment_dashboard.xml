@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F0E8"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
@@ -18,21 +18,24 @@
             android:padding="24dp">
 
             <!-- Header -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="EcoScoop"
-                android:textSize="32sp"
-                android:fontFamily="sans-serif-medium"
-                android:layout_marginBottom="4dp" />
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:contentDescription="EcoScoop logo"
+                android:src="@drawable/logo_text" />
+
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your environmental news hub"
-                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Your environmental news hub."
                 android:textColor="?android:attr/textColorSecondary"
-                android:layout_marginBottom="24dp" />
+                android:textSize="14sp" />
+
 
             <!-- Weather Section -->
             <TextView

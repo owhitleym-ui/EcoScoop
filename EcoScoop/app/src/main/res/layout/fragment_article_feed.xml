@@ -8,7 +8,7 @@
     <!-- Feed fills all space above the nav bar -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/itemsRecView"
-        android:background="#F5F0E8"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
