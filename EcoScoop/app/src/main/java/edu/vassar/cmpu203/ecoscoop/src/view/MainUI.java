@@ -16,16 +16,15 @@ import androidx.fragment.app.FragmentTransaction;
 import edu.vassar.cmpu203.ecoscoop.databinding.ActivityMainBinding;
 
 /**
- * Class to manage components shared among all screens and the fragments being displayed.
+ * Top-level view helper that owns the activity's root binding and {@link androidx.fragment.app.FragmentManager},
+ * exposing a single {@link #displayFragment} method to swap the visible screen.
  */
 public class MainUI {
 
     private final ActivityMainBinding binding;
     private final FragmentManager fmanager;
 
-    /**
-     * Constructor method.
-     */
+    /** Creates the MainUI, inflates the activity layout, and enables edge-to-edge rendering. */
     public MainUI (@NonNull FragmentActivity factivity) {
         this.binding = ActivityMainBinding.inflate(LayoutInflater.from(factivity));
         this.fmanager = factivity.getSupportFragmentManager();
@@ -50,11 +49,7 @@ public class MainUI {
         ftrans.commit();
     }
 
-    /**
-     * Retrieve the graphical widget (android view) at the root of the screen hierarchy.
-     *
-     * @return the screen's root android view (widget)
-     */
+    /** Returns the root view of the activity layout, needed to set it as the content view. */
     @NonNull
     public View getRootView() { return this.binding.getRoot(); }
 }

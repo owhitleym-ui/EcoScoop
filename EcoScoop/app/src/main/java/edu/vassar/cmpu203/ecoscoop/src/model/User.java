@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A class to represent a user in the application.
+ * User account entity holding credentials, preferences (metric units, local location),
+ * comments, and activity counters (articles read/liked/disliked).
  */
 public class User implements Serializable {
 
@@ -56,8 +57,11 @@ public class User implements Serializable {
      */
     public String getUsername() { return this.username; }
 
+    /** Appends a comment to the user's comment history. */
     public void addComment(String comment) { userComments.add(comment); }
+    /** Removes the comment at the given index from the user's comment history. */
     public void removeComment(int index) { userComments.remove(index); }
+    /** Returns an unmodifiable view of the user's comment history. */
     public List<String> getComments() { return Collections.unmodifiableList(userComments); }
 
     public boolean isUseMetric() { return useMetric; }
@@ -65,10 +69,13 @@ public class User implements Serializable {
     public boolean isUseLocalLocation() { return useLocalLocation; }
     public void setUseLocalLocation(boolean v) { this.useLocalLocation = v; }
     public int getArticlesRead() { return articlesRead; }
+    /** Increments the count of articles the user has opened. */
     public void incrementRead() { articlesRead++; }
     public int getArticlesLiked() { return articlesLiked; }
+    /** Increments the count of articles the user has liked. */
     public void incrementLiked() { articlesLiked++; }
     public int getArticlesDisliked() { return articlesDisliked; }
+    /** Increments the count of articles the user has disliked. */
     public void incrementDisliked() { articlesDisliked++; }
 
     /**

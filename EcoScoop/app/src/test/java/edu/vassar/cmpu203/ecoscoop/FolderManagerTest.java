@@ -22,9 +22,10 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Source;
  *
  * Focuses on: {@code createFolder()} adding to the collection,
  * {@code deleteFolder()} true/false return values, {@code getFolder()} null
- * when missing, and {@code saveToFolder()} auto-creating folders on demand.
+ * when missing, {@code saveToFolder()} auto-creating folders on demand, and
+ * {@code renameFolder()} updating folder names.
  *
- * Uses an anonymous {@link ArticleRetriever} implementation to inject test data
+ * Uses an anonymous {@link ArticleDatabase} implementation to inject test data
  * without making any network calls.
  */
 public class FolderManagerTest {
@@ -35,18 +36,18 @@ public class FolderManagerTest {
 
     @Before
     public void setUp() {
-        article = new Article(1, "Title", "Desc",
+        article = new Article("a1", "Title", "Desc",
                 new ArrayList<>(), new ArrayList<>(),
                 new Source("Grist", "https://grist.org", "2024-01-01"), "Body.", "");
 
-        Map<Integer, Article> db = new HashMap<>();
-        db.put(1, article);
+        Map<String, Article> db = new HashMap<>();
+        db.put("a1", article);
 
         List<Article> list = new ArrayList<>();
         list.add(article);
 
         ArticleDatabase database = new ArticleDatabase() {
-            @Override public Map<Integer, Article> getDatabase() { return db; }
+            @Override public Map<String, Article> getDatabase() { return db; }
             @Override public List<Article> getArticles() { return list; }
         };
 
@@ -140,7 +141,7 @@ public class FolderManagerTest {
      */
     @Test
     public void testSaveToFolder_autoCreatesFolder() {
-        manager.saveToFolder(1, "NewFolder");
+        manager.saveToFolder("a1", "NewFolder");
         Folder f = manager.getFolder("NewFolder");
         assertNotNull(f);
         assertEquals(1, f.open().size());
@@ -153,8 +154,48 @@ public class FolderManagerTest {
     @Test
     public void testSaveToFolder_usesExistingFolderWhenPresent() {
         manager.createFolder("Existing");
-        manager.saveToFolder(1, "Existing");
+        manager.saveToFolder("a1", "Existing");
         assertEquals(1, manager.getFolders().size());
         assertEquals(1, manager.getFolder("Existing").open().size());
+    }
+
+    // -------------------------------------------------------------------------
+    // renameFolder
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verifies {@code renameFolder()} returns {@code true} and the folder is
+     * retrievable under its new name.
+     */
+    @Test
+    public void testRenameFolder_existingFolderUpdatesName() {
+        manager.createFolder("OldName");
+        boolean result = manager.renameFolder("OldName", "NewName");
+        assertTrue(result);
+        assertNotNull(manager.getFolder("NewName"));
+        assertNull(manager.getFolder("OldName"));
+    }
+
+    /**
+     * Verifies {@code renameFolder()} returns {@code false} when the source
+     * folder does not exist, leaving the collection unchanged.
+     */
+    @Test
+    public void testRenameFolder_nonExistentFolderReturnsFalse() {
+        boolean result = manager.renameFolder("Ghost", "NewName");
+        assertFalse(result);
+    }
+
+    /**
+     * Verifies that articles are preserved after a folder rename.
+     */
+    @Test
+    public void testRenameFolder_preservesArticles() {
+        manager.createFolder("Before");
+        manager.saveToFolder("a1", "Before");
+        manager.renameFolder("Before", "After");
+        Folder renamed = manager.getFolder("After");
+        assertNotNull(renamed);
+        assertEquals(1, renamed.open().size());
     }
 }

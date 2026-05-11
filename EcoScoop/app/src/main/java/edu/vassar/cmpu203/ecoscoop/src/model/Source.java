@@ -10,7 +10,7 @@ public class Source {
     private final String publishDate;
 
     /**
-     * Creates a model.Source with the given website info.
+     * Creates a Source with the given publication details.
      *
      * @param websiteName the name of the publication
      * @param url         the direct link to the article

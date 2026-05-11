@@ -49,30 +49,30 @@ public class ArticleServiceTest {
         List<Tag> oceanTags = new ArrayList<>();
         oceanTags.add(new Tag("ocean"));
 
-        climate = new Article(1, "Climate change overview", "A summary of climate.",
+        climate = new Article("a1", "Climate change overview", "A summary of climate.",
                 smithAuthors, climateTags,
                 new Source("Grist", "https://grist.org", "2024-03-01"),
                 "Climate change is accelerating.", "");
 
-        energy = new Article(2, "Renewable energy report", "Clean energy trends.",
+        energy = new Article("a2", "Renewable energy report", "Clean energy trends.",
                 new ArrayList<>(), energyTags,
                 new Source("Carbon Brief", "https://carbonbrief.org", "2024-01-15"),
                 "Solar and wind power are growing fast.", "");
 
-        ocean = new Article(3, "Ocean health update", "Marine ecosystem news.",
+        ocean = new Article("a3", "Ocean health update", "Marine ecosystem news.",
                 new ArrayList<>(), oceanTags,
                 new Source("Earth911", "https://earth911.com", "2024-06-20"),
                 "Coral reefs are under threat.", "");
 
-        Map<Integer, Article> db = new HashMap<>();
-        db.put(1, climate);
-        db.put(2, energy);
-        db.put(3, ocean);
+        Map<String, Article> db = new HashMap<>();
+        db.put("a1", climate);
+        db.put("a2", energy);
+        db.put("a3", ocean);
 
         List<Article> list = new ArrayList<>(Arrays.asList(climate, energy, ocean));
 
         ArticleDatabase mockDatabase = new ArticleDatabase() {
-            @Override public Map<Integer, Article> getDatabase() { return db; }
+            @Override public Map<String, Article> getDatabase() { return db; }
             @Override public List<Article> getArticles() { return list; }
         };
 
@@ -198,6 +198,76 @@ public class ArticleServiceTest {
     }
 
     // -------------------------------------------------------------------------
+    // sortArticles — oldest first
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verifies that sorting by "oldest" places the article with the earliest
+     * publishDate first (ascending order).
+     */
+    @Test
+    public void testSortByOldest_oldestFirst() {
+        List<Article> all = new ArrayList<>(Arrays.asList(climate, energy, ocean));
+        List<Article> sorted = service.sortArticles(all, "oldest");
+        // energy = 2024-01-15, climate = 2024-03-01, ocean = 2024-06-20
+        assertEquals(energy,  sorted.get(0));
+        assertEquals(climate, sorted.get(1));
+        assertEquals(ocean,   sorted.get(2));
+    }
+
+    /**
+     * Verifies "oldest" sort is the exact reverse of "date" (newest-first) sort.
+     */
+    @Test
+    public void testSortByOldest_reverseOfNewest() {
+        List<Article> all = new ArrayList<>(Arrays.asList(climate, energy, ocean));
+        List<Article> newest = service.sortArticles(all, "date");
+        List<Article> oldest = service.sortArticles(all, "oldest");
+        assertEquals(newest.get(0), oldest.get(oldest.size() - 1));
+        assertEquals(newest.get(newest.size() - 1), oldest.get(0));
+    }
+
+    /**
+     * Verifies that "oldest" sort does not mutate the input list.
+     */
+    @Test
+    public void testSortByOldest_doesNotMutateInput() {
+        List<Article> original = new ArrayList<>(Arrays.asList(climate, energy, ocean));
+        List<Article> copy = new ArrayList<>(original);
+        service.sortArticles(original, "oldest");
+        assertEquals(copy, original);
+    }
+
+    // -------------------------------------------------------------------------
+    // sortArticles — source A-Z
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verifies that sorting by "source" orders articles alphabetically by
+     * source website name (case-insensitive).
+     */
+    @Test
+    public void testSortBySource_alphabeticalOrder() {
+        List<Article> all = new ArrayList<>(Arrays.asList(climate, energy, ocean));
+        List<Article> sorted = service.sortArticles(all, "source");
+        // Carbon Brief < Earth911 < Grist
+        assertEquals(energy,  sorted.get(0)); // Carbon Brief
+        assertEquals(ocean,   sorted.get(1)); // Earth911
+        assertEquals(climate, sorted.get(2)); // Grist
+    }
+
+    /**
+     * Verifies that "source" sort does not mutate the input list.
+     */
+    @Test
+    public void testSortBySource_doesNotMutateInput() {
+        List<Article> original = new ArrayList<>(Arrays.asList(climate, energy, ocean));
+        List<Article> copy = new ArrayList<>(original);
+        service.sortArticles(original, "source");
+        assertEquals(copy, original);
+    }
+
+    // -------------------------------------------------------------------------
     // getArticle
     // -------------------------------------------------------------------------
 
@@ -206,7 +276,7 @@ public class ArticleServiceTest {
      */
     @Test
     public void testGetArticle_validIdReturnsArticle() {
-        assertSame(climate, service.getArticle(1));
+        assertSame(climate, service.getArticle("a1"));
     }
 
     /**
@@ -214,6 +284,6 @@ public class ArticleServiceTest {
      */
     @Test
     public void testGetArticle_invalidIdReturnsNull() {
-        assertNull(service.getArticle(999));
+        assertNull(service.getArticle("unknown"));
     }
 }

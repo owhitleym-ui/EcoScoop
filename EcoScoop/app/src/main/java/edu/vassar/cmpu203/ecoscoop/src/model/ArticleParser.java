@@ -45,6 +45,7 @@ public class ArticleParser {
 
     private final XmlPullParser xpp;
 
+    /** Creates a namespace-aware XmlPullParser for RSS processing. */
     public ArticleParser() throws XmlPullParserException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -201,10 +202,7 @@ public class ArticleParser {
         }
     }
 
-    /**
-     * Builds our article object
-     * @return an article with a UUID derived from its URL
-     */
+    /** Assembles an {@link Article} from the current item buffers; ID is a UUID derived from the article URL. */
     private Article buildArticle() {
         ArrayList<Author> authors = new ArrayList<>();
         for (String name : authorList) {
@@ -269,9 +267,7 @@ public class ArticleParser {
         );
     }
 
-    /**
-     * Resets the buffers to be used on the next article parsed.
-     */
+    /** Clears all per-item buffers so they are ready for the next {@code <item>} element. */
     private void resetBuffers() {
         currentTitle = "";
         currentUrl = "";

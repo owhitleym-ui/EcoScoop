@@ -60,7 +60,7 @@ public class NavigationTest {
     @Test
     public void profileTab_showsProfileScreen() {
         onView(withId(R.id.profileTab)).perform(click());
-        onView(withId(R.id.emptyLabel)).check(matches(isDisplayed()));
+        onView(withId(R.id.settingsButton)).check(matches(isDisplayed()));
     }
 
     /**

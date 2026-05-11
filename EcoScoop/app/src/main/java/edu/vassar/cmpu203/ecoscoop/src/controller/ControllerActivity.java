@@ -2,7 +2,11 @@ package edu.vassar.cmpu203.ecoscoop.src.controller;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -17,8 +21,15 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
@@ -53,6 +64,13 @@ public class ControllerActivity extends AppCompatActivity
 
     private static final String STATE = "state";
     private static final String CUR_ARTICLE_ID = "curArticleId";
+
+    // Fallback coordinates used when GPS is unavailable or local location is off (New York City)
+    private static final double DEFAULT_LAT = 40.7128;
+    private static final double DEFAULT_LON = -74.0060;
+
+    private static final int GPS_TIMEOUT_MS = 15_000;
+
     private PersistenceFacade pfacade;
     private EcoDataRetriever ecoDataRetriever;
     private ArticleRetriever articleRetriever;
@@ -62,6 +80,25 @@ public class ControllerActivity extends AppCompatActivity
 
     // Held so onLoadEcoData can push data to the existing instance instead of creating a new one
     private DashboardFragment dashboardFragment;
+
+    // Location state
+    private FusedLocationProviderClient locationClient;
+    private LocationCallback locationCallback;
+    private double lat = 0.0;
+    private double lon = 0.0;
+    private String lastSearchedName = null;
+
+    // GPS fallback: fires if no location arrives within GPS_TIMEOUT_MS
+    private final Handler gpsTimeoutHandler = new Handler(Looper.getMainLooper());
+    private final Runnable gpsFallbackRunnable = () -> {
+        if (lat == 0.0 && lon == 0.0) {
+            Log.d("FeedDebug", "GPS timeout — falling back to default location");
+            lat = DEFAULT_LAT;
+            lon = DEFAULT_LON;
+            reverseGeocode(DEFAULT_LAT, DEFAULT_LON);
+            onUpdateEcoData(lat, lon);
+        }
+    };
 
     State curState = State.AUTH;
     State prevState = State.FEED;
@@ -87,18 +124,6 @@ public class ControllerActivity extends AppCompatActivity
         public String toString() { return name; }
     }
 
-    /**
-     * Called when the activity is starting.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *     previously being shut down then this Bundle contains the data it most
-     *     recently supplied in {@link #onSaveInstanceState}. Otherwise, it is null.
-     */
-    //Get Location
-    private FusedLocationProviderClient locationClient;
-    private double lat;
-    private double lon;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.installSplashScreen(this);
@@ -118,11 +143,16 @@ public class ControllerActivity extends AppCompatActivity
         onAuth();
     }
 
-    /**
-     * Called before activity destruction to give it an opportunity to store state.
-     *
-     * @param outState Bundle in which to place your saved state.
-     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        gpsTimeoutHandler.removeCallbacks(gpsFallbackRunnable);
+        if (locationCallback != null) {
+            locationClient.removeLocationUpdates(locationCallback);
+            locationCallback = null;
+        }
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -130,7 +160,9 @@ public class ControllerActivity extends AppCompatActivity
         if (this.curArticle != null) outState.putString(CUR_ARTICLE_ID, this.curArticle.getId());
     }
 
-    /** Request Location of the User */
+    // ── Location ──────────────────────────────────────────────────────────────
+
+    /** Request the user's location; falls back to a fresh fix if the cache is empty. */
     private void requestLocation() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -141,12 +173,17 @@ public class ControllerActivity extends AppCompatActivity
             return;
         }
 
-        // Try the fast cached fix first; fall back to a live request if null
+        // Schedule fallback in case GPS never responds
+        gpsTimeoutHandler.removeCallbacks(gpsFallbackRunnable);
+        gpsTimeoutHandler.postDelayed(gpsFallbackRunnable, GPS_TIMEOUT_MS);
+
         locationClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
+                gpsTimeoutHandler.removeCallbacks(gpsFallbackRunnable);
                 this.lat = location.getLatitude();
                 this.lon = location.getLongitude();
                 Log.d("FeedDebug", "Cached location: " + this.lat + ", " + this.lon);
+                reverseGeocode(this.lat, this.lon);
                 onUpdateEcoData(this.lat, this.lon);
             } else {
                 Log.d("FeedDebug", "No cached location — requesting fresh fix");
@@ -155,27 +192,36 @@ public class ControllerActivity extends AppCompatActivity
         });
     }
 
-    /** Fallback: request a single fresh GPS fix when the cache is empty */
+    /** Requests a single fresh GPS fix; falls back to default if the fix is null. */
     @SuppressWarnings("MissingPermission")
     private void requestFreshLocation() {
         LocationRequest req = new LocationRequest.Builder(
-                Priority.PRIORITY_BALANCED_POWER_ACCURACY, 5000L)
+                Priority.PRIORITY_HIGH_ACCURACY, 5000L)
                 .setMaxUpdates(1)
                 .build();
 
-        locationClient.requestLocationUpdates(req, new LocationCallback() {
+        locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult result) {
+                gpsTimeoutHandler.removeCallbacks(gpsFallbackRunnable);
                 locationClient.removeLocationUpdates(this);
                 android.location.Location loc = result.getLastLocation();
                 if (loc != null) {
                     lat = loc.getLatitude();
                     lon = loc.getLongitude();
                     Log.d("FeedDebug", "Fresh location: " + lat + ", " + lon);
+                    reverseGeocode(lat, lon);
+                    onUpdateEcoData(lat, lon);
+                } else {
+                    Log.d("FeedDebug", "Fresh location result was null — using default");
+                    lat = DEFAULT_LAT;
+                    lon = DEFAULT_LON;
+                    reverseGeocode(DEFAULT_LAT, DEFAULT_LON);
                     onUpdateEcoData(lat, lon);
                 }
             }
-        }, getMainLooper());
+        };
+        locationClient.requestLocationUpdates(req, locationCallback, getMainLooper());
     }
 
     @Override
@@ -184,13 +230,138 @@ public class ControllerActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100 && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            requestLocation(); // permission granted, try again
+            requestLocation();
+        } else if (requestCode == 100) {
+            // Permission denied — use default location so dashboard still loads
+            Log.d("FeedDebug", "Location permission denied — using default location");
+            lat = DEFAULT_LAT;
+            lon = DEFAULT_LON;
+            reverseGeocode(DEFAULT_LAT, DEFAULT_LON);
+            onUpdateEcoData(lat, lon);
         }
     }
 
-    /** Fetch and Updates Database on a background thread; update the feed when ready */
-    private void onUpdateDatabase(){
-        new Thread( () ->{
+    /**
+     * Geocodes a city name via Open-Meteo's geocoding API and fetches weather
+     * for the first matching result. Runs entirely on a background thread.
+     */
+    private void geocodeAndFetch(String query) {
+        new Thread(() -> {
+            try {
+                String encoded = URLEncoder.encode(query, StandardCharsets.UTF_8.name());
+                String urlStr = "https://geocoding-api.open-meteo.com/v1/search?name="
+                        + encoded + "&count=1&language=en&format=json";
+
+                HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(10_000);
+                conn.setReadTimeout(10_000);
+
+                int code = conn.getResponseCode();
+                if (code != 200) {
+                    Log.e("ControllerActivity", "Geocoding HTTP " + code);
+                    conn.disconnect();
+                    return;
+                }
+
+                ByteArrayOutputStream buf = new ByteArrayOutputStream();
+                try (InputStream is = conn.getInputStream()) {
+                    byte[] chunk = new byte[4096];
+                    int n;
+                    while ((n = is.read(chunk)) != -1) buf.write(chunk, 0, n);
+                } finally {
+                    conn.disconnect();
+                }
+
+                org.json.JSONObject obj = new org.json.JSONObject(buf.toString("UTF-8"));
+                org.json.JSONArray results = obj.optJSONArray("results");
+                if (results == null || results.length() == 0) {
+                    Log.d("ControllerActivity", "No geocoding results for: " + query);
+                    return;
+                }
+
+                org.json.JSONObject first = results.getJSONObject(0);
+                double geoLat  = first.getDouble("latitude");
+                double geoLon  = first.getDouble("longitude");
+                String geoName = first.optString("name", query);
+
+                runOnUiThread(() -> {
+                    lastSearchedName = geoName;
+                    if (curState == State.DASHBOARD && dashboardFragment != null) {
+                        dashboardFragment.setLocationLabel("📍 " + geoName);
+                    }
+                    onUpdateEcoData(geoLat, geoLon);
+                });
+
+            } catch (Exception e) {
+                Log.e("ControllerActivity", "Geocoding error", e);
+            }
+        }).start();
+    }
+
+    /**
+     * Reverse-geocodes coordinates to a human-readable city name using the device's
+     * built-in Geocoder (no API key required). Runs on a background thread and
+     * pushes the result to the dashboard label on the UI thread.
+     */
+    private void reverseGeocode(double lat, double lon) {
+        new Thread(() -> {
+            String label = String.format(Locale.US, "📍 %.2f°, %.2f°", lat, lon); // safe fallback
+            try {
+                if (Geocoder.isPresent()) {
+                    Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                    List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address addr = addresses.get(0);
+                        String city = addr.getLocality();
+                        if (city == null || city.isEmpty()) city = addr.getSubAdminArea();
+                        if (city == null || city.isEmpty()) city = addr.getAdminArea();
+                        if (city != null && !city.isEmpty()) label = "📍 " + city;
+                    }
+                }
+            } catch (Exception e) {
+                Log.d("ControllerActivity", "Reverse geocoding failed: " + e.getMessage());
+            }
+            final String finalLabel = label;
+            runOnUiThread(() -> {
+                if (curState == State.DASHBOARD && dashboardFragment != null) {
+                    dashboardFragment.setLocationLabel(finalLabel);
+                }
+            });
+        }).start();
+    }
+
+    // ── Eco data ──────────────────────────────────────────────────────────────
+
+    /** Fetches weather + climate on a background thread; delivers to the UI thread when done. */
+    private void onUpdateEcoData(double lat, double lon) {
+        new Thread(() -> {
+            try {
+                EcoRepository repo = new EcoRepository(new EcoDataFetcher());
+                repo.refresh(lat, lon);
+                EcoDataRetriever retriever = new EcoDataRetriever(repo);
+                runOnUiThread(() -> onLoadEcoData(retriever));
+            } catch (Exception e) {
+                Log.e("FeedDebug", "Failed to load weather", e);
+            }
+        }).start();
+    }
+
+    private void onLoadEcoData(EcoDataRetriever retriever) {
+        this.ecoDataRetriever = retriever;
+        // Push to the dashboard if it's the current screen.
+        // onWeatherLoaded() safely stores the data as pendingRetriever when
+        // binding is null (fragment not yet attached), so no isAdded() guard needed.
+        if (curState == State.DASHBOARD && dashboardFragment != null) {
+            dashboardFragment.onWeatherLoaded(retriever);
+        }
+    }
+
+    // ── Article database ──────────────────────────────────────────────────────
+
+    /** Fetch and updates database on a background thread; updates the feed when ready. */
+    private void onUpdateDatabase() {
+        new Thread(() -> {
             try {
                 ArticleDatabase newDatabase = new ArticleRepository();
                 Log.d("ControllerActivity", "Loaded " + newDatabase.getDatabase().size() + " articles");
@@ -212,38 +383,10 @@ public class ControllerActivity extends AppCompatActivity
 
         Log.d("FeedDebug", "Article Size: " + articleRetriever.getDatabaseSize());
 
-        // Only navigate to feed if the user has already signed in
         if (curState != State.AUTH) showArticleFeedTab();
     }
 
-    /** Fetches and updates weather database on a background thread; updates the view when ready */
-    private void onUpdateEcoData(double lat, double lon) {
-        new Thread(() -> {
-            try {
-                EcoRepository repo = new EcoRepository(new EcoDataFetcher());
-                repo.refresh(lat, lon);
-                EcoDataRetriever retriever = new EcoDataRetriever(repo);
-
-                runOnUiThread(() -> onLoadEcoData(retriever));
-            } catch (Exception e) {
-                Log.e("FeedDebug", "Failed to load weather", e);
-            }
-        }).start();
-    }
-
-    private void onLoadEcoData(EcoDataRetriever retriever) {
-        this.ecoDataRetriever = retriever;
-        // Push data to whichever DashboardFragment is currently on screen.
-        // Never create a new fragment here — that's showDashBoardTab's job.
-        if (curState == State.DASHBOARD && dashboardFragment != null) {
-            dashboardFragment.onWeatherLoaded(retriever);
-        }
-    }
-
-
-    /**
-     * Navigation Helpers
-     */
+    // ── Navigation helpers ────────────────────────────────────────────────────
 
     private void onAuth() {
         this.curState = State.AUTH;
@@ -256,8 +399,7 @@ public class ControllerActivity extends AppCompatActivity
         this.curState = State.DASHBOARD;
         this.dashboardFragment = new DashboardFragment();
         this.dashboardFragment.setListener(this);
-        // If weather is already loaded, hand it over immediately.
-        // If not, pendingRetriever in DashboardFragment holds it until onViewCreated fires.
+        this.dashboardFragment.setUseMetric(curUser != null && curUser.isUseMetric());
         if (ecoDataRetriever != null) this.dashboardFragment.onWeatherLoaded(ecoDataRetriever);
         if (mainUI != null) mainUI.displayFragment(this.dashboardFragment);
     }
@@ -287,8 +429,6 @@ public class ControllerActivity extends AppCompatActivity
             public void onDataReceived(FolderManager loaded) {
                 folderManager = loaded;
                 if (articleRetriever != null) folderManager.updateRetriever(articleRetriever);
-                // Load articles stored in Firestore so saved folders still open even if
-                // the RSS feed no longer contains them.
                 pfacade.loadSavedArticles(new PersistenceFacade.DataListener<java.util.Map<String, Article>>() {
                     @Override
                     public void onDataReceived(@NonNull java.util.Map<String, Article> saved) {
@@ -296,15 +436,11 @@ public class ControllerActivity extends AppCompatActivity
                         displayProfileFragment();
                     }
                     @Override
-                    public void onNoDataFound() {
-                        displayProfileFragment();
-                    }
+                    public void onNoDataFound() { displayProfileFragment(); }
                 });
             }
             @Override
-            public void onNoDataFound() {
-                displayProfileFragment();
-            }
+            public void onNoDataFound() { displayProfileFragment(); }
         });
     }
 
@@ -319,51 +455,42 @@ public class ControllerActivity extends AppCompatActivity
         if (mainUI != null) mainUI.displayFragment(profileFragment);
     }
 
+    // ── Navigation tab callbacks ──────────────────────────────────────────────
 
-    /**
-     * Navigation Tab Implementations
-     */
-
-    @Override
-    public void onArticleTabClick() { showArticleFeedTab(); }
-
-    @Override
-    public void onDashBoardClick() { showDashBoardTab(); }
-
-    @Override
-    public void onSearchClick() { showSearchTab(); }
-
-    @Override
-    public void onProfileClick() { showProfileTab(); }
+    @Override public void onArticleTabClick() { showArticleFeedTab(); }
+    @Override public void onDashBoardClick()   { showDashBoardTab(); }
+    @Override public void onSearchClick()      { showSearchTab(); }
+    @Override public void onProfileClick()     { showProfileTab(); }
 
     @Override
     public void onRequestGPSRefresh() {
-        // Re-run the GPS fetch and reload weather for the current location
-        requestLocation();
+        lastSearchedName = null; // clear any searched city; go back to GPS
+        // Skip the cache so we always get the current device location
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            gpsTimeoutHandler.removeCallbacks(gpsFallbackRunnable);
+            gpsTimeoutHandler.postDelayed(gpsFallbackRunnable, GPS_TIMEOUT_MS);
+            requestFreshLocation();
+        } else {
+            requestLocation();
+        }
     }
 
     @Override
     public void onSearchLocation(String query) {
-        // TODO: pass query through Open-Meteo Geocoding API to resolve lat/lon,
-        // then call onUpdateEcoData(lat, lon) with the result.
-        // For now, log and fall back to last known GPS location as a safe no-op.
-        Log.d("ControllerActivity", "Location search requested: " + query);
+        if (query == null || query.trim().isEmpty()) return;
+        geocodeAndFetch(query.trim());
     }
 
-
-    /**
-     * AuthUI.Listener Implementations
-     */
+    // ── AuthUI.Listener ───────────────────────────────────────────────────────
 
     @Override
     public void onRegister(String username, String password, AuthUI ui) {
         User user = new User(username, password);
         this.pfacade.createUserIfNotExists(user, new PersistenceFacade.BinaryResultListener() {
-            @Override
-            public void onYesResult() { ui.onRegisterSuccess(); }
-
-            @Override
-            public void onNoResult() { ui.onUserAlreadyExists(); }
+            @Override public void onYesResult() { ui.onRegisterSuccess(); }
+            @Override public void onNoResult()  { ui.onUserAlreadyExists(); }
         });
     }
 
@@ -375,7 +502,6 @@ public class ControllerActivity extends AppCompatActivity
                 if (user.validatePassword(password)) {
                     curUser = user;
                     pfacade.setCurrentUser(user.getUsername());
-                    // If articles already loaded go straight to feed, otherwise dashboard while loading
                     if (articleRetriever != null) {
                         showArticleFeedTab();
                     } else {
@@ -385,20 +511,16 @@ public class ControllerActivity extends AppCompatActivity
                     ui.onInvalidCredentials();
                 }
             }
-
             @Override
             public void onNoDataFound() { ui.onInvalidCredentials(); }
         });
     }
 
-
-    /**
-     * ArticleFeedUI.Listener Implementations
-     */
+    // ── ArticleFeedUI.Listener ────────────────────────────────────────────────
 
     @Override
     public void onArticleClicked(String id) {
-        if (articleRetriever.getArticle(id) == null) return;
+        if (articleRetriever == null || articleRetriever.getArticle(id) == null) return;
 
         this.prevState = this.curState;
         this.curState = State.DISPLAY_ARTICLE;
@@ -409,7 +531,6 @@ public class ControllerActivity extends AppCompatActivity
         DisplayArticleFragment displayArticleFragment = new DisplayArticleFragment();
         displayArticleFragment.setListener(this);
         displayArticleFragment.setArguments(args);
-
         mainUI.displayFragment(displayArticleFragment);
     }
 
@@ -418,10 +539,7 @@ public class ControllerActivity extends AppCompatActivity
         ui.runShowFeed(articles);
     }
 
-
-    /**
-     * DisplayArticleUI.Listener Implementations
-     */
+    // ── DisplayArticleUI.Listener ─────────────────────────────────────────────
 
     @Override
     public void onRequestArticle(String id, DisplayArticleUI ui) {
@@ -447,7 +565,6 @@ public class ControllerActivity extends AppCompatActivity
         if (folderManager != null) {
             folderManager.saveToFolder(id, folderName);
             pfacade.saveFolderManager(folderManager);
-            // Persist the full article so the folder can display it in future sessions
             if (curArticle != null) pfacade.saveArticle(curArticle);
         }
     }
@@ -483,17 +600,14 @@ public class ControllerActivity extends AppCompatActivity
         }
     }
 
-
-    /**
-     * SearchArticleUI.Listener Implementations
-     */
+    // ── SearchArticleUI.Listener ──────────────────────────────────────────────
 
     @Override
     public void onSearchQuery(String query, String type, SearchArticleUI ui) {
         List<Article> results = articleRetriever != null
                 ? articleRetriever.searchArticles(query, type)
                 : new ArrayList<>();
-        ui.runShowResults(results);
+        ui.runShowFreshResults(results);
     }
 
     @Override
@@ -504,10 +618,7 @@ public class ControllerActivity extends AppCompatActivity
         ui.runShowResults(sorted);
     }
 
-
-    /**
-     * ProfileUI.Listener Implementations
-     */
+    // ── ProfileUI.Listener ────────────────────────────────────────────────────
 
     @Override
     public List<Folder> onGetFolders() {
@@ -565,10 +676,34 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     public void onSettingChanged(boolean useMetric, boolean useLocalLocation) {
-        if (curUser != null) {
-            curUser.setUseMetric(useMetric);
-            curUser.setUseLocalLocation(useLocalLocation);
-            pfacade.saveUser(curUser);
+        if (curUser == null) return;
+
+        boolean wasLocal = curUser.isUseLocalLocation();
+        curUser.setUseMetric(useMetric);
+        curUser.setUseLocalLocation(useLocalLocation);
+        pfacade.saveUser(curUser);
+
+        // When the local/global toggle changes, refresh weather with the right source
+        if (wasLocal != useLocalLocation) {
+            if (useLocalLocation) {
+                lastSearchedName = null;
+                requestLocation();
+            } else {
+                // Global: use default location (clears any GPS coords)
+                lat = DEFAULT_LAT;
+                lon = DEFAULT_LON;
+                lastSearchedName = null;
+                reverseGeocode(DEFAULT_LAT, DEFAULT_LON);
+                onUpdateEcoData(DEFAULT_LAT, DEFAULT_LON);
+            }
+        }
+
+        // Push updated metric preference to the dashboard immediately if it's on screen
+        if (curState == State.DASHBOARD
+                && dashboardFragment != null
+                && dashboardFragment.isAdded()) {
+            dashboardFragment.setUseMetric(useMetric);
+            if (ecoDataRetriever != null) dashboardFragment.onWeatherLoaded(ecoDataRetriever);
         }
     }
 

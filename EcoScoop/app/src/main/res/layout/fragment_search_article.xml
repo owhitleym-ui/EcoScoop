@@ -78,7 +78,7 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <!-- Sort chips: Relevance / Date -->
+    <!-- Sort chips: Relevance / Oldest first / Source A-Z -->
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroupSort"
         android:layout_width="match_parent"
@@ -103,7 +103,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:chipBackgroundColor="@color/light_blue"
-            android:text="Newest first" />
+            android:text="Oldest first" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSortSource"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipBackgroundColor="@color/light_blue"
+            android:text="Source A–Z" />
 
     </com.google.android.material.chip.ChipGroup>
 

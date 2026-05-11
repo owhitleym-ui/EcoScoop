@@ -14,12 +14,17 @@ import java.io.ObjectOutputStream;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
 import edu.vassar.cmpu203.ecoscoop.src.model.User;
 
+/**
+ * {@link PersistenceFacade} implementation that serializes the {@link edu.vassar.cmpu203.ecoscoop.src.model.FolderManager}
+ * to a local file using Java object serialization via Android's internal storage.
+ */
 public class LocalStorageFacade implements PersistenceFacade {
 
     private static final String FOLDER_MANAGER_FNAME = "folder_manager.ngp";
 
     private final File folderManagerFile;
 
+    /** Creates a facade that reads/writes the folder manager file in the app's internal files directory. */
     public LocalStorageFacade(Context context) {
         this.folderManagerFile = new File(context.getFilesDir(), FOLDER_MANAGER_FNAME);
     }

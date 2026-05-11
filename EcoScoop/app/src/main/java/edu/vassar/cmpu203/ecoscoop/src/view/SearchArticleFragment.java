@@ -39,6 +39,7 @@ public class SearchArticleFragment extends Fragment implements SearchArticleUI {
 
     private final SearchResultAdapter adapter = new SearchResultAdapter();
     private List<Article> currentResults = new ArrayList<>();
+    private List<Article> originalResults = new ArrayList<>();
 
     /** Grabs the controller as the listener when the fragment attaches to the activity. */
     @Override
@@ -88,10 +89,16 @@ public class SearchArticleFragment extends Fragment implements SearchArticleUI {
 
         // Sort chips — delegate to controller, which calls runShowResults
         binding.chipGroupSort.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty() || currentResults.isEmpty() || listener == null) return;
-            String criteria = (checkedIds.get(0) == binding.chipSortDate.getId())
-                    ? "date" : "relevance";
-            listener.onSortResults(currentResults, criteria, this);
+            if (checkedIds.isEmpty() || originalResults.isEmpty() || listener == null) return;
+            int chipId = checkedIds.get(0);
+            if (chipId == binding.chipSortRelevance.getId()) {
+                runShowResults(new ArrayList<>(originalResults));
+            } else {
+                String criteria = (chipId == binding.chipSortDate.getId())   ? "oldest"
+                                : (chipId == binding.chipSortSource.getId()) ? "source"
+                                : "relevance";
+                listener.onSortResults(originalResults, criteria, this);
+            }
         });
 
         // Bottom nav
@@ -124,6 +131,13 @@ public class SearchArticleFragment extends Fragment implements SearchArticleUI {
         int n = results.size();
         binding.searchResultsCount.setText(
                 n == 0 ? "No results found" : n + " result" + (n == 1 ? "" : "s"));
+    }
+
+    /** Shows a fresh search result set, resetting the sort state to Relevance. */
+    public void runShowFreshResults(List<Article> results) {
+        originalResults = new ArrayList<>(results);
+        binding.chipSortRelevance.setChecked(true);
+        runShowResults(results);
     }
 
     /** Reads the search input and selected type, then asks the controller for results. */
