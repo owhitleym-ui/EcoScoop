@@ -22,7 +22,7 @@ public interface ArticleFeedUI {
         void onProfileClick();
 
         /** Called when the user taps an article card. */
-        void onArticleClicked(int id);
+        void onArticleClicked(String id);
         /** Called to load articles into the feed. */
         void onShowFeed(List<Article> ArticleList, ArticleFeedUI ui);
     }
@@ -32,5 +32,5 @@ public interface ArticleFeedUI {
 
     /** Shows the given list of articles in the feed. */
     void runShowFeed(List<Article> ArticleList);
-    void runArticleClicked(int id);
+    void runArticleClicked(String id);
 }

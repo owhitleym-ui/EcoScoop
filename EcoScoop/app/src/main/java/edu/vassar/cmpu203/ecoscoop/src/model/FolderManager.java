@@ -68,12 +68,26 @@ public class FolderManager implements Serializable {
     }
 
     /**
+     * Renames the folder with the given name.
+     *
+     * @param oldName current folder name
+     * @param newName new folder name
+     * @return true if the folder was found and renamed
+     */
+    public boolean renameFolder(String oldName, String newName) {
+        Folder folder = getFolder(oldName);
+        if (folder == null) return false;
+        folder.rename(newName);
+        return true;
+    }
+
+    /**
      * Saves an article to a named folder. Creates the folder if it doesn't exist yet.
      *
-     * @param articleId  the ID of the article to save
+     * @param articleId  the UUID of the article to save
      * @param folderName the name of the target folder
      */
-    public void saveToFolder(int articleId, String folderName) {
+    public void saveToFolder(String articleId, String folderName) {
         Folder folder = getFolder(folderName);
         if (folder == null) {
             folder = createFolder(folderName);

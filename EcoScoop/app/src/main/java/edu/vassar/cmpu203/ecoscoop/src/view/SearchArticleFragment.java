@@ -172,12 +172,13 @@ public class SearchArticleFragment extends Fragment implements SearchArticleUI {
             void bind(Article article) {
                 String imgUrl = article.getImageUrl();
                 if (imgUrl != null && !imgUrl.isEmpty()) {
+                    cardBinding.imgHeader.setVisibility(View.VISIBLE);
                     Glide.with(cardBinding.getRoot().getContext())
                             .load(imgUrl)
                             .centerCrop()
                             .into(cardBinding.imgHeader);
                 } else {
-                    cardBinding.imgHeader.setImageDrawable(null);
+                    cardBinding.imgHeader.setVisibility(View.GONE);
                 }
 
                 cardBinding.cardTitle.setText(article.getTitle());

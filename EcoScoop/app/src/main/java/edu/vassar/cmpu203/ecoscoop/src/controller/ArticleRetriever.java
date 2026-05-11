@@ -1,7 +1,9 @@
 package edu.vassar.cmpu203.ecoscoop.src.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.ArticleDatabase;
@@ -11,10 +13,12 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Tag;
 /**
  * Handles article lookup, search, and sorting.
  * Reads article data from an ArticleDatabase — does not store a duplicate copy.
+ * Falls back to savedArticles (loaded from Firestore) for IDs not in the live feed.
  */
 public class ArticleRetriever {
 
     private final ArticleDatabase database;
+    private final Map<String, Article> savedArticles = new HashMap<>();
 
     // Search type constants
     public static final String SEARCH_KEYWORD = "keyword";
@@ -38,9 +42,16 @@ public class ArticleRetriever {
     /** Returns Database Size  */
     public int getDatabaseSize() {return database.getArticles().size();}
 
-    /** Returns the article with the given ID, or null if not found. */
-    public Article getArticle(int id) {
-        return database.getDatabase().get(id);
+    /** Returns the article with the given UUID, checking the live feed then saved articles. */
+    public Article getArticle(String id) {
+        Article a = database.getDatabase().get(id);
+        if (a == null) a = savedArticles.get(id);
+        return a;
+    }
+
+    /** Merges Firestore-loaded articles into the fallback map so saved folders still open. */
+    public void injectSavedArticles(Map<String, Article> saved) {
+        savedArticles.putAll(saved);
     }
 
     /**

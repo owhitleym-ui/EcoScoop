@@ -82,7 +82,7 @@ public class ArticleFeedFragment extends Fragment implements ArticleFeedUI {
     }
 
     @Override
-    public void runArticleClicked(int id) {
+    public void runArticleClicked(String id) {
 
     }
 
@@ -112,12 +112,13 @@ public class ArticleFeedFragment extends Fragment implements ArticleFeedUI {
                 // Load header image
                 String imgUrl = article.getImageUrl();
                 if (!imgUrl.isEmpty()) {
+                    cardBinding.imgHeader.setVisibility(View.VISIBLE);
                     Glide.with(cardBinding.getRoot().getContext())
                             .load(imgUrl)
                             .centerCrop()
                             .into(cardBinding.imgHeader);
                 } else {
-                    cardBinding.imgHeader.setImageDrawable(null);
+                    cardBinding.imgHeader.setVisibility(View.GONE);
                 }
 
                 //Sets Title

@@ -18,7 +18,7 @@ public interface SearchArticleUI {
         void onSortResults(List<Article> results, String criteria, SearchArticleUI ui);
 
         /** Opens the article detail view for the tapped card. */
-        void onArticleClicked(int id);
+        void onArticleClicked(String id);
 
         // Navigation tabs
         /** Goes to the article feed tab. */

@@ -127,7 +127,7 @@ public class ControllerActivity extends AppCompatActivity
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(STATE, this.curState.name());
-        if (this.curArticle != null) outState.putInt(CUR_ARTICLE_ID, this.curArticle.getId());
+        if (this.curArticle != null) outState.putString(CUR_ARTICLE_ID, this.curArticle.getId());
     }
 
     /** Request Location of the User */
@@ -287,7 +287,19 @@ public class ControllerActivity extends AppCompatActivity
             public void onDataReceived(FolderManager loaded) {
                 folderManager = loaded;
                 if (articleRetriever != null) folderManager.updateRetriever(articleRetriever);
-                displayProfileFragment();
+                // Load articles stored in Firestore so saved folders still open even if
+                // the RSS feed no longer contains them.
+                pfacade.loadSavedArticles(new PersistenceFacade.DataListener<java.util.Map<String, Article>>() {
+                    @Override
+                    public void onDataReceived(@NonNull java.util.Map<String, Article> saved) {
+                        if (articleRetriever != null) articleRetriever.injectSavedArticles(saved);
+                        displayProfileFragment();
+                    }
+                    @Override
+                    public void onNoDataFound() {
+                        displayProfileFragment();
+                    }
+                });
             }
             @Override
             public void onNoDataFound() {
@@ -385,14 +397,14 @@ public class ControllerActivity extends AppCompatActivity
      */
 
     @Override
-    public void onArticleClicked(int id) {
+    public void onArticleClicked(String id) {
         if (articleRetriever.getArticle(id) == null) return;
 
         this.prevState = this.curState;
         this.curState = State.DISPLAY_ARTICLE;
 
         Bundle args = new Bundle();
-        args.putInt("article_id", id);
+        args.putString("article_id", id);
 
         DisplayArticleFragment displayArticleFragment = new DisplayArticleFragment();
         displayArticleFragment.setListener(this);
@@ -412,10 +424,11 @@ public class ControllerActivity extends AppCompatActivity
      */
 
     @Override
-    public void onRequestArticle(int id, DisplayArticleUI ui) {
+    public void onRequestArticle(String id, DisplayArticleUI ui) {
         if (articleRetriever != null && articleRetriever.getArticle(id) != null) {
             curArticle = articleRetriever.getArticle(id);
             ui.runShowArticle(curArticle);
+            if (curUser != null) { curUser.incrementRead(); pfacade.saveUser(curUser); }
         }
     }
 
@@ -430,25 +443,39 @@ public class ControllerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSaveClick(int id, String folderName) {
+    public void onSaveClick(String id, String folderName) {
         if (folderManager != null) {
             folderManager.saveToFolder(id, folderName);
             pfacade.saveFolderManager(folderManager);
+            // Persist the full article so the folder can display it in future sessions
+            if (curArticle != null) pfacade.saveArticle(curArticle);
         }
     }
 
     @Override
-    public void onLikeClick(int id) {
-        if (curArticle != null) curArticle.addLike();
+    public void onLikeClick(String id) {
+        if (curArticle != null) {
+            curArticle.addLike();
+            if ("liked".equals(curArticle.getUserReaction()) && curUser != null) {
+                curUser.incrementLiked();
+                pfacade.saveUser(curUser);
+            }
+        }
     }
 
     @Override
-    public void onDislikeClick(int id) {
-        if (curArticle != null) curArticle.addDislike();
+    public void onDislikeClick(String id) {
+        if (curArticle != null) {
+            curArticle.addDislike();
+            if ("disliked".equals(curArticle.getUserReaction()) && curUser != null) {
+                curUser.incrementDisliked();
+                pfacade.saveUser(curUser);
+            }
+        }
     }
 
     @Override
-    public void onCommentSubmit(int id, String comment) {
+    public void onCommentSubmit(String id, String comment) {
         if (curArticle != null) curArticle.addComment(comment);
         if (curUser != null) {
             curUser.addComment(comment);
@@ -499,5 +526,65 @@ public class ControllerActivity extends AppCompatActivity
     public List<String> onGetUserComments() {
         if (curUser == null) return new ArrayList<>();
         return new ArrayList<>(curUser.getComments());
+    }
+
+    @Override
+    public void onRemoveComment(int index) {
+        if (curUser != null) {
+            curUser.removeComment(index);
+            pfacade.saveUser(curUser);
+        }
+    }
+
+    @Override
+    public void onDeleteFolder(String folderName) {
+        if (folderManager != null) {
+            folderManager.deleteFolder(folderName);
+            pfacade.saveFolderManager(folderManager);
+        }
+    }
+
+    @Override
+    public void onRenameFolder(String oldName, String newName) {
+        if (folderManager != null) {
+            folderManager.renameFolder(oldName, newName);
+            pfacade.saveFolderManager(folderManager);
+        }
+    }
+
+    @Override
+    public void onRemoveArticle(String folderName, String articleId) {
+        if (folderManager != null) {
+            Folder folder = folderManager.getFolder(folderName);
+            if (folder != null) {
+                folder.removeArticle(articleId);
+                pfacade.saveFolderManager(folderManager);
+            }
+        }
+    }
+
+    @Override
+    public void onSettingChanged(boolean useMetric, boolean useLocalLocation) {
+        if (curUser != null) {
+            curUser.setUseMetric(useMetric);
+            curUser.setUseLocalLocation(useLocalLocation);
+            pfacade.saveUser(curUser);
+        }
+    }
+
+    @Override
+    public boolean getUserSettingMetric() {
+        return curUser != null && curUser.isUseMetric();
+    }
+
+    @Override
+    public boolean getUserSettingLocal() {
+        return curUser != null && curUser.isUseLocalLocation();
+    }
+
+    @Override
+    public int[] getUserStats() {
+        if (curUser == null) return new int[]{0, 0, 0};
+        return new int[]{curUser.getArticlesRead(), curUser.getArticlesLiked(), curUser.getArticlesDisliked()};
     }
 }
