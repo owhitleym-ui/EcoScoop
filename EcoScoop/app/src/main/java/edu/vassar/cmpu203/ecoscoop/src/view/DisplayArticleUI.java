@@ -22,15 +22,15 @@ public interface DisplayArticleUI {
         void onProfileClick();
 
         /** Asks the controller to load the article with the given id. */
-        void onRequestArticle(int id, DisplayArticleUI ui);
+        void onRequestArticle(String id, DisplayArticleUI ui);
         /** Called when the user saves an article to a folder. */
-        void onSaveClick(int id, String folderName);
+        void onSaveClick(String id, String folderName);
         /** Called when the user taps the Like button. */
-        void onLikeClick(int id);
+        void onLikeClick(String id);
         /** Called when the user taps the Dislike button. */
-        void onDislikeClick(int id);
+        void onDislikeClick(String id);
         /** Called when the user posts a comment. */
-        void onCommentSubmit(int id, String comment);
+        void onCommentSubmit(String id, String comment);
     }
 
     /** Sets the listener that handles user events. */

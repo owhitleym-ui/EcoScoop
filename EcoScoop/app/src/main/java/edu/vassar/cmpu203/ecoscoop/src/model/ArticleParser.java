@@ -7,8 +7,10 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Parses RSS XML content into Article objects using an XML pull parser.
@@ -40,8 +42,6 @@ public class ArticleParser {
     private String currentImageUrl;
 
     private static final String CONTENT_NS = "http://purl.org/rss/1.0/modules/content/";
-
-    private static int idCounter = 0;
 
     private final XmlPullParser xpp;
 
@@ -203,11 +203,9 @@ public class ArticleParser {
 
     /**
      * Builds our article object
-     * @return an article with unique ID
+     * @return an article with a UUID derived from its URL
      */
     private Article buildArticle() {
-        idCounter++;
-
         ArrayList<Author> authors = new ArrayList<>();
         for (String name : authorList) {
             authors.add(new Author(name));
@@ -263,7 +261,9 @@ public class ArticleParser {
                 .replace("&#8211;", "-")
                 .replace("&#8212;", "--");
 
-        return new Article(idCounter, cleanTitle, cleanDesc, authors, tags,
+        String uuid = UUID.nameUUIDFromBytes(currentUrl.getBytes(StandardCharsets.UTF_8)).toString();
+
+        return new Article(uuid, cleanTitle, cleanDesc, authors, tags,
                 new Source(website, currentUrl, currentPubDate),
                 body, currentImageUrl
         );

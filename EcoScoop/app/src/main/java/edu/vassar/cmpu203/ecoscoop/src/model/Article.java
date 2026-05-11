@@ -2,6 +2,7 @@ package edu.vassar.cmpu203.ecoscoop.src.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,8 +11,7 @@ import java.util.Map;
  * Stores the article's content, metadata, and user reactions (likes/dislikes).
  */
 public class Article implements Serializable {
-    private static final String TITLE = "title";
-    private int id;
+    private String id;
     private String title;
     private String description;
     private List<Author> authors;
@@ -28,7 +28,7 @@ public class Article implements Serializable {
     /**
      * Creates an article with all fields.
      *
-     * @param id          unique article ID
+     * @param id          unique article UUID derived from the article URL
      * @param title       article headline
      * @param description short article summary
      * @param authors     list of authors
@@ -36,7 +36,7 @@ public class Article implements Serializable {
      * @param source      the source website and URL
      * @param content     full article body text
      */
-    public Article(int id, String title, String description, List<Author> authors, List<Tag> tagList, Source source, String content, String imageUrl) {
+    public Article(String id, String title, String description, List<Author> authors, List<Tag> tagList, Source source, String content, String imageUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -55,7 +55,7 @@ public class Article implements Serializable {
      * Creates a blank default article with empty fields.
      */
     public Article() {
-        this.id = 0;
+        this.id = "";
         this.title = "";
         this.description = "";
         this.authors = new ArrayList<Author>();
@@ -88,10 +88,10 @@ public class Article implements Serializable {
     }
 
     /**
-     * Returns a one-screen summary with ID, title, authors, description, source, and tags.
+     * Returns a one-screen summary with title, authors, description, source, and tags.
      */
     public String getSummary(){
-        return "ID: " + id + " " + title + "\n" + authors + "\n \n" + wordWrap(description, 80) + "\n \n" + source.getWebsiteName() + " -- " + source.getPublishDate() + "\n" + tagList;
+        return title + "\n" + authors + "\n \n" + wordWrap(description, 80) + "\n \n" + source.getWebsiteName() + " -- " + source.getPublishDate() + "\n" + tagList;
     }
 
     /**
@@ -185,17 +185,59 @@ public class Article implements Serializable {
 
         return result.toString();
     }
-    /**
-    public static Article fromMap(Map<String, Object> map) {
-        final String title = (String)map.get(TITLE);
-
-        return new Article(TITLE);
+    /** Serializes this article to a Firestore-compatible map. */
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("title", title);
+        map.put("description", description);
+        map.put("content", content);
+        map.put("imageUrl", imageUrl != null ? imageUrl : "");
+        List<String> authorNames = new ArrayList<>();
+        for (Author a : authors) authorNames.add(a.getName());
+        map.put("authors", authorNames);
+        List<String> tagNames = new ArrayList<>();
+        for (Tag t : tagList) tagNames.add(t.getName());
+        map.put("tags", tagNames);
+        map.put("websiteName", source.getWebsiteName());
+        map.put("articleUrl", source.getUrl());
+        map.put("publishDate", source.getPublishDate());
+        return map;
     }
-     */
-    /**
-     * Returns the unique article ID assigned during parsing.
-     */
-    public int getId() {
+
+    /** Reconstructs an Article from a Firestore document map. */
+    public static Article fromMap(Map<String, Object> map) {
+        String id = (String) map.getOrDefault("id", "");
+        String title = (String) map.getOrDefault("title", "");
+        String description = (String) map.getOrDefault("description", "");
+        String content = (String) map.getOrDefault("content", "");
+        String imageUrl = (String) map.getOrDefault("imageUrl", "");
+        String websiteName = (String) map.getOrDefault("websiteName", "");
+        String articleUrl = (String) map.getOrDefault("articleUrl", "");
+        String publishDate = (String) map.getOrDefault("publishDate", "");
+
+        List<Author> authors = new ArrayList<>();
+        Object authorList = map.get("authors");
+        if (authorList instanceof List) {
+            for (Object name : (List<?>) authorList) {
+                if (name instanceof String) authors.add(new Author((String) name));
+            }
+        }
+
+        List<Tag> tags = new ArrayList<>();
+        Object tagList = map.get("tags");
+        if (tagList instanceof List) {
+            for (Object name : (List<?>) tagList) {
+                if (name instanceof String) tags.add(new Tag((String) name));
+            }
+        }
+
+        return new Article(id, title, description, authors, tags,
+                new Source(websiteName, articleUrl, publishDate), content, imageUrl);
+    }
+
+    /** Returns the unique article UUID derived from the article URL. */
+    public String getId() {
         return id;
     }
 

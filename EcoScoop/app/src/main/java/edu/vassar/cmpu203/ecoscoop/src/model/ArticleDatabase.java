@@ -2,7 +2,6 @@ package edu.vassar.cmpu203.ecoscoop.src.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Data source interface for articles.
@@ -11,8 +10,8 @@ import java.util.UUID;
  */
 public interface ArticleDatabase {
 
-    /** Returns all articles mapped by their ID. */
-    Map<Integer, Article> getDatabase();
+    /** Returns all articles mapped by their UUID. */
+    Map<String, Article> getDatabase();
 
     /** Returns all articles as a flat list. */
     List<Article> getArticles();

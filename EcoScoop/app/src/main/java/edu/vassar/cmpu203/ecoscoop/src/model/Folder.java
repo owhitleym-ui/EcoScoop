@@ -17,7 +17,7 @@ import edu.vassar.cmpu203.ecoscoop.src.controller.ArticleRetriever;
 public class Folder implements Serializable {
 
     private String name;
-    private List<Integer> articleIds;
+    private List<String> articleIds;
     private transient ArticleRetriever articleRetriever;
 
     /**
@@ -54,8 +54,8 @@ public class Folder implements Serializable {
         Object ids = map.get("articleIds");
         if (ids instanceof List) {
             for (Object id : (List<?>) ids) {
-                if (id instanceof Long) {
-                    folder.articleIds.add(((Long) id).intValue());
+                if (id instanceof String) {
+                    folder.articleIds.add((String) id);
                 }
             }
         }
@@ -80,11 +80,11 @@ public class Folder implements Serializable {
     }
 
     /**
-     * Adds an article to this folder by ID. Does nothing if it's already saved here.
+     * Adds an article to this folder by UUID. Does nothing if it's already saved here.
      *
-     * @param id the article ID to add
+     * @param id the article UUID to add
      */
-    public void addArticle(int id) {
+    public void addArticle(String id) {
         if (articleRetriever.getArticle(id) == null) {
             throw new IllegalArgumentException("Article ID not found in database.");
         }
@@ -94,19 +94,19 @@ public class Folder implements Serializable {
     }
 
     /**
-     * Removes an article from this folder by ID.
+     * Removes an article from this folder by UUID.
      *
-     * @param id the article ID to remove
+     * @param id the article UUID to remove
      */
-    public void removeArticle(int id) {
-        articleIds.remove((Integer) id);
+    public void removeArticle(String id) {
+        articleIds.remove(id);
     }
 
     /** Returns the articles currently saved in this folder. */
     public List<Article> open() {
         if (articleRetriever == null) return new ArrayList<>();
         List<Article> contents = new ArrayList<>();
-        for (int id : articleIds) {
+        for (String id : articleIds) {
             Article a = articleRetriever.getArticle(id);
             if (a != null) contents.add(a);
         }

@@ -2,6 +2,9 @@ package edu.vassar.cmpu203.ecoscoop.src.persistence;
 
 import androidx.annotation.NonNull;
 
+import java.util.Map;
+
+import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
 import edu.vassar.cmpu203.ecoscoop.src.model.User;
 
@@ -71,4 +74,12 @@ public interface PersistenceFacade {
 
     /** Persists the current user's data (including comments) to the backend. */
     default void saveUser(@NonNull User user) {}
+
+    /** Stores a full article in the backend so it survives across sessions. */
+    default void saveArticle(@NonNull Article article) {}
+
+    /** Loads all previously saved articles (for folder fallback when the RSS feed has changed). */
+    default void loadSavedArticles(@NonNull DataListener<Map<String, Article>> listener) {
+        listener.onNoDataFound();
+    }
 }

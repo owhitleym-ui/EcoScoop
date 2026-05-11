@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:orientation="horizontal"
-    android:paddingHorizontal="24dp"
+    android:paddingStart="24dp"
+    android:paddingEnd="8dp"
     android:gravity="center_vertical"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
@@ -23,13 +24,24 @@
         android:layout_height="wrap_content"
         android:textSize="13sp"
         android:textColor="?android:attr/textColorSecondary"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="4dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="›"
-        android:textSize="22sp"
-        android:textColor="?android:attr/textColorSecondary" />
+    <ImageButton
+        android:id="@+id/renameFolder"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Rename folder"
+        android:src="@android:drawable/ic_menu_edit"
+        android:tint="?android:attr/textColorSecondary" />
+
+    <ImageButton
+        android:id="@+id/deleteFolder"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Delete folder"
+        android:src="@android:drawable/ic_menu_delete"
+        android:tint="#C62828" />
 
 </LinearLayout>

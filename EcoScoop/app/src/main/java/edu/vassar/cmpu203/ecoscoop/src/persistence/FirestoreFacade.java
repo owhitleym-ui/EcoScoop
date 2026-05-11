@@ -9,8 +9,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.Folder;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
 import edu.vassar.cmpu203.ecoscoop.src.model.User;
@@ -24,6 +27,7 @@ public class FirestoreFacade implements PersistenceFacade {
 
     private static final String USERS_COLLECTION = "users";
     private static final String FOLDERS_SUB = "folders";
+    private static final String ARTICLES_COLLECTION = "articles";
 
     private final CollectionReference usersCref =
             FirebaseFirestore.getInstance().collection(USERS_COLLECTION);
@@ -115,5 +119,37 @@ public class FirestoreFacade implements PersistenceFacade {
     @Override
     public void saveUser(@NonNull User user) {
         usersCref.document(user.getUsername()).set(user.toMap());
+    }
+
+    @Override
+    public void saveArticle(@NonNull Article article) {
+        FirebaseFirestore.getInstance()
+                .collection(ARTICLES_COLLECTION)
+                .document(article.getId())
+                .set(article.toMap());
+    }
+
+    @Override
+    public void loadSavedArticles(@NonNull DataListener<Map<String, Article>> listener) {
+        FirebaseFirestore.getInstance()
+                .collection(ARTICLES_COLLECTION)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot snapshots) {
+                        if (snapshots.isEmpty()) {
+                            listener.onNoDataFound();
+                            return;
+                        }
+                        Map<String, Article> articles = new HashMap<>();
+                        for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                            if (doc.getData() != null) {
+                                Article article = Article.fromMap(doc.getData());
+                                articles.put(article.getId(), article);
+                            }
+                        }
+                        listener.onDataReceived(articles);
+                    }
+                });
     }
 }

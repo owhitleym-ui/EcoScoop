@@ -13,9 +13,12 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+
+import edu.vassar.cmpu203.ecoscoop.R;
 
 import java.util.List;
 
@@ -64,9 +67,9 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int articleId = getArguments() != null ? getArguments().getInt("article_id", -1) : -1;
+        String articleId = getArguments() != null ? getArguments().getString("article_id", null) : null;
 
-        if (articleId != -1 && listener != null) {
+        if (articleId != null && listener != null) {
             listener.onRequestArticle(articleId, this);
         }
 
@@ -82,18 +85,21 @@ public class DisplayArticleFragment extends Fragment implements DisplayArticleUI
 
         // Save button — shows a popup asking for a folder name
         this.binding.saveButton.setOnClickListener(v -> {
-            if (articleId == -1 || listener == null) return;
+            if (articleId == null || listener == null) return;
             EditText input = new EditText(requireContext());
             input.setHint("Folder name");
-            new AlertDialog.Builder(requireContext())
+            AlertDialog dialog = new AlertDialog.Builder(requireContext())
                     .setTitle("Save to folder")
                     .setView(input)
-                    .setPositiveButton("Save", (dialog, which) -> {
+                    .setPositiveButton("Save", (d, which) -> {
                         String name = input.getText().toString().trim();
                         if (!name.isEmpty()) listener.onSaveClick(articleId, name);
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
+            int green = ContextCompat.getColor(requireContext(), R.color.green);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(green);
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(green);
         });
 
         // Like button — toggles and updates both reaction labels

@@ -14,7 +14,7 @@ import edu.vassar.cmpu203.ecoscoop.src.controller.FeedFetcher;
  */
 public class ArticleRepository implements ArticleDatabase {
 
-    private final Map<Integer, Article> database;
+    private final Map<String, Article> database;
     private final List<Article> articles;
 
     /**
@@ -31,7 +31,7 @@ public class ArticleRepository implements ArticleDatabase {
         FeedFetcher fetcher = new FeedFetcher();
         this.articles = fetcher.fetchAll(feeds);
 
-        Map<Integer, Article> db = new HashMap<>();
+        Map<String, Article> db = new HashMap<>();
         for (Article a : this.articles) {
             db.put(a.getId(), a);
         }
@@ -39,7 +39,7 @@ public class ArticleRepository implements ArticleDatabase {
     }
 
     @Override
-    public Map<Integer, Article> getDatabase() {
+    public Map<String, Article> getDatabase() {
         return database;
     }
 
