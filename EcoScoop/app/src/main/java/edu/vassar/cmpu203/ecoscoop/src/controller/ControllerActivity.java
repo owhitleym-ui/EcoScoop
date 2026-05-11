@@ -11,7 +11,11 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +59,9 @@ public class ControllerActivity extends AppCompatActivity
     private FolderManager folderManager;
     private Article curArticle;
     private User curUser;
+
+    // Held so onLoadEcoData can push data to the existing instance instead of creating a new one
+    private DashboardFragment dashboardFragment;
 
     State curState = State.AUTH;
     State prevState = State.FEED;
@@ -125,7 +132,6 @@ public class ControllerActivity extends AppCompatActivity
 
     /** Request Location of the User */
     private void requestLocation() {
-        // Check permission first
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -135,15 +141,41 @@ public class ControllerActivity extends AppCompatActivity
             return;
         }
 
+        // Try the fast cached fix first; fall back to a live request if null
         locationClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
                 this.lat = location.getLatitude();
                 this.lon = location.getLongitude();
-
-                Log.d("FeedDebug", "(Lat, Lon)" + this.lat + this.lon);
+                Log.d("FeedDebug", "Cached location: " + this.lat + ", " + this.lon);
                 onUpdateEcoData(this.lat, this.lon);
+            } else {
+                Log.d("FeedDebug", "No cached location — requesting fresh fix");
+                requestFreshLocation();
             }
         });
+    }
+
+    /** Fallback: request a single fresh GPS fix when the cache is empty */
+    @SuppressWarnings("MissingPermission")
+    private void requestFreshLocation() {
+        LocationRequest req = new LocationRequest.Builder(
+                Priority.PRIORITY_BALANCED_POWER_ACCURACY, 5000L)
+                .setMaxUpdates(1)
+                .build();
+
+        locationClient.requestLocationUpdates(req, new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult result) {
+                locationClient.removeLocationUpdates(this);
+                android.location.Location loc = result.getLastLocation();
+                if (loc != null) {
+                    lat = loc.getLatitude();
+                    lon = loc.getLongitude();
+                    Log.d("FeedDebug", "Fresh location: " + lat + ", " + lon);
+                    onUpdateEcoData(lat, lon);
+                }
+            }
+        }, getMainLooper());
     }
 
     @Override
@@ -201,13 +233,10 @@ public class ControllerActivity extends AppCompatActivity
 
     private void onLoadEcoData(EcoDataRetriever retriever) {
         this.ecoDataRetriever = retriever;
-
-        // Only navigate to dashboard if the user has already signed in
-        if (curState == State.DASHBOARD) {
-            DashboardFragment dashboardFragment = new DashboardFragment();
-            dashboardFragment.setListener(this);
+        // Push data to whichever DashboardFragment is currently on screen.
+        // Never create a new fragment here — that's showDashBoardTab's job.
+        if (curState == State.DASHBOARD && dashboardFragment != null) {
             dashboardFragment.onWeatherLoaded(retriever);
-            mainUI.displayFragment(dashboardFragment);
         }
     }
 
@@ -225,10 +254,12 @@ public class ControllerActivity extends AppCompatActivity
 
     private void showDashBoardTab() {
         this.curState = State.DASHBOARD;
-        DashboardFragment dashboardFragment = new DashboardFragment();
-        dashboardFragment.setListener(this);
-        if (ecoDataRetriever != null) dashboardFragment.onWeatherLoaded(ecoDataRetriever);
-        if (mainUI != null) mainUI.displayFragment(dashboardFragment);
+        this.dashboardFragment = new DashboardFragment();
+        this.dashboardFragment.setListener(this);
+        // If weather is already loaded, hand it over immediately.
+        // If not, pendingRetriever in DashboardFragment holds it until onViewCreated fires.
+        if (ecoDataRetriever != null) this.dashboardFragment.onWeatherLoaded(ecoDataRetriever);
+        if (mainUI != null) mainUI.displayFragment(this.dashboardFragment);
     }
 
     private void showArticleFeedTab() {
@@ -292,6 +323,20 @@ public class ControllerActivity extends AppCompatActivity
 
     @Override
     public void onProfileClick() { showProfileTab(); }
+
+    @Override
+    public void onRequestGPSRefresh() {
+        // Re-run the GPS fetch and reload weather for the current location
+        requestLocation();
+    }
+
+    @Override
+    public void onSearchLocation(String query) {
+        // TODO: pass query through Open-Meteo Geocoding API to resolve lat/lon,
+        // then call onUpdateEcoData(lat, lon) with the result.
+        // For now, log and fall back to last known GPS location as a safe no-op.
+        Log.d("ControllerActivity", "Location search requested: " + query);
+    }
 
 
     /**

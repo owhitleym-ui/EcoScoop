@@ -15,6 +15,10 @@ public interface DashboardUI {
         void onSearchClick();
         /** Goes to the profile tab. */
         void onProfileClick();
+
+        void onRequestGPSRefresh();
+
+        void onSearchLocation(String query);
     }
 
     /** Sets the listener that handles nav button clicks. */
