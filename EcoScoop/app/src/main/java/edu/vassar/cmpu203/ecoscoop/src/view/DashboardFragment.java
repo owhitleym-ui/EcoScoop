@@ -35,8 +35,6 @@ public class DashboardFragment extends Fragment implements DashboardUI {
     private EcoDataRetriever pendingRetriever;
     private boolean useMetric = true; // default to metric; updated by controller before display
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -89,7 +87,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
         this.binding = null;
     }
 
-    // ── DashboardUI ───────────────────────────────────────────────────────────
+    // DashboardUI Implementation
 
     /** Populates all dashboard sections from the given retriever; deferred if the view is not yet ready. */
     @SuppressLint("SetTextI18n")
@@ -113,7 +111,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
         this.useMetric = useMetric;
     }
 
-    // ── Unit conversion helpers ───────────────────────────────────────────────
+    // Unit Conversion Settings Helper
 
     /** Convert Celsius to the user's preferred temperature unit. */
     private float temp(float celsius) {
@@ -387,8 +385,6 @@ public class DashboardFragment extends Fragment implements DashboardUI {
             showClimateSheet(climate, retriever.getCurrentTemp());
         });
     }
-
-    // ── Detail sheets ─────────────────────────────────────────────────────────
 
     /**
      * Shows a bottom sheet with a large value, three stat chips, and an optional scrollable data table.

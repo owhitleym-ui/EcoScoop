@@ -26,7 +26,7 @@ public class EcoDataFetcher {
     private static final String FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
     private static final String CLIMATE_URL  = "https://archive-api.open-meteo.com/v1/archive";
 
-    // ── Forecast ──────────────────────────────────────────────────────────────
+    // Forecast Fetching
 
     /** Fetches current conditions, hourly, and 7-day daily forecast. */
     public WeatherData fetch(double lat, double lon) throws Exception {
@@ -86,11 +86,10 @@ public class EcoDataFetcher {
                 hourlyTimes, hourlyTemp, hourlyHumid, hourlyWind);
     }
 
-    // ── Climate (historical) ──────────────────────────────────────────────────
+    // Climate Fetching
 
     /** Fetches ~3 months of historical ERA5 climate data for anomaly calculation. */
     public ClimateData fetchClimate(double lat, double lon) throws Exception {
-        // ERA5 typically has a 2-3 month lag; request prior calendar year Q4 for safety
         LocalDate end   = LocalDate.now().minusYears(1).withMonth(12).withDayOfMonth(31);
         LocalDate start = end.minusMonths(3);
 
@@ -117,9 +116,9 @@ public class EcoDataFetcher {
         return new ClimateData(dailyTimes, dailyMax, dailyMin, dailyPrecip);
     }
 
-    // ── Shared helpers ────────────────────────────────────────────────────────
+    // Private Helper Methods
 
-    /** Downloads a URL and returns its body as a UTF-8 string. */
+    /** Downloads a specific URL and returns its body as a UTF-8 string. */
     private String fetchString(String urlStr) throws Exception {
         HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
         conn.setRequestMethod("GET");
