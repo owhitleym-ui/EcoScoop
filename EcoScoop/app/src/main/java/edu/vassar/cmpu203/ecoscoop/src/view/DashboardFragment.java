@@ -35,8 +35,6 @@ public class DashboardFragment extends Fragment implements DashboardUI {
     private EcoDataRetriever pendingRetriever;
     private boolean useMetric = true;
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -89,7 +87,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
         this.binding = null;
     }
 
-    // ── DashboardUI ───────────────────────────────────────────────────────────
+    // DashboardUI Implementation
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -111,7 +109,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
         this.useMetric = useMetric;
     }
 
-    // ── Unit conversion helpers ───────────────────────────────────────────────
+    // Unit Conversion Settings Helper
 
     private float temp(float celsius) {
         return useMetric ? celsius : celsius * 9f / 5f + 32f;
@@ -131,7 +129,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
 
     private String precipUnit() { return useMetric ? "mm" : "in"; }
 
-    // ── Bind methods ──────────────────────────────────────────────────────────
+    // Bind methods
 
     private void bindHeader(EcoDataRetriever retriever) {
         int code = (int) retriever.getCurrentWeatherCode();
@@ -394,9 +392,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
             ).show(getParentFragmentManager(), "climate");
         });
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
+    //  Helpers
     private LinearLayout makeDayChip(int dayIndex, float hi, float lo, boolean rainy) {
         if (getContext() == null) return new LinearLayout(requireActivity());
         LinearLayout chip = new LinearLayout(getContext());
@@ -480,7 +476,7 @@ public class DashboardFragment extends Fragment implements DashboardUI {
         return "🌡";
     }
 
-    // ── Math helpers ──────────────────────────────────────────────────────────
+    // Math helpers
 
     private float safeFirst(float[] a) { return (a != null && a.length > 0) ? a[0] : 0f; }
     private float average(float[] a)   { return a != null ? avg(a, a.length) : 0f; }

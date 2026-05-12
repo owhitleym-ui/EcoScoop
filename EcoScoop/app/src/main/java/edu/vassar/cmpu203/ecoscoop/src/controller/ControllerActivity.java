@@ -65,7 +65,7 @@ public class ControllerActivity extends AppCompatActivity
     private static final String STATE = "state";
     private static final String CUR_ARTICLE_ID = "curArticleId";
 
-    // Fallback coordinates used when GPS is unavailable or local location is off (New York City)
+    // Default Location (New York City)
     private static final double DEFAULT_LAT = 40.7128;
     private static final double DEFAULT_LON = -74.0060;
 
@@ -78,17 +78,16 @@ public class ControllerActivity extends AppCompatActivity
     private Article curArticle;
     private User curUser;
 
-    // Held so onLoadEcoData can push data to the existing instance instead of creating a new one
     private DashboardFragment dashboardFragment;
 
-    // Location state
+    // Location Variables
     private FusedLocationProviderClient locationClient;
     private LocationCallback locationCallback;
     private double lat = 0.0;
     private double lon = 0.0;
     private String lastSearchedName = null;
 
-    // GPS fallback: fires if no location arrives within GPS_TIMEOUT_MS
+    // GPS Fall Back
     private final Handler gpsTimeoutHandler = new Handler(Looper.getMainLooper());
     private final Runnable gpsFallbackRunnable = () -> {
         if (lat == 0.0 && lon == 0.0) {
@@ -138,8 +137,8 @@ public class ControllerActivity extends AppCompatActivity
             this.curState = State.valueOf(savedInstanceState.getString(STATE));
         }
 
-        onUpdateDatabase(); // start loading articles in background while user authenticates
-        requestLocation();
+        onUpdateDatabase(); // start loading Articles in background Threasd
+        requestLocation();  // start loading EcoData in background Thread
         onAuth();
     }
 
@@ -160,7 +159,7 @@ public class ControllerActivity extends AppCompatActivity
         if (this.curArticle != null) outState.putString(CUR_ARTICLE_ID, this.curArticle.getId());
     }
 
-    // ── Location ──────────────────────────────────────────────────────────────
+    // Request Location Private Methods
 
     /** Request the user's location; falls back to a fresh fix if the cache is empty. */
     private void requestLocation() {
@@ -192,7 +191,7 @@ public class ControllerActivity extends AppCompatActivity
         });
     }
 
-    /** Requests a single fresh GPS fix; falls back to default if the fix is null. */
+    /** Requests a single fresh GPS fix */
     @SuppressWarnings("MissingPermission")
     private void requestFreshLocation() {
         LocationRequest req = new LocationRequest.Builder(
@@ -300,9 +299,8 @@ public class ControllerActivity extends AppCompatActivity
     }
 
     /**
-     * Reverse-geocodes coordinates to a human-readable city name using the device's
-     * built-in Geocoder (no API key required). Runs on a background thread and
-     * pushes the result to the dashboard label on the UI thread.
+     * Reverse-geocodes coordinates to a human-readable city name using android's geocoder to
+     * push the result to the dashboard label on the UI thread.
      */
     private void reverseGeocode(double lat, double lon) {
         new Thread(() -> {
@@ -331,8 +329,6 @@ public class ControllerActivity extends AppCompatActivity
         }).start();
     }
 
-    // ── Eco data ──────────────────────────────────────────────────────────────
-
     /** Fetches weather + climate on a background thread; delivers to the UI thread when done. */
     private void onUpdateEcoData(double lat, double lon) {
         new Thread(() -> {
@@ -356,8 +352,6 @@ public class ControllerActivity extends AppCompatActivity
             dashboardFragment.onWeatherLoaded(retriever);
         }
     }
-
-    // ── Article database ──────────────────────────────────────────────────────
 
     /** Fetch and updates database on a background thread; updates the feed when ready. */
     private void onUpdateDatabase() {
@@ -386,14 +380,14 @@ public class ControllerActivity extends AppCompatActivity
         if (curState != State.AUTH) showArticleFeedTab();
     }
 
-    // ── Navigation helpers ────────────────────────────────────────────────────
-
     private void onAuth() {
         this.curState = State.AUTH;
         AuthFragment authFragment = new AuthFragment();
         authFragment.setListener(this);
         if (mainUI != null) mainUI.displayFragment(authFragment);
     }
+
+    // Bottom-Row Navigation Tab Implementation
 
     private void showDashBoardTab() {
         this.curState = State.DASHBOARD;
@@ -455,17 +449,21 @@ public class ControllerActivity extends AppCompatActivity
         if (mainUI != null) mainUI.displayFragment(profileFragment);
     }
 
-    // ── Navigation tab callbacks ──────────────────────────────────────────────
+
 
     @Override public void onArticleTabClick() { showArticleFeedTab(); }
     @Override public void onDashBoardClick()   { showDashBoardTab(); }
     @Override public void onSearchClick()      { showSearchTab(); }
     @Override public void onProfileClick()     { showProfileTab(); }
 
+
+    /**
+     * Requests Refreshed GPS Location if Searched and asks for Permission
+     */
     @Override
     public void onRequestGPSRefresh() {
-        lastSearchedName = null; // clear any searched city; go back to GPS
-        // Skip the cache so we always get the current device location
+        lastSearchedName = null; //clear searched city
+
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -483,7 +481,7 @@ public class ControllerActivity extends AppCompatActivity
         geocodeAndFetch(query.trim());
     }
 
-    // ── AuthUI.Listener ───────────────────────────────────────────────────────
+    // AuthUI.Listener Method Implementations
 
     @Override
     public void onRegister(String username, String password, AuthUI ui) {
@@ -516,7 +514,7 @@ public class ControllerActivity extends AppCompatActivity
         });
     }
 
-    // ── ArticleFeedUI.Listener ────────────────────────────────────────────────
+    // ArticleFeedUI.Listener Method Implementation
 
     @Override
     public void onArticleClicked(String id) {
@@ -539,7 +537,7 @@ public class ControllerActivity extends AppCompatActivity
         ui.runShowFeed(articles);
     }
 
-    // ── DisplayArticleUI.Listener ─────────────────────────────────────────────
+    // DisplayArticleUI.Listener Method Implementation
 
     @Override
     public void onRequestArticle(String id, DisplayArticleUI ui) {
@@ -600,7 +598,7 @@ public class ControllerActivity extends AppCompatActivity
         }
     }
 
-    // ── SearchArticleUI.Listener ──────────────────────────────────────────────
+    // SearchArticleUI.Listener Methods Implementation
 
     @Override
     public void onSearchQuery(String query, String type, SearchArticleUI ui) {
@@ -618,7 +616,7 @@ public class ControllerActivity extends AppCompatActivity
         ui.runShowResults(sorted);
     }
 
-    // ── ProfileUI.Listener ────────────────────────────────────────────────────
+    // ProfileUI.Listener Methods Implementation
 
     @Override
     public List<Folder> onGetFolders() {
@@ -683,13 +681,13 @@ public class ControllerActivity extends AppCompatActivity
         curUser.setUseLocalLocation(useLocalLocation);
         pfacade.saveUser(curUser);
 
-        // When the local/global toggle changes, refresh weather with the right source
+        //Switch from Gloabl to Local
         if (wasLocal != useLocalLocation) {
             if (useLocalLocation) {
                 lastSearchedName = null;
                 requestLocation();
             } else {
-                // Global: use default location (clears any GPS coords)
+                // Uses Default Lat and Lon
                 lat = DEFAULT_LAT;
                 lon = DEFAULT_LON;
                 lastSearchedName = null;
