@@ -2,6 +2,8 @@
 
 An Android news and climate app that aggregates environmental news from RSS feeds and pairs it with live local weather and historical climate data — so users can read about climate change while seeing its effects in their own backyard.
 
+## Testing Note
+- **When running Espresso tests on Android** tester must interact with the location popup, While Using, or else tests will fail.
 ## Features
 
 - **Live RSS feed** from Grist, Carbon Brief, and Earth911 — fetched on app launch

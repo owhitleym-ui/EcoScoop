@@ -38,9 +38,7 @@ public class ProfileTest {
         onView(ViewMatchers.withId(R.id.profileTab)).perform(click());
     }
 
-    // -------------------------------------------------------------------------
     // Profile screen structure
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that the Settings button is visible on the profile screen landing page.
@@ -83,9 +81,7 @@ public class ProfileTest {
         onView(withId(R.id.foldersRecyclerView)).check(matches(isDisplayed()));
     }
 
-    // -------------------------------------------------------------------------
     // Settings
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that tapping the Settings button does not crash the app, and that
@@ -98,9 +94,7 @@ public class ProfileTest {
         onView(withId(R.id.settingsButton)).check(matches(isDisplayed()));
     }
 
-    // -------------------------------------------------------------------------
     // Navigation back to profile from another tab
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that navigating away to the Articles tab and then tapping Profile

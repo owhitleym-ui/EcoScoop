@@ -13,16 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="ArticleInteractionTest">
+      <SelectionState runConfigName="launch_showsDashboard()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="profileTab_afterLeavingAndReturning_isDisplayed()">
+      <SelectionState runConfigName="searchThenArticles_navigatesCorrectly()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="likeButton_firstTap_incrementsAndMarksLiked()">
+      <SelectionState runConfigName="dashboardTab_fromSearch_returnsToDashboard()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="tapSearchResult_opensArticleDetail()">
+      <SelectionState runConfigName="dislike_afterLike_removesLikeAndAddsDislike()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="like_afterDislike_removesDislikeAndAddsLike()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
