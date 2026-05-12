@@ -28,14 +28,25 @@ An Android news and climate app that aggregates environmental news from RSS feed
 - Evapotranspiration (ET₀) is always displayed in mm/day regardless of the metric/imperial toggle (it is a soil-science unit with no standard imperial equivalent)
 - Article images depend on the RSS feed including an image URL in `<media:content>` or `content:encoded`; feeds without images show no image
 
-## APIs Used
+## APIs & Libraries
+
+### External APIs / Services
 
 | API | Purpose |
 |---|---|
-| **Open-Meteo Forecast API** | Fetches current conditions and 7-day forecast (temperature, precipitation, wind, UV index, feels-like, ET₀) for a given lat/lon |
-| **Open-Meteo ERA5 Archive API** | Retrieves historical daily climate averages used to compute the temperature anomaly card on the dashboard |
-| **Open-Meteo Geocoding API** | Converts a city name typed into the dashboard search bar into lat/lon coordinates for weather lookup |
+| **Open-Meteo Forecast API** | Fetches current conditions and 7-day forecast (temperature, precipitation, wind, UV index, feels-like, ET₀) for a given lat/lon; accessed via the official Open-Meteo Android SDK |
+| **Open-Meteo ERA5 Archive API** | Retrieves historical daily climate averages used to compute the temperature anomaly card on the dashboard; accessed via the Open-Meteo SDK |
+| **Open-Meteo Geocoding API** | Converts a city name typed into the dashboard search bar into lat/lon coordinates for weather lookup; accessed via the Open-Meteo SDK |
 | **Firebase Firestore** | Cloud persistence for user accounts, saved article folders, and article reactions (likes, dislikes, comments) |
+
+### Libraries
+
+| Library | Purpose |
+|---|---|
+| **Open-Meteo SDK** (`com.open-meteo:sdk`) | Official Android SDK that wraps all Open-Meteo HTTP calls and handles FlatBuffers deserialization of the API responses |
+| **Glide** (`com.github.bumptech.glide`) | Loads and caches article header images from RSS-provided URLs into the article feed and detail views |
+| **XPP3** (`xpp3:xpp3`) | XML pull parser used by `ArticleParser` to parse raw RSS/XML feeds from Grist, Carbon Brief, and Earth911 into `Article` objects |
+| **Google Play Services Location** | Provides `FusedLocationProviderClient` for GPS-based device location with a 15-second timeout fallback |
 
 ## How to Run (Android)
 

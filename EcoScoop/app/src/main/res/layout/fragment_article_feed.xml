@@ -5,6 +5,15 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:src="@drawable/logo_text"
+        android:scaleType="fitCenter"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="8dp"
+        android:contentDescription="EcoScoop" />
+
     <!-- Feed fills all space above the nav bar -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/itemsRecView"

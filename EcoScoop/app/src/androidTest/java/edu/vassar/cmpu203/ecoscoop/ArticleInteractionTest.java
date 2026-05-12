@@ -187,6 +187,38 @@ public class ArticleInteractionTest {
         androidx.test.espresso.Espresso.pressBack();
     }
 
+    // Navigation from article
+
+    /**
+     * Verifies that tapping the Articles nav tab from the article detail screen
+     * returns the user to the article feed RecyclerView.
+     */
+    @Test
+    public void articleFeedTab_fromArticleDetail_returnToFeed() {
+        onView(ViewMatchers.withId(R.id.articleFeedTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.itemsRecView)).check(matches(isDisplayed()));
+    }
+
+    /**
+     * Verifies that tapping the Search nav tab from the article detail screen
+     * shows the search input without crashing.
+     */
+    @Test
+    public void searchTab_fromArticleDetail_showsSearchInput() {
+        onView(ViewMatchers.withId(R.id.searchTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchInput)).check(matches(isDisplayed()));
+    }
+
+    /**
+     * Verifies that tapping the Profile nav tab from the article detail screen
+     * shows the profile settings button without crashing.
+     */
+    @Test
+    public void profileTab_fromArticleDetail_showsProfile() {
+        onView(ViewMatchers.withId(R.id.profileTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.settingsButton)).check(matches(isDisplayed()));
+    }
+
     private static Matcher<View> childAtPosition(Matcher<View> parentMatcher, int position) {
         return new TypeSafeMatcher<View>() {
             @Override
