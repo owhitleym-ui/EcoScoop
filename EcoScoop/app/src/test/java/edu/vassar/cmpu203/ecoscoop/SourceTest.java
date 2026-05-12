@@ -14,9 +14,7 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Source;
  */
 public class SourceTest {
 
-    // -------------------------------------------------------------------------
     // Getters
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies {@code getWebsiteName()} returns the exact value passed to the
@@ -75,9 +73,7 @@ public class SourceTest {
         assertEquals("", s.getPublishDate());
     }
 
-    // -------------------------------------------------------------------------
     // toString
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that {@code toString()} includes the website name, URL, and

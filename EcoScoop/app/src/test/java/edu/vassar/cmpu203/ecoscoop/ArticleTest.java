@@ -125,10 +125,7 @@ public class ArticleTest {
         assertEquals("none", article.getUserReaction());
     }
 
-    // -------------------------------------------------------------------------
     // Comments
-    // -------------------------------------------------------------------------
-
     /**
      * Verifies {@code getComments()} returns an empty list before any comments
      * are added.
@@ -163,9 +160,7 @@ public class ArticleTest {
         assertEquals("Third",  c.get(2));
     }
 
-    // -------------------------------------------------------------------------
     // getContent() — normalisation
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that {@code &nbsp;} HTML entities are replaced with a regular space.
@@ -241,10 +236,7 @@ public class ArticleTest {
         assertFalse(result.contains("\n\n\n"));
     }
 
-    // -------------------------------------------------------------------------
     // toMap / fromMap — serialisation round-trip
-    // -------------------------------------------------------------------------
-
     /**
      * Verifies that {@code toMap()} followed by {@code fromMap()} faithfully
      * reconstructs the article's core fields (id, title, description, content,
@@ -285,9 +277,7 @@ public class ArticleTest {
         assertEquals("", restored.getTitle());
     }
 
-    // -------------------------------------------------------------------------
-    // Helper
-    // -------------------------------------------------------------------------
+   // Helper
 
     /** Creates an Article with only the body field set, for getContent() tests. */
     private Article body(String content) {

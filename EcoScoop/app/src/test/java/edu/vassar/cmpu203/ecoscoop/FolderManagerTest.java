@@ -56,9 +56,7 @@ public class FolderManagerTest {
         manager = new FolderManager(articleRetriever);
     }
 
-    // -------------------------------------------------------------------------
-    // createFolder
-    // -------------------------------------------------------------------------
+     // createFolder
 
     /**
      * Verifies {@code createFolder()} returns a non-null Folder and that the
@@ -83,9 +81,7 @@ public class FolderManagerTest {
         assertEquals(3, manager.getFolders().size());
     }
 
-    // -------------------------------------------------------------------------
     // deleteFolder
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies {@code deleteFolder()} returns {@code true} and removes the folder
@@ -109,9 +105,7 @@ public class FolderManagerTest {
         assertFalse(result);
     }
 
-    // -------------------------------------------------------------------------
     // getFolder
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies {@code getFolder()} returns the correct folder when it exists.
@@ -131,9 +125,7 @@ public class FolderManagerTest {
         assertNull(manager.getFolder("DoesNotExist"));
     }
 
-    // -------------------------------------------------------------------------
     // saveToFolder
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that {@code saveToFolder()} auto-creates the folder when it does
@@ -159,9 +151,7 @@ public class FolderManagerTest {
         assertEquals(1, manager.getFolder("Existing").open().size());
     }
 
-    // -------------------------------------------------------------------------
     // renameFolder
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies {@code renameFolder()} returns {@code true} and the folder is

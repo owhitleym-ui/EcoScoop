@@ -59,9 +59,7 @@ public class FolderTest {
         folder = new Folder("Favourites", articleRetriever);
     }
 
-    // -------------------------------------------------------------------------
     // addArticle
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that adding a valid article ID makes the article appear in
@@ -95,9 +93,7 @@ public class FolderTest {
         folder.addArticle("unknown-id");
     }
 
-    // -------------------------------------------------------------------------
     // removeArticle
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that removing a previously added article results in an empty
@@ -124,9 +120,7 @@ public class FolderTest {
         assertEquals(1, folder.open().size());
     }
 
-    // -------------------------------------------------------------------------
     // open
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies {@code open()} returns an empty list when no articles have been
@@ -149,9 +143,7 @@ public class FolderTest {
         assertEquals(article2, contents.get(1));
     }
 
-    // -------------------------------------------------------------------------
     // rename
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies {@code rename()} updates the folder's name as returned by

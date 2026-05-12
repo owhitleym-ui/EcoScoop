@@ -31,9 +31,10 @@ public class ProfileTest {
     public ActivityScenarioRule<ControllerActivity> activityRule =
             new ActivityScenarioRule<>(ControllerActivity.class);
 
-    /** Navigates to the Profile tab before each test. */
+    /** Signs in and navigates to the Profile tab before each test. */
     @Before
     public void navigateToProfile() {
+        EspressoTestHelper.loginAndWait();
         onView(ViewMatchers.withId(R.id.profileTab)).perform(click());
     }
 

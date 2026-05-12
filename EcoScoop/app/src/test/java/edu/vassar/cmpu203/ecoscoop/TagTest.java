@@ -13,10 +13,7 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Tag;
  * handled without error.
  */
 public class TagTest {
-
-    // -------------------------------------------------------------------------
-    // getName
-    // -------------------------------------------------------------------------
+// getName
 
     /**
      * Verifies {@code getName()} returns the exact name passed to the constructor.
@@ -54,9 +51,7 @@ public class TagTest {
         assertEquals("  ", tag.getName());
     }
 
-    // -------------------------------------------------------------------------
     // toString
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that {@code toString()} returns the tag name — used when tags are

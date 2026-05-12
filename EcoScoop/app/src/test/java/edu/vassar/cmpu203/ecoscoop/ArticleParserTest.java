@@ -58,9 +58,7 @@ public class ArticleParserTest {
         parser = new ArticleParser();
     }
 
-    // -------------------------------------------------------------------------
     // Article count
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that parsing a feed with two {@code <item>} elements produces
@@ -85,9 +83,7 @@ public class ArticleParserTest {
         assertTrue(parser.loadArticles().isEmpty());
     }
 
-    // -------------------------------------------------------------------------
     // Field extraction
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that the article's title is extracted correctly from the
@@ -141,9 +137,7 @@ public class ArticleParserTest {
         assertTrue(desc.contains("rising temperatures"));
     }
 
-    // -------------------------------------------------------------------------
     // Source website
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that the website name passed to {@code parse()} is stored as the

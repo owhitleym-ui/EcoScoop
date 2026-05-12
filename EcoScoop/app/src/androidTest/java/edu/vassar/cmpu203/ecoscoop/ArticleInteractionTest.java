@@ -45,10 +45,11 @@ public class ArticleInteractionTest {
             new ActivityScenarioRule<>(ControllerActivity.class);
 
     /**
-     * Navigates to the feed, waits for articles to load, then opens the first card.
+     * Signs in, navigates to the feed, waits for articles to load, then opens the first card.
      */
     @Before
     public void openFirstArticle() {
+        EspressoTestHelper.loginAndWait();
         onView(ViewMatchers.withId(R.id.articleFeedTab)).perform(click());
         SystemClock.sleep(20000);
         onView(childAtPosition(ViewMatchers.withId(R.id.itemsRecView), 0)).perform(click());

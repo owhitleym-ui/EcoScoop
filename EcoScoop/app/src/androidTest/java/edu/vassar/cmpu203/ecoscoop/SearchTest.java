@@ -42,9 +42,10 @@ public class SearchTest {
     public ActivityScenarioRule<ControllerActivity> activityRule =
             new ActivityScenarioRule<>(ControllerActivity.class);
 
-    /** Navigates to the Search tab and waits for articles to load. */
+    /** Signs in, navigates to the Search tab, and waits for articles to load. */
     @Before
     public void navigateToSearch() {
+        EspressoTestHelper.loginAndWait();
         onView(ViewMatchers.withId(R.id.searchTab)).perform(click());
         SystemClock.sleep(20000);
     }
@@ -148,7 +149,7 @@ public class SearchTest {
         onView(childAtPosition(ViewMatchers.withId(R.id.searchResultsRecyclerView), 0))
                 .perform(click());
 
-        onView(withId(R.id.returnButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.saveButton)).check(matches(isDisplayed()));
     }
 
     /**

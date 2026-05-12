@@ -79,9 +79,7 @@ public class ArticleServiceTest {
         service = new ArticleRetriever(mockDatabase);
     }
 
-    // -------------------------------------------------------------------------
     // searchArticles — keyword
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that a keyword search returns only articles whose title,
@@ -123,9 +121,7 @@ public class ArticleServiceTest {
         assertEquals(climate, results.get(0));
     }
 
-    // -------------------------------------------------------------------------
     // searchArticles — tag
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that tag search returns only articles carrying a matching tag.
@@ -146,9 +142,7 @@ public class ArticleServiceTest {
         assertTrue(results.isEmpty());
     }
 
-    // -------------------------------------------------------------------------
     // searchArticles — author
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that author search returns articles by a matching author name
@@ -170,9 +164,7 @@ public class ArticleServiceTest {
         assertTrue(results.isEmpty());
     }
 
-    // -------------------------------------------------------------------------
     // sortArticles — date
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that sorting by date places newer articles first.
@@ -197,9 +189,7 @@ public class ArticleServiceTest {
         assertEquals(copy, original);
     }
 
-    // -------------------------------------------------------------------------
     // sortArticles — oldest first
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that sorting by "oldest" places the article with the earliest
@@ -238,9 +228,7 @@ public class ArticleServiceTest {
         assertEquals(copy, original);
     }
 
-    // -------------------------------------------------------------------------
     // sortArticles — source A-Z
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that sorting by "source" orders articles alphabetically by
@@ -267,9 +255,7 @@ public class ArticleServiceTest {
         assertEquals(copy, original);
     }
 
-    // -------------------------------------------------------------------------
     // getArticle
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies {@code getArticle()} returns the correct article for a valid ID.

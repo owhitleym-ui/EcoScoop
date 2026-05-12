@@ -46,9 +46,7 @@ public class EcoRepositoryTest {
         repo = new EcoRepository(stubFetcher);
     }
 
-    // -------------------------------------------------------------------------
     // Initial state
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that {@code getLatestWeather()} returns {@code null} before
@@ -68,9 +66,7 @@ public class EcoRepositoryTest {
         assertNull(repo.getLatestClimate());
     }
 
-    // -------------------------------------------------------------------------
     // After refresh
-    // -------------------------------------------------------------------------
 
     /**
      * Verifies that after {@code refresh()}, {@code getLatestWeather()} returns
