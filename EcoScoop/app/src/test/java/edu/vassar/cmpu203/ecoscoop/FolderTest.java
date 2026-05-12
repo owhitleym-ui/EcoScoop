@@ -22,7 +22,7 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Source;
  * Focuses on: {@code addArticle()} duplicate prevention and invalid-ID rejection,
  * {@code removeArticle()}, {@code open()} contents, and {@code rename()} null guard.
  *
- * Uses an anonymous {@link ArticleRetriver} implementation to inject test data
+ * Uses an anonymous {@link ArticleDatabase} implementation to inject test data
  * without making any network calls.
  */
 public class FolderTest {
@@ -34,23 +34,23 @@ public class FolderTest {
 
     @Before
     public void setUp() {
-        article1 = new Article(1, "Title One", "Desc one",
+        article1 = new Article("a1", "Title One", "Desc one",
                 new ArrayList<>(), new ArrayList<>(),
                 new Source("Grist", "https://grist.org", "2024-01-01"), "Body one.", "");
-        article2 = new Article(2, "Title Two", "Desc two",
+        article2 = new Article("a2", "Title Two", "Desc two",
                 new ArrayList<>(), new ArrayList<>(),
                 new Source("Grist", "https://grist.org", "2024-02-01"), "Body two.", "");
 
-        Map<Integer, Article> db = new HashMap<>();
-        db.put(1, article1);
-        db.put(2, article2);
+        Map<String, Article> db = new HashMap<>();
+        db.put("a1", article1);
+        db.put("a2", article2);
 
         List<Article> list = new ArrayList<>();
         list.add(article1);
         list.add(article2);
 
         ArticleDatabase database = new ArticleDatabase() {
-            @Override public Map<Integer, Article> getDatabase() { return db; }
+            @Override public Map<String, Article> getDatabase() { return db; }
             @Override public List<Article> getArticles() { return list; }
         };
 
@@ -69,7 +69,7 @@ public class FolderTest {
      */
     @Test
     public void testAddArticle_validIdAppearsInOpen() {
-        folder.addArticle(1);
+        folder.addArticle("a1");
         List<Article> contents = folder.open();
         assertEquals(1, contents.size());
         assertEquals(article1, contents.get(0));
@@ -81,8 +81,8 @@ public class FolderTest {
      */
     @Test
     public void testAddArticle_duplicateIgnored() {
-        folder.addArticle(1);
-        folder.addArticle(1);
+        folder.addArticle("a1");
+        folder.addArticle("a1");
         assertEquals(1, folder.open().size());
     }
 
@@ -92,7 +92,7 @@ public class FolderTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddArticle_invalidIdThrows() {
-        folder.addArticle(999);
+        folder.addArticle("unknown-id");
     }
 
     // -------------------------------------------------------------------------
@@ -105,9 +105,9 @@ public class FolderTest {
      */
     @Test
     public void testRemoveArticle_removesCorrectEntry() {
-        folder.addArticle(1);
-        folder.addArticle(2);
-        folder.removeArticle(1);
+        folder.addArticle("a1");
+        folder.addArticle("a2");
+        folder.removeArticle("a1");
         List<Article> contents = folder.open();
         assertEquals(1, contents.size());
         assertEquals(article2, contents.get(0));
@@ -119,8 +119,8 @@ public class FolderTest {
      */
     @Test
     public void testRemoveArticle_nonExistentIdNoOp() {
-        folder.addArticle(1);
-        folder.removeArticle(999);
+        folder.addArticle("a1");
+        folder.removeArticle("unknown-id");
         assertEquals(1, folder.open().size());
     }
 
@@ -142,8 +142,8 @@ public class FolderTest {
      */
     @Test
     public void testOpen_preservesInsertionOrder() {
-        folder.addArticle(1);
-        folder.addArticle(2);
+        folder.addArticle("a1");
+        folder.addArticle("a2");
         List<Article> contents = folder.open();
         assertEquals(article1, contents.get(0));
         assertEquals(article2, contents.get(1));

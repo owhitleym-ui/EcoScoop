@@ -18,7 +18,7 @@ public class ArticleTest {
 
     /** Creates an Article with only the body field set, for getContent() tests. */
     private Article body(String content) {
-        return new Article(1, "", "", new ArrayList<>(), new ArrayList<>(),
+        return new Article("test-id", "", "", new ArrayList<>(), new ArrayList<>(),
                 new Source("", "", ""), content, "");
     }
 

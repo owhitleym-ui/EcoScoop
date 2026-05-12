@@ -34,4 +34,7 @@ public interface SearchArticleUI {
 
     /** Shows the search results in the list. */
     void runShowResults(List<Article> results);
+
+    /** Shows a fresh search result set and resets the sort chip to Relevance. */
+    void runShowFreshResults(List<Article> results);
 }

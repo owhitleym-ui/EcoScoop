@@ -155,12 +155,7 @@ public class Article implements Serializable {
         return comments;
     }
 
-    /**
-     * Wraps text at a certain lineWidth
-     * @param text
-     * @param lineWidth
-     * @return
-     */
+    /** Inserts line breaks so no line exceeds {@code lineWidth} characters. */
     private String wordWrap(String text, int lineWidth) {
         StringBuilder result = new StringBuilder();
         String[] words = text.split(" ");

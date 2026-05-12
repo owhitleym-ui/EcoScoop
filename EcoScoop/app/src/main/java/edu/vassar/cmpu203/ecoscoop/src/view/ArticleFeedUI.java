@@ -32,5 +32,6 @@ public interface ArticleFeedUI {
 
     /** Shows the given list of articles in the feed. */
     void runShowFeed(List<Article> ArticleList);
+    /** Called after an article card is tapped; currently handled by the controller. */
     void runArticleClicked(String id);
 }

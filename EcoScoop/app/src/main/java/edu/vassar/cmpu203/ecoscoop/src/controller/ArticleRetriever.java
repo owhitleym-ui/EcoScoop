@@ -28,6 +28,8 @@ public class ArticleRetriever {
     // Sort criteria constants
     public static final String SORT_RELEVANCE = "relevance";
     public static final String SORT_DATE      = "date";
+    public static final String SORT_OLDEST    = "oldest";
+    public static final String SORT_SOURCE    = "source";
     public static final String SORT_RATING    = "rating";
     public static final String SORT_TRENDING  = "trending";
 
@@ -154,6 +156,17 @@ public class ArticleRetriever {
             case SORT_DATE:
                 sorted.sort((a, b) -> b.getSource().getPublishDate()
                         .compareTo(a.getSource().getPublishDate()));
+                break;
+            case SORT_OLDEST:
+                sorted.sort((a, b) -> a.getSource().getPublishDate()
+                        .compareTo(b.getSource().getPublishDate()));
+                break;
+            case SORT_SOURCE:
+                sorted.sort((a, b) -> {
+                    String sa = a.getSource() != null ? a.getSource().getWebsiteName() : "";
+                    String sb = b.getSource() != null ? b.getSource().getWebsiteName() : "";
+                    return sa.compareToIgnoreCase(sb);
+                });
                 break;
             case SORT_RATING:
             case SORT_TRENDING:

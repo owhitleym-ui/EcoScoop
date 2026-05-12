@@ -135,6 +135,7 @@ public class ProfileFragment extends Fragment implements ProfileUI {
         this.listener = listener;
     }
 
+    /** Refreshes the folders list from the controller and toggles the empty-state label. */
     private void loadFolders() {
         List<Folder> folders = listener.onGetFolders();
         foldersAdapter.setFolders(folders);
@@ -147,7 +148,9 @@ public class ProfileFragment extends Fragment implements ProfileUI {
         }
     }
 
+    /** Rebuilds the comment history view, adding a removable bullet row for each comment. */
     private void loadComments() {
+        if (!isAdded() || listener == null) return;
         List<String> comments = listener.onGetUserComments();
         if (comments.isEmpty()) {
             binding.commentsSection.setVisibility(View.GONE);
@@ -155,15 +158,38 @@ public class ProfileFragment extends Fragment implements ProfileUI {
         }
         binding.commentsSection.setVisibility(View.VISIBLE);
         binding.commentsContainer.removeAllViews();
+
+        int padH = (int) (4 * getResources().getDisplayMetrics().density);
+        int padV = (int) (6 * getResources().getDisplayMetrics().density);
+
         for (int i = 0; i < comments.size(); i++) {
             final int index = i;
-            final String comment = comments.get(i);
+            final String text = comments.get(i);
+
+            // Row: bullet text (fills width) + ✕ button
+            android.widget.LinearLayout row = new android.widget.LinearLayout(requireContext());
+            row.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+            row.setGravity(android.view.Gravity.CENTER_VERTICAL);
+            row.setPadding(0, padV, 0, padV);
+
             TextView tv = new TextView(requireContext());
-            tv.setText("• " + comment);
+            tv.setText("• " + text);
             tv.setTextSize(14f);
-            tv.setPadding(0, 8, 0, 8);
-            tv.setLongClickable(true);
-            tv.setOnLongClickListener(v -> {
+            android.widget.LinearLayout.LayoutParams tvLp =
+                    new android.widget.LinearLayout.LayoutParams(
+                            0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv.setLayoutParams(tvLp);
+            row.addView(tv);
+
+            TextView removeBtn = new TextView(requireContext());
+            removeBtn.setText("✕");
+            removeBtn.setTextSize(16f);
+            removeBtn.setTextColor(android.graphics.Color.parseColor("#C0392B"));
+            removeBtn.setPadding(padH * 3, padV, padH, padV);
+            removeBtn.setClickable(true);
+            removeBtn.setFocusable(true);
+            removeBtn.setOnClickListener(v -> {
+                if (!isAdded() || listener == null) return;
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Remove comment")
                         .setMessage("Remove this comment?")
@@ -173,12 +199,14 @@ public class ProfileFragment extends Fragment implements ProfileUI {
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
-                return true;
             });
-            binding.commentsContainer.addView(tv);
+            row.addView(removeBtn);
+
+            binding.commentsContainer.addView(row);
         }
     }
 
+    /** Switches to the folder-contents screen and loads the given folder's articles. */
     private void openFolder(Folder folder) {
         if (listener == null) return;
         currentFolderName = folder.getFolderName();
@@ -199,6 +227,7 @@ public class ProfileFragment extends Fragment implements ProfileUI {
         }
     }
 
+    /** Returns to the folder-list screen and disables the back-navigation callback. */
     private void showFolderList() {
         currentFolderName = null;
         binding.folderContentsScreen.setVisibility(View.GONE);
@@ -207,6 +236,7 @@ public class ProfileFragment extends Fragment implements ProfileUI {
         loadFolders(); // refresh in case a rename/delete happened
     }
 
+    /** Shows the settings dialog with metric/imperial and local/global location toggles. */
     private void showSettingsDialog() {
         if (listener == null) return;
 
@@ -305,6 +335,7 @@ public class ProfileFragment extends Fragment implements ProfileUI {
         public int getItemCount() { return folders.size(); }
     }
 
+    /** Shows a dialog to rename the given folder, then refreshes the folder list on confirmation. */
     private void showRenameDialog(Folder folder) {
         if (listener == null) return;
         EditText input = new EditText(requireContext());
@@ -326,6 +357,7 @@ public class ProfileFragment extends Fragment implements ProfileUI {
                 .show();
     }
 
+    /** Shows a confirmation dialog to permanently delete the given folder. */
     private void showDeleteDialog(Folder folder) {
         if (listener == null) return;
         new AlertDialog.Builder(requireContext())

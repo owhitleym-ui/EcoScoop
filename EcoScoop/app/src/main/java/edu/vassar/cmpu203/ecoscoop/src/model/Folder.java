@@ -32,15 +32,18 @@ public class Folder implements Serializable {
         this.articleIds = new ArrayList<>();
     }
 
+    /** Creates an empty folder with no name; used by {@link #fromMap} during deserialization. */
     public Folder() {
         this.name = "";
         this.articleIds = new ArrayList<>();
     }
 
+    /** Sets the {@link ArticleRetriever} used to resolve article IDs after deserialization. */
     public void setArticleRetriever(ArticleRetriever retriever) {
         this.articleRetriever = retriever;
     }
 
+    /** Serializes this folder to a Firestore-compatible map. */
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
@@ -48,6 +51,7 @@ public class Folder implements Serializable {
         return map;
     }
 
+    /** Reconstructs a Folder from a Firestore document map (retriever must be set separately). */
     public static Folder fromMap(Map<String, Object> map) {
         Folder folder = new Folder();
         folder.name = (String) map.getOrDefault("name", "");
@@ -85,7 +89,7 @@ public class Folder implements Serializable {
      * @param id the article UUID to add
      */
     public void addArticle(String id) {
-        if (articleRetriever.getArticle(id) == null) {
+        if (articleRetriever == null || articleRetriever.getArticle(id) == null) {
             throw new IllegalArgumentException("Article ID not found in database.");
         }
         if (!articleIds.contains(id)) {

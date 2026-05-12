@@ -8,8 +8,12 @@ import edu.vassar.cmpu203.ecoscoop.src.model.Article;
 import edu.vassar.cmpu203.ecoscoop.src.model.FolderManager;
 import edu.vassar.cmpu203.ecoscoop.src.model.User;
 
+/**
+ * Interface for saving and loading user data, folders, and articles to/from a persistence backend.
+ */
 public interface PersistenceFacade {
 
+    /** Callback interface for async data-retrieval operations. */
     interface DataListener<T> {
         /**
          * Called when the requested data is successfully received.

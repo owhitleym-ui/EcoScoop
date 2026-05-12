@@ -30,7 +30,7 @@ public class ArticleTest {
         authors.add(new Author("Jane Doe"));
         List<Tag> tags = new ArrayList<>();
         tags.add(new Tag("climate"));
-        article = new Article(1, "Climate Report", "A summary.", authors, tags,
+        article = new Article("id-1", "Climate Report", "A summary.", authors, tags,
                 new Source("Grist", "https://grist.org", "2024-01-15"),
                 "Body text.", "");
     }
@@ -102,7 +102,7 @@ public class ArticleTest {
 
     /** Creates an Article with only the body field set, for getContent() tests. */
     private Article body(String content) {
-        return new Article(99, "T", "D", new ArrayList<>(), new ArrayList<>(),
+        return new Article("id-99", "T", "D", new ArrayList<>(), new ArrayList<>(),
                 new Source("", "", ""), content, "");
     }
 }
