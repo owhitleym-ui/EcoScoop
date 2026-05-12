@@ -7,6 +7,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -41,8 +42,8 @@ public class NavigationTest {
      */
     @Test
     public void articleTab_showsFeed() {
-        onView(withId(R.id.articleFeedTab)).perform(click());
-        onView(withId(R.id.itemsRecView)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.articleFeedTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.itemsRecView)).check(matches(isDisplayed()));
     }
 
     /**
@@ -50,8 +51,8 @@ public class NavigationTest {
      */
     @Test
     public void searchTab_showsSearchInput() {
-        onView(withId(R.id.searchTab)).perform(click());
-        onView(withId(R.id.searchInput)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.searchTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchInput)).check(matches(isDisplayed()));
     }
 
     /**
@@ -59,8 +60,8 @@ public class NavigationTest {
      */
     @Test
     public void profileTab_showsProfileScreen() {
-        onView(withId(R.id.profileTab)).perform(click());
-        onView(withId(R.id.emptyLabel)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.profileTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.emptyLabel)).check(matches(isDisplayed()));
     }
 
     /**
@@ -68,8 +69,8 @@ public class NavigationTest {
      */
     @Test
     public void dashboardTab_fromSearch_returnsToDashboard() {
-        onView(withId(R.id.searchTab)).perform(click());
-        onView(withId(R.id.dashboardTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.dashboardTab)).perform(click());
         onView(withText("EcoScoop")).check(matches(isDisplayed()));
     }
 
@@ -79,11 +80,11 @@ public class NavigationTest {
      */
     @Test
     public void searchThenArticles_navigatesCorrectly() {
-        onView(withId(R.id.articleFeedTab)).perform(click());
-        onView(withId(R.id.searchTab)).perform(click());
-        onView(withId(R.id.searchInput)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.articleFeedTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchInput)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.articleFeedTab)).perform(click());
-        onView(withId(R.id.itemsRecView)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.articleFeedTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.itemsRecView)).check(matches(isDisplayed()));
     }
 }

@@ -1,135 +1,112 @@
 # View Profile
 
 ## 1. Primary actor and goals
-__User__: Wants to check achievements, access stats and points, change bio, review tags. Wants clear direction of what to access.
+__User__: Wants to review their activity stats, browse saved folders, and review or remove their comment history.
 
 ## 2. Other stakeholders and their goals
-No other stakeholders
+None.
 
 ## 3. Preconditions
-
-* User opens EcoScoop
-* User switches to Profile Section
+* User taps the Profile tab.
 
 ## 4. Postconditions
-
-* Displays the User Profile
-* Displays Level/Gamified Aspects
-* Shows Likes and Tags.
+* User stats (articles read, liked, disliked) are displayed.
+* Saved folders list is shown with article counts.
+* Comment history is shown with a remove button per entry.
 
 ## 5. Workflow
-
 ```plantuml
 @startuml
-
 skin rose
 
 title View Profile (Casual)
 
-'define the lanes
 |#application|User|
 |#implementation|System|
 
 |User|
 start
-:Click Profile Tab;
-:Navigate to menu item;
+:Tap Profile Tab;
+
 |System|
-switch (Handle User selection)
-case ( Clicked Achievements?)
-    |System|
-    :Show number of articles read, 
-    number of comments left, 
-    stats on likes and dislikes;
-
-case ( Clicked Level?)
-    |System|
-    :Show levels and point breakdown;
-
-case ( Checked Tags?)
-    repeat
-    :Show most popular user tags;
-    |System|
-    switch (Chose tags?)
-    |System|
-    case ( Added Tag?)
-    |System|
-        :Save preferences and recommend more content with tag;
-    case ( Removed Tag?)
-    |System|
-        :Save preferences and recommend less content with tag;
-    case ( Kept Tags?)
-    |System|
-        :No changes to tags;
-    endswitch
-    repeat while (More tags?) is (yes) not (no)
-endswitch
-
-
+:Load user stats\n(articles read, liked, disliked);
+:Load saved folders from FolderManager;
+:Load comment history from User;
+:Render profile screen;
 
 |User|
-:Finish viewing profile;
+:Browse stats and folder list;
 
+if (Open a folder?) then (yes)
+  |System|
+  :Folder.open() → List<Article>;
+  :Show article list in folder;
+  |User|
+  :Browse folder contents;
+endif
+
+if (Remove a comment?) then (yes)
+  |User|
+  :Tap ✕ on comment;
+  |System|
+  :User.removeComment(index);
+  :Refresh comment list;
+endif
+
+|User|
+:Navigate away;
 stop
 @enduml
 ```
-## 6. Sequence Diagram
+
+## 6. Sequence Diagrams
+
 ```plantuml
 @startuml
 skin rose
 hide footbox
-title View Profile (Sequence)
+title Load Profile Screen
 
-actor User
-participant ": System UI" as UI
-participant ": Controller" as Controller
-participant ": Tag" as Tag
-participant ": Profile" as Profile
-participant ": ArticleRetriever" as Retriever
+actor User as user
+participant "fragment : ProfileFragment" as UI
+participant "activity : ControllerActivity" as controller
+participant "u : User" as userModel
+participant "fm : FolderManager" as FM
 
-User -> UI : click profile
-UI -> Controller : displayProfile()
-Controller -> Profile : getStats()
-Profile --> Controller : return user stats
-Controller --> UI : show user stats
+user -> UI : taps Profile tab
+UI -> controller : onGetUserComments()
+controller -> userModel : getComments()
+userModel --> controller : List<String>
+controller --> UI : comments
 
-opt show achievements
-User -> UI : click achievements
-UI -> Controller : displayAchievementScreen()
-Controller -> Profile : getAchievements()
-Profile --> Controller : return achievements
-Controller --> UI : show user achievement
+UI -> controller : onGetFolders()
+controller -> FM : getFolders()
+FM --> controller : List<Folder>
+controller --> UI : folders
 
-else show level
-User -> UI : click level
-UI -> Controller : displayLevel()
-Controller -> Profile : getLevel()
-Profile --> Controller : return user's levels
-Controller --> UI : show level stats
+UI --> user : stats, settings toggles,\nfolders list, comments with ✕ buttons
 
-else show tags
-User -> UI : click tags
-UI -> Controller : displayTags()
-Controller -> Retriever : getArticleTags()
-Retriever --> Controller : return tags
-Controller --> UI : show tags of liked articles
+@enduml
+```
 
-alt add tag
-User -> UI : click add tag
-UI -> Controller : addTag()
-Controller -> Tag : addTag()
-Tag --> Controller : updates tags
-Controller --> UI : shows updated tags
+```plantuml
+@startuml
+skin rose
+hide footbox
+title Remove Comment from Profile
 
-else remove tag
-User -> UI : click remove tag
-UI -> Controller : addTag()
-Controller -> Tag : removeTag()
-Tag --> Controller : updates tags
-Controller --> UI : shows updated tags
-end alt
+actor User as user
+participant "fragment : ProfileFragment" as UI
+participant "activity : ControllerActivity" as controller
+participant "u : User" as userModel
 
+user -> UI : taps ✕ next to a comment
+UI -> UI : AlertDialog — confirm Remove
+user -> UI : confirms
+UI -> controller : onRemoveComment(index)
+controller -> userModel : removeComment(index)
+UI -> UI : loadComments()
+UI --> user : updated comment list
 
-end opt
 @enduml
 ```

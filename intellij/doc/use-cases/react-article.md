@@ -2,80 +2,72 @@
 
 ## 1. Primary actor and goals
 
-__User__: Ease of access giving feedback on article content from personal impressions and thoughts. Able to Upvote or Downvote articles based off enjoyment or other opinions. Ease of access leaving comments to any articles they have strong opinions about.
-
+__User__: Wants to like, dislike, or comment on an article they have read. Likes and dislikes are mutually exclusive toggles. Comments are stored per-session and removable from the profile screen.
 
 ## 2. Other stakeholders and their goals
 
-* __Websites__: Wants to know how many reactions the article has gotten for later use.
-* __Author__: Wants feedback from users on their article, probably positive. Prefers likes to dislikes. Wants user to check out other articles they have written or to subscribe to their profile.
+* __Authors__: Benefit from knowing how many users reacted positively.
 
 ## 3. Preconditions
-* User is authenticated
-* User is in articles tab and clicks an article.
-* User has opened and read through an article.
+* User has opened an article in the Display Article screen.
 
 ## 4. Postconditions
-* Liked article is saved to section in profile.
-* Preferences are saved, so user receives more liked content and less disliked content.
-* Comment is saved to user history.
-* Stats are updated in user profile.
-* Displays reaction (comment or like/dislike)
+* Like/dislike count is updated (mutual exclusion enforced).
+* Comment is appended to the article and to the user's comment history.
+* User can remove their own comments from the Profile screen.
 
 ## 5. Workflow
-
 ```plantuml
 @startuml
-
 skin rose
 
-title React Article(Casual)
+title React to Article (Casual)
 
-'define the lanes
 |#application|User|
 |#implementation|System|
 
-
 |User|
 start
-repeat
-:Give feedback on article;
-|System|
-switch (Handle Feedback)
-    
-    case ( Open Comment Section?)
-        if(Commented?) then (yes)
-            |User|
-            :Edit/Delete Comment;
-            |System|
-            :Updates or deletes Comment;
-        (no)elseif (Make Comment?) then (yes)
-            |System|
-            :Add comment to profile history;
-        (no)elseif (Upvote or Downvote Comment?)
-            |System|
-            :Update comment stats;
-        endif
-    case (      Like Article?)
-        |System|
-        :Execute __Save Article__;
-        :Show more related content;
-    case ( Dislike Article?)
-        :Show less content like this;
-    case ( Save Author?) 
-        |System|
-        :Follow author;
-        :Show author's content in articles tab;
+:Open article;
+
+switch (Choose reaction)
+case (Like)
+  |System|
+  if (Already disliked?) then (yes)
+    :Remove dislike first;
+  endif
+  :Increment like count;
+  :Update button state;
+case (Dislike)
+  |System|
+  if (Already liked?) then (yes)
+    :Remove like first;
+  endif
+  :Increment dislike count;
+  :Update button state;
+case (Comment)
+  |User|
+  :Type comment text;
+  |System|
+  :Append comment to article;
+  :Append comment to User history;
+case (Remove comment)
+  |User|
+  :Navigate to Profile → Comments;
+  :Tap ✕ on comment row;
+  |System|
+  :Remove comment at index from User;
+  :Refresh comment list;
 endswitch
 
-
 |User|
-repeat while (Finished reaction?) is (no) not (yes)
-:Finish reaction;
+:Continue reading or navigate back;
 stop
 @enduml
 ```
-## 6. Sequence Diagram
+
+## 6. Sequence Diagrams
+
 ```plantuml
 @startuml
 skin rose
@@ -83,18 +75,18 @@ hide footbox
 title Like Article
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
+participant "fragment : DisplayArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "ar : ArticleRetriever" as AR
 participant "art : Article" as article
 
-UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
-user -> UI : enters 1
+user -> UI : taps Like button
 UI -> controller : onLikeArticle(id)
 controller -> AR : getArticle(id)
-AR --> controller : art : Article
+AR --> controller : art
 controller -> article : addLike()
-UI --> user : "Liked! (N likes)"
+controller -> UI : update like count display
+UI --> user : Like button highlighted, count incremented
 
 @enduml
 ```
@@ -106,18 +98,18 @@ hide footbox
 title Dislike Article
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
+participant "fragment : DisplayArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "ar : ArticleRetriever" as AR
 participant "art : Article" as article
 
-UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
-user -> UI : enters 2
+user -> UI : taps Dislike button
 UI -> controller : onDislikeArticle(id)
 controller -> AR : getArticle(id)
-AR --> controller : art : Article
+AR --> controller : art
 controller -> article : addDislike()
-UI --> user : "Disliked! (N dislikes)"
+controller -> UI : update dislike count display
+UI --> user : Dislike button highlighted, count incremented
 
 @enduml
 ```
@@ -129,20 +121,19 @@ hide footbox
 title Comment on Article
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
+participant "fragment : DisplayArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "ar : ArticleRetriever" as AR
 participant "art : Article" as article
+participant "u : User" as userModel
 
-UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
-user -> UI : enters 3
-UI -> user : "Enter your comment: "
-user -> UI : enters comment text
+user -> UI : taps Add Comment, enters text, confirms
 UI -> controller : onCommentArticle(id, comment)
 controller -> AR : getArticle(id)
-AR --> controller : art : Article
+AR --> controller : art
 controller -> article : addComment(comment)
-UI --> user : "Comment added."
+controller -> userModel : addComment(comment)
+UI --> user : comment appears in list below article
 
 @enduml
 ```
@@ -151,14 +142,27 @@ UI --> user : "Comment added."
 @startuml
 skin rose
 hide footbox
-title Skip Reaction
+title Remove Comment from Profile
 
 actor User as user
-participant "ui : CmdLineUI" as UI
+participant "fragment : ProfileFragment" as UI
+participant "activity : ControllerActivity" as controller
+participant "u : User" as userModel
 
-UI -> user : display react prompt\n(0. Skip / 1. Like / 2. Dislike / 3. Comment)
-user -> UI : enters 0
-UI --> user : return to article list
+user -> UI : navigates to Profile → Comments
+UI -> controller : onGetUserComments()
+controller -> userModel : getComments()
+userModel --> controller : List<String>
+controller --> UI : comment list
+UI --> user : each comment shown with ✕ button
+
+user -> UI : taps ✕ on a comment
+UI -> UI : show confirmation dialog
+user -> UI : confirms Remove
+UI -> controller : onRemoveComment(index)
+controller -> userModel : removeComment(index)
+UI -> UI : loadComments()
+UI --> user : updated comment list
 
 @enduml
 ```

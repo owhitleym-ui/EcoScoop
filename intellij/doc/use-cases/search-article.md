@@ -1,20 +1,18 @@
 # Search Article
 
 ## 1. Primary actor and goals
-__User__: Wants to look for relevant articles depending on keywords, tags, authors, or publishing year. Looking for relevant, topical news that all relate to what the user inputs and is searching for.
+__User__: Wants to find relevant environmental articles by keyword, tag, or author, and sort results in a meaningful order.
 
 ## 2. Other stakeholders and their goals
 
-* __Websites__: Wants information about if their article was searched and accessed.
-* __Author__: Wants information if their article was searched for.
-
+* __Websites__: Want attribution when their articles are surfaced.
+* __Authors__: Want visibility when their articles are searched.
 
 ## 3. Preconditions
-* User switches to Article Section
+* User navigates to the Search tab.
 
 ## 4. Postconditions
-* List of relevant articles are shown
-* Ordered from most relevant based on relevancy from keywords
+* A list of matching articles is displayed, ordered by the selected sort criterion.
 
 ## 5. Workflow
 ```plantuml
@@ -23,46 +21,37 @@ skin rose
 
 title Search Articles (Casual)
 
-'define the lanes
 |#application|User|
 |#implementation|System|
-|#technology|ESS|
 
 |User|
 start
-repeat 
-if (Click on Search Tab) then (yes)
-|System|
-    if (Keyword Search?) then (yes)
-    :Search by Keywords;
-    (no) elseif (Tag Search?) then (yes)
-    :Search by Tags;
-    (no) elseif (Author Search?) then (yes)
-    :Search by Author;
-    endif
+:Click Search Tab;
 
+|System|
+if (Keyword Search?) then (yes)
+  :Search by keywords;\nRank by hit count;
+(no) elseif (Tag Search?) then (yes)
+  :Search by tag;
+(no) elseif (Author Search?) then (yes)
+  :Search by author name;
 endif
-|ESS|
-:Load Articles by Search;
-|User|
-:View List;
-|System|
-    
-    if (Trending?) then (yes)
-    :Sort by most viewed articles;
-    (no) elseif (Rating?) then (yes)
-    :Sort by Rating;
-    (no) elseif (Sort by Date?) then (yes)
-    :Sort by Publishing Date;
-    (default) elseif (Sort by Relevance?) then (yes)
-    endif
 
-|ESS|
-:Sort loaded Articles;
+:Show results list;
 
 |User|
+if (Sort results?) then (yes)
+  |System|
+  if (Relevance?) then (yes)
+    :Restore original search order;
+  (no) elseif (Oldest First?) then (yes)
+    :Sort by publishDate ascending;
+  (no) elseif (Source A-Z?) then (yes)
+    :Sort alphabetically by source;
+  endif
+endif
 
-repeat while (Finish Searching?) is (no) not (yes)
+|User|
 :Click article;
 
 |System|
@@ -70,7 +59,9 @@ repeat while (Finish Searching?) is (no) not (yes)
 stop
 @enduml
 ```
-## 6. Sequence Diagram
+
+## 6. Sequence Diagrams
+
 ```plantuml
 @startuml
 skin rose
@@ -78,28 +69,24 @@ hide footbox
 title Search by Keyword
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
+participant "fragment : SearchArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "ar : ArticleRetriever" as AR
 participant "art : Article" as article
 
-user -> UI : selects "Search Articles"
-UI -> user : display search type menu\n(0. Return / 1. Keyword / 2. Tag / 3. Author)
-user -> UI : enters 1
-UI -> user : "Enter search query: "
-user -> UI : enters query
-UI -> controller : onSearchQuery(query, "keyword")
+user -> UI : selects Keyword chip, enters query, taps Search
+UI -> controller : onSearchQuery(query, "keyword", ui)
 controller -> AR : searchArticles(query, "keyword")
 
-loop for each article in articleList
+loop for each article in database
   AR -> article : getTitle(), getDescription(), getContent()
-  AR -> AR : count keyword hits in title,\ndescription, and content
+  AR -> AR : count keyword hits
 end
 
-AR -> AR : sort results by keyword hit count (descending)
+AR -> AR : sort by hit count descending
 AR --> controller : List<Article>
-controller --> UI : results
-UI --> user : display search results (N found)
+controller -> UI : runShowFreshResults(results)
+UI --> user : display results (N found), Relevance chip selected
 
 @enduml
 ```
@@ -111,31 +98,25 @@ hide footbox
 title Search by Tag
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
+participant "fragment : SearchArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "ar : ArticleRetriever" as AR
-participant "art : Article" as article
 participant "t : Tag" as tag
 
-user -> UI : selects "Search Articles"
-UI -> user : display search type menu\n(0. Return / 1. Keyword / 2. Tag / 3. Author)
-user -> UI : enters 2
-UI -> user : "Enter search query: "
-user -> UI : enters query
-UI -> controller : onSearchQuery(query, "tag")
+user -> UI : selects Tag chip, enters query, taps Search
+UI -> controller : onSearchQuery(query, "tag", ui)
 controller -> AR : searchArticles(query, "tag")
 
-loop for each article in articleList
-  AR -> article : getTagList()
+loop for each article in database
   loop for each tag
     AR -> tag : getName()
-    AR -> AR : check if tag name contains query
+    AR -> AR : check if tag contains query
   end
 end
 
 AR --> controller : List<Article>
-controller --> UI : results
-UI --> user : display search results (N found)
+controller -> UI : runShowFreshResults(results)
+UI --> user : display results
 
 @enduml
 ```
@@ -147,22 +128,16 @@ hide footbox
 title Search by Author
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
+participant "fragment : SearchArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "ar : ArticleRetriever" as AR
-participant "art : Article" as article
 participant "a : Author" as author
 
-user -> UI : selects "Search Articles"
-UI -> user : display search type menu\n(0. Return / 1. Keyword / 2. Tag / 3. Author)
-user -> UI : enters 3
-UI -> user : "Enter search query: "
-user -> UI : enters query
-UI -> controller : onSearchQuery(query, "author")
+user -> UI : selects Author chip, enters query, taps Search
+UI -> controller : onSearchQuery(query, "author", ui)
 controller -> AR : searchArticles(query, "author")
 
-loop for each article in articleList
-  AR -> article : getAuthors()
+loop for each article in database
   loop for each author
     AR -> author : getName()
     AR -> AR : check if author name contains query
@@ -170,8 +145,8 @@ loop for each article in articleList
 end
 
 AR --> controller : List<Article>
-controller --> UI : results
-UI --> user : display search results (N found)
+controller -> UI : runShowFreshResults(results)
+UI --> user : display results
 
 @enduml
 ```
@@ -183,32 +158,34 @@ hide footbox
 title Sort Search Results
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
+participant "fragment : SearchArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "ar : ArticleRetriever" as AR
 
+user -> UI : selects sort chip
+UI -> UI : check selected chip id
 
-UI -> user : display sort menu\n(0. Skip / 1. Relevance / 2. Date / 3. Rating / 4. Trending)
-user -> UI : enters sort choice
-UI -> controller : onSortResults(results, criteria)
-controller -> AR : sortArticles(results, criteria)
-
-alt criteria = "date"
-  AR -> AR : sort by publishDate (newest first)
-else criteria = "rating"
-  note right : Not yet implemented
-else criteria = "trending"
-  note right : Not yet implemented
-else criteria = "relevance" (default)
-  note right : Not yet implemented
+alt Relevance chip
+  UI -> UI : runShowResults(originalResults)
+else Oldest First chip
+  UI -> controller : onSortResults(originalResults, "oldest", ui)
+  controller -> AR : sortArticles(results, "oldest")
+  AR -> AR : sort by publishDate ascending
+  AR --> controller : sorted List<Article>
+  controller -> UI : runShowResults(sorted)
+else Source A-Z chip
+  UI -> controller : onSortResults(originalResults, "source", ui)
+  controller -> AR : sortArticles(results, "source")
+  AR -> AR : sort alphabetically by source name
+  AR --> controller : sorted List<Article>
+  controller -> UI : runShowResults(sorted)
 end
 
-AR --> controller : List<Article> (sorted)
-controller --> UI : sorted results
-UI --> user : display sorted search results
+UI --> user : display sorted results
 
 @enduml
 ```
+
 ```plantuml
 @startuml
 skin rose
@@ -216,12 +193,13 @@ hide footbox
 title Open Article from Search Results
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
-participant "ar : ArticleRetriever" as AR
+participant "fragment : SearchArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 
-user -> UI : select article from results
-ref over user, UI, controller, AR
+user -> UI : taps article card
+UI -> controller : onArticleClicked(id)
+
+ref over user, UI, controller
   Access Article(id)
 end ref
 

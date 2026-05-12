@@ -2,62 +2,59 @@
 
 ## 1. Primary actor and goals
 
-__User__: Ease of access storing articles for later reading or saving them in preferred folders. 
+__User__: Wants to save articles into named folders for later reference. Folders are created on demand and listed on the Profile screen.
 
 ## 2. Other stakeholders and their goals
 
-* __Author__: Wants to know how many saves their article has gained.
-
+* __Authors__: Benefit from knowing how many users saved their article.
 
 ## 3. Preconditions
-* User is authenticated
-* User switches to Article Section
-* User accesses Article
-* User has clicked Save Article Button
+* User has opened an article in the Display Article screen.
 
 ## 4. Postconditions
-* Stores Article into a Saved Folder
-* Author is able to view how much saves
+* Article is stored in the named folder (folder is created if it does not exist).
+* Folder appears on the Profile screen.
 
 ## 5. Workflow
-
 ```plantuml
 @startuml
-
 skin rose
 
 title Save Article (Casual)
 
-'define the lanes
 |#application|User|
 |#implementation|System|
 
-|System|
-start
-if (Article is Saved?) then (no)
-:Display Saved Article Folders;
 |User|
-if(Update Saved Folders?) then (yes)
-:Select which Folder to save Article in;
-else()
-:Create New Folder;
+start
+:Tap Save button on article;
+
 |System|
-:Save New Folder to Folders;
+:Show folder picker dialog\n(existing folders + "New folder" option);
+
+|User|
+if (Choose existing folder?) then (yes)
+  :Select folder name;
+else (create new)
+  :Enter new folder name;
 endif
+
 |System|
-:Send Article to save;
- else ()
-:Remove Article;
+:saveToFolder(articleId, folderName);
+if (Folder exists?) then (no)
+  :Create new Folder;
+  :Add to FolderManager;
+endif
+:Add article ID to folder;
+
+|User|
+:Confirmation shown;
 stop
-endif
-
-
-:Save Article to user's preferred location;
-:Update amount of saves on Article;
 @enduml
 ```
 
-## 6. Sequence Diagram
+## 6. Sequence Diagrams
+
 ```plantuml
 @startuml
 skin rose
@@ -65,51 +62,31 @@ hide footbox
 title Save Article to Folder
 
 actor User as user
-participant "ui : CmdLineUI" as UI
-participant "controller : Controller" as controller
-participant "ar : ArticleRetriever" as AR
+participant "fragment : DisplayArticleFragment" as UI
+participant "activity : ControllerActivity" as controller
 participant "fm : FolderManager" as FM
+participant "folder : Folder" as F
+participant "ar : ArticleRetriever" as AR
 
-UI -> user : display save prompt\n(0. No / 1. Yes)
-user -> UI : enters 1
-UI -> user : "Enter folder name: "
-user -> UI : enters folderName
+user -> UI : taps Save, enters folder name
 UI -> controller : onSaveToFolder(articleId, folderName)
-controller -> AR : saveToFolder(articleId, folderName)
-AR -> FM : saveToFolder(articleId, folderName)
+controller -> FM : saveToFolder(articleId, folderName)
 FM -> FM : getFolder(folderName)
 
 alt folder does not exist
-  create participant "folder : Folder" as F
-  FM -> F : folder = new Folder(name, retriever)
+  create F
+  FM -> F : new Folder(name, retriever)
   FM -> FM : folders.add(folder)
 else folder exists
-  FM -> F : folder found
+  FM -> F : (existing folder)
 end
 
 FM -> F : addArticle(articleId)
 F -> AR : getArticle(articleId)
-AR --> F : art : Article
+AR --> F : Article (validates ID exists)
 F -> F : articleIds.add(id)
 
-UI --> user : "Saved to folder 'folderName'."
-
-@enduml
-
-```
-
-```plantuml
-@startuml
-skin rose
-hide footbox
-title Save Article Declined
-
-actor User as user
-participant "ui : CmdLineUI" as UI
-
-UI -> user : display save prompt\n(0. No / 1. Yes)
-user -> UI : enters 0
-UI --> user : return to article list
+UI --> user : "Saved to 'folderName'"
 
 @enduml
 ```
@@ -121,13 +98,13 @@ hide footbox
 title Remove Article from Folder
 
 actor User as user
-participant "ui : CmdLineUI" as UI
+participant "fragment : ProfileFragment" as UI
 participant "folder : Folder" as F
 
-user -> UI : remove article from folder
+user -> UI : opens folder, taps remove on article
 UI -> F : removeArticle(id)
 F -> F : articleIds.remove(id)
-UI --> user : show updated folder contents
+UI --> user : updated folder contents
 
 @enduml
 ```

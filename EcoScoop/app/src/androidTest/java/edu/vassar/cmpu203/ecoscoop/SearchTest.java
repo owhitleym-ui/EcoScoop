@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -44,7 +45,7 @@ public class SearchTest {
     /** Navigates to the Search tab and waits for articles to load. */
     @Before
     public void navigateToSearch() {
-        onView(withId(R.id.searchTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchTab)).perform(click());
         SystemClock.sleep(20000);
     }
 
@@ -54,11 +55,11 @@ public class SearchTest {
      */
     @Test
     public void keywordSearch_climate_returnsResults() {
-        onView(withId(R.id.searchInput))
+        onView(ViewMatchers.withId(R.id.searchInput))
                 .perform(typeText("climate"), closeSoftKeyboard());
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchButton)).perform(click());
 
-        onView(withId(R.id.searchResultsCount))
+        onView(ViewMatchers.withId(R.id.searchResultsCount))
                 .check(matches(not(withText("No results found"))));
     }
 
@@ -67,11 +68,11 @@ public class SearchTest {
      */
     @Test
     public void keywordSearch_gibberish_showsNoResults() {
-        onView(withId(R.id.searchInput))
+        onView(ViewMatchers.withId(R.id.searchInput))
                 .perform(typeText("zzznomatch99999"), closeSoftKeyboard());
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchButton)).perform(click());
 
-        onView(withId(R.id.searchResultsCount))
+        onView(ViewMatchers.withId(R.id.searchResultsCount))
                 .check(matches(withText("No results found")));
     }
 
@@ -80,11 +81,11 @@ public class SearchTest {
      */
     @Test
     public void keywordSearch_resultCountLabelIsShown() {
-        onView(withId(R.id.searchInput))
+        onView(ViewMatchers.withId(R.id.searchInput))
                 .perform(typeText("energy"), closeSoftKeyboard());
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchButton)).perform(click());
 
-        onView(withId(R.id.searchResultsCount)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.searchResultsCount)).check(matches(isDisplayed()));
     }
 
     //Tag Search
@@ -94,12 +95,12 @@ public class SearchTest {
      */
     @Test
     public void tagSearch_showsResultCount() {
-        onView(withId(R.id.chipTag)).perform(click());
-        onView(withId(R.id.searchInput))
+        onView(ViewMatchers.withId(R.id.chipTag)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchInput))
                 .perform(typeText("climate"), closeSoftKeyboard());
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchButton)).perform(click());
 
-        onView(withId(R.id.searchResultsCount)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.searchResultsCount)).check(matches(isDisplayed()));
     }
 
     //Author Search
@@ -108,12 +109,12 @@ public class SearchTest {
      */
     @Test
     public void authorSearch_showsResultCount() {
-        onView(withId(R.id.chipAuthor)).perform(click());
-        onView(withId(R.id.searchInput))
+        onView(ViewMatchers.withId(R.id.chipAuthor)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchInput))
                 .perform(typeText("staff"), closeSoftKeyboard());
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchButton)).perform(click());
 
-        onView(withId(R.id.searchResultsCount)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.searchResultsCount)).check(matches(isDisplayed()));
     }
 
     //Sorting Functionality
@@ -122,13 +123,13 @@ public class SearchTest {
      */
     @Test
     public void sortByDate_afterSearch_keepsResultsVisible() {
-        onView(withId(R.id.searchInput))
+        onView(ViewMatchers.withId(R.id.searchInput))
                 .perform(typeText("climate"), closeSoftKeyboard());
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchButton)).perform(click());
 
-        onView(withId(R.id.chipSortDate)).perform(click());
+        onView(ViewMatchers.withId(R.id.chipSortDate)).perform(click());
 
-        onView(withId(R.id.searchResultsCount))
+        onView(ViewMatchers.withId(R.id.searchResultsCount))
                 .check(matches(not(withText("No results found"))));
     }
 
@@ -138,13 +139,13 @@ public class SearchTest {
      */
     @Test
     public void tapSearchResult_opensArticleDetail() {
-        onView(withId(R.id.searchInput))
+        onView(ViewMatchers.withId(R.id.searchInput))
                 .perform(typeText("the"), closeSoftKeyboard());
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.searchButton)).perform(click());
 
         SystemClock.sleep(500);
 
-        onView(childAtPosition(withId(R.id.searchResultsRecyclerView), 0))
+        onView(childAtPosition(ViewMatchers.withId(R.id.searchResultsRecyclerView), 0))
                 .perform(click());
 
         onView(withId(R.id.returnButton)).check(matches(isDisplayed()));

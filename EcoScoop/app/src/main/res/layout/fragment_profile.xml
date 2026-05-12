@@ -134,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:text="Disliked"
                         android:textSize="11sp"
-                        android:textColor="@color/green" />
+                        android:textColor="@color/" />
 
                 </LinearLayout>
 

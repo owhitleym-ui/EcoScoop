@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -48,9 +49,9 @@ public class ArticleInteractionTest {
      */
     @Before
     public void openFirstArticle() {
-        onView(withId(R.id.articleFeedTab)).perform(click());
+        onView(ViewMatchers.withId(R.id.articleFeedTab)).perform(click());
         SystemClock.sleep(20000);
-        onView(childAtPosition(withId(R.id.itemsRecView), 0)).perform(click());
+        onView(childAtPosition(ViewMatchers.withId(R.id.itemsRecView), 0)).perform(click());
         SystemClock.sleep(2000);
     }
 
@@ -61,7 +62,7 @@ public class ArticleInteractionTest {
      */
     @Test
     public void likeButton_initiallyShowsZero() {
-        onView(withId(R.id.likeButton)).check(matches(withText("Likes: 0")));
+        onView(ViewMatchers.withId(R.id.likeButton)).check(matches(withText("Likes: 0")));
     }
 
     /**
@@ -70,8 +71,8 @@ public class ArticleInteractionTest {
      */
     @Test
     public void likeButton_firstTap_incrementsAndMarksLiked() {
-        onView(withId(R.id.likeButton)).perform(click());
-        onView(withId(R.id.likeButton)).check(matches(withText("Liked: 1")));
+        onView(ViewMatchers.withId(R.id.likeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.likeButton)).check(matches(withText("Liked: 1")));
     }
 
     /**
@@ -80,9 +81,9 @@ public class ArticleInteractionTest {
      */
     @Test
     public void likeButton_secondTap_togglesOff() {
-        onView(withId(R.id.likeButton)).perform(click());
-        onView(withId(R.id.likeButton)).perform(click());
-        onView(withId(R.id.likeButton)).check(matches(withText("Likes: 0")));
+        onView(ViewMatchers.withId(R.id.likeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.likeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.likeButton)).check(matches(withText("Likes: 0")));
     }
 
     /**
@@ -90,7 +91,7 @@ public class ArticleInteractionTest {
      */
     @Test
     public void dislikeButton_initiallyShowsZero() {
-        onView(withId(R.id.dislikeButton)).check(matches(withText("Dislikes: 0")));
+        onView(ViewMatchers.withId(R.id.dislikeButton)).check(matches(withText("Dislikes: 0")));
     }
 
     /**
@@ -98,8 +99,8 @@ public class ArticleInteractionTest {
      */
     @Test
     public void dislikeButton_firstTap_incrementsAndMarksDisliked() {
-        onView(withId(R.id.dislikeButton)).perform(click());
-        onView(withId(R.id.dislikeButton)).check(matches(withText("Disliked: 1")));
+        onView(ViewMatchers.withId(R.id.dislikeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.dislikeButton)).check(matches(withText("Disliked: 1")));
     }
 
     /**
@@ -107,9 +108,9 @@ public class ArticleInteractionTest {
      */
     @Test
     public void dislikeButton_secondTap_togglesOff() {
-        onView(withId(R.id.dislikeButton)).perform(click());
-        onView(withId(R.id.dislikeButton)).perform(click());
-        onView(withId(R.id.dislikeButton)).check(matches(withText("Dislikes: 0")));
+        onView(ViewMatchers.withId(R.id.dislikeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.dislikeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.dislikeButton)).check(matches(withText("Dislikes: 0")));
     }
 
     /**
@@ -117,10 +118,10 @@ public class ArticleInteractionTest {
      */
     @Test
     public void like_afterDislike_removesDislikeAndAddsLike() {
-        onView(withId(R.id.dislikeButton)).perform(click());
-        onView(withId(R.id.likeButton)).perform(click());
-        onView(withId(R.id.likeButton)).check(matches(withText("Liked: 1")));
-        onView(withId(R.id.dislikeButton)).check(matches(withText("Dislikes: 0")));
+        onView(ViewMatchers.withId(R.id.dislikeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.likeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.likeButton)).check(matches(withText("Liked: 1")));
+        onView(ViewMatchers.withId(R.id.dislikeButton)).check(matches(withText("Dislikes: 0")));
     }
 
     /**
@@ -128,10 +129,10 @@ public class ArticleInteractionTest {
      */
     @Test
     public void dislike_afterLike_removesLikeAndAddsDislike() {
-        onView(withId(R.id.likeButton)).perform(click());
-        onView(withId(R.id.dislikeButton)).perform(click());
-        onView(withId(R.id.dislikeButton)).check(matches(withText("Disliked: 1")));
-        onView(withId(R.id.likeButton)).check(matches(withText("Likes: 0")));
+        onView(ViewMatchers.withId(R.id.likeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.dislikeButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.dislikeButton)).check(matches(withText("Disliked: 1")));
+        onView(ViewMatchers.withId(R.id.likeButton)).check(matches(withText("Likes: 0")));
     }
 
     //Commenting on Articles
@@ -142,12 +143,12 @@ public class ArticleInteractionTest {
      */
     @Test
     public void postComment_appearsInList_andClearsInput() {
-        onView(withId(R.id.commentInput))
+        onView(ViewMatchers.withId(R.id.commentInput))
                 .perform(scrollTo(), typeText("Great article!"), closeSoftKeyboard());
-        onView(withId(R.id.submitCommentButton)).perform(scrollTo(), click());
+        onView(ViewMatchers.withId(R.id.submitCommentButton)).perform(scrollTo(), click());
 
         onView(withText("• Great article!")).check(matches(isDisplayed()));
-        onView(withId(R.id.commentInput)).check(matches(withText("")));
+        onView(ViewMatchers.withId(R.id.commentInput)).check(matches(withText("")));
     }
 
     /**
@@ -155,13 +156,13 @@ public class ArticleInteractionTest {
      */
     @Test
     public void multipleComments_allAppearInList() {
-        onView(withId(R.id.commentInput))
+        onView(ViewMatchers.withId(R.id.commentInput))
                 .perform(scrollTo(), typeText("First"), closeSoftKeyboard());
-        onView(withId(R.id.submitCommentButton)).perform(scrollTo(), click());
+        onView(ViewMatchers.withId(R.id.submitCommentButton)).perform(scrollTo(), click());
 
-        onView(withId(R.id.commentInput))
+        onView(ViewMatchers.withId(R.id.commentInput))
                 .perform(scrollTo(), typeText("Second"), closeSoftKeyboard());
-        onView(withId(R.id.submitCommentButton)).perform(scrollTo(), click());
+        onView(ViewMatchers.withId(R.id.submitCommentButton)).perform(scrollTo(), click());
 
         onView(withText("• First")).check(matches(isDisplayed()));
         onView(withText("• Second")).check(matches(isDisplayed()));
@@ -174,7 +175,7 @@ public class ArticleInteractionTest {
      */
     @Test
     public void saveButton_isDisplayed() {
-        onView(withId(R.id.saveButton)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.saveButton)).check(matches(isDisplayed()));
     }
 
     /**
@@ -182,7 +183,7 @@ public class ArticleInteractionTest {
      */
     @Test
     public void saveButton_click_doesNotCrash() {
-        onView(withId(R.id.saveButton)).perform(click());
+        onView(ViewMatchers.withId(R.id.saveButton)).perform(click());
         androidx.test.espresso.Espresso.pressBack();
     }
 
