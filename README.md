@@ -1,4 +1,4 @@
-# EcoSCOOP
+# EcoScoop
 
 An Android news and climate app that aggregates environmental news from RSS feeds and pairs it with live local weather and historical climate data — so users can read about climate change while seeing its effects in their own backyard.
 
